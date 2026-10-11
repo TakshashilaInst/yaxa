@@ -1,3 +1,17 @@
+<!-- yaxa-header -->
+# Yaxa
+
+**Yaxa** is an AI-native learning platform for public policy education, built as a fork of
+[DeepTutor](https://github.com/HKUDS/DeepTutor) by the Data Intelligence Lab at the University
+of Hong Kong (HKUDS). DeepTutor is licensed under the Apache License 2.0; this fork keeps that
+license and its notices (see `LICENSE`, `NOTICE` and `THIRD_PARTY_NOTICES.md`). Yaxa-specific
+changes live under `scripts/yaxa/` and are applied with `python scripts/yaxa/brand.py`.
+
+The original DeepTutor README follows.
+
+---
+<!-- /yaxa-header -->
+
 <div align="center">
 
 <p align="center"><img src="assets/figs/logo/logo.png" alt="DeepTutor logo" height="56" style="vertical-align: middle;">&nbsp;<img src="assets/figs/logo/banner.png" alt="DeepTutor" height="48" style="vertical-align: middle;"></p>

@@ -1,0 +1,12 @@
+Yaxa
+Copyright 2026 Takshashila Institution
+
+This product is a modified version of DeepTutor
+(https://github.com/HKUDS/DeepTutor), developed by the Data Intelligence Lab,
+University of Hong Kong (HKUDS), and licensed under the Apache License,
+Version 2.0. See LICENSE for the full license text.
+
+Modifications by Takshashila Institution: user-facing branding (name, logos,
+interface text, assistant prompts) applied by scripts/yaxa/brand.py, plus
+Yaxa-specific additions under scripts/yaxa/. Third-party components are listed
+in THIRD_PARTY_NOTICES.md.

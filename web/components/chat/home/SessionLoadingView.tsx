@@ -59,8 +59,8 @@ export default function SessionLoadingView({
       {/* Logo + spinner (or the failure mark) */}
       <div className="flex items-center gap-3">
         <img
-          src="/logo_black.png"
-          alt="DeepTutor"
+          src="/yaxa-logo.png"
+          alt="Yaxa"
           width={32}
           height={32}
           className="h-8 w-8 select-none"

@@ -395,6 +395,12 @@ export default function AboutSettingsPage() {
         <ResourceRow
           title={t("GitHub")}
           description={t("Source code, issues, and contributions")}
+          href="https://github.com/TakshashilaInst/yaxa"
+          icon={<Github className="h-4 w-4" />}
+        />
+        <ResourceRow
+          title="Built on DeepTutor"
+          description="Yaxa is a fork of DeepTutor by HKUDS (University of Hong Kong), used under the Apache License 2.0"
           href="https://github.com/HKUDS/DeepTutor"
           icon={<Github className="h-4 w-4" />}
         />
