@@ -48,11 +48,25 @@ def _nlp():
     return spacy.load("en_core_web_sm", disable=["lemmatizer"])
 
 
+def _norm(text: str) -> str:
+    """'the Bretton  Woods' / "Ajay Shah's" -> 'Bretton Woods' / 'Ajay Shah'."""
+    name = " ".join(text.split())
+    name = re.sub(r"^(the|The)\s+", "", name)
+    return re.sub(r"['’]s$", "", name).strip(".,;:!?")
+
+
+def _dictionary() -> set[str]:
+    path = Path("/usr/share/dict/words")
+    return {w.strip().lower() for w in path.read_text().split()} if path.exists() else set()
+
+
 # --------------------------------------------------------------- known names
 def build_known_names(dirs: list[Path], out: Path) -> None:
     """Names that occur in the course/faculty corpus are public figures.
 
-    Saves {"full": [multi-word names], "single": [one-word names seen at least twice]}.
+    Saves {"full": [multi-word names], "single": [one-word names seen at least twice],
+    "other": [places / organisations / groups]} -- the last so that a transcript
+    entity the tagger mislabels as a person ("Tamil Nadu") is not redacted.
     """
     from collections import Counter
     import subprocess
@@ -61,6 +75,7 @@ def build_known_names(dirs: list[Path], out: Path) -> None:
     nlp.max_length = 3_000_000
     names: set[str] = set()
     singles: Counter[str] = Counter()
+    other: set[str] = set()
     for d in dirs:
         for f in sorted(d.rglob("*")):
             if f.suffix == ".md" and not f.name.startswith("Webinar"):
@@ -71,7 +86,10 @@ def build_known_names(dirs: list[Path], out: Path) -> None:
                 continue
             for i in range(0, len(text), 500_000):
                 for ent in nlp(text[i : i + 500_000]).ents:
-                    name = " ".join(ent.text.split())
+                    name = _norm(ent.text)
+                    if ent.label_ in {"GPE", "LOC", "ORG", "NORP", "FAC", "EVENT", "LAW"}:
+                        other.add(name)
+                        continue
                     if ent.label_ != "PERSON" or not name[:1].isupper():
                         continue
                     if len(name.split()) >= 2:
@@ -79,7 +97,7 @@ def build_known_names(dirs: list[Path], out: Path) -> None:
                     else:
                         singles[name] += 1
     single = sorted(n for n, c in singles.items() if c >= 2)
-    out.write_text(json.dumps({"full": sorted(names), "single": single}, ensure_ascii=False))
+    out.write_text(json.dumps({"full": sorted(names), "single": single, "other": sorted(other)}, ensure_ascii=False))
     print(f"{len(names)} full + {len(single)} single public names from {len(dirs)} folders")
 
 
@@ -137,7 +155,8 @@ def lecturer_mask(segments: list[dict], audio: Path) -> list[bool]:
 
 
 # -------------------------------------------------------------------- names
-def redact_names(text: str, nlp, public: set[str], keep: set[str], single: set[str] = frozenset()) -> tuple[str, int]:
+def redact_names(text: str, nlp, public: set[str], keep: set[str], single: set[str] = frozenset(),
+                 other: set[str] = frozenset(), words: set[str] = frozenset()) -> tuple[str, int]:
     # one-word names that are public: surnames of public full names ("Keynes"), and
     # one-word names the corpus itself uses ("Nixon")
     public_last = {n.split()[-1] for n in public} | set(single)
@@ -147,9 +166,15 @@ def redact_names(text: str, nlp, public: set[str], keep: set[str], single: set[s
     for ent in doc.ents:
         if ent.label_ != "PERSON":
             continue
-        name = " ".join(ent.text.split())
+        name = _norm(ent.text)
         tokens = name.split()
-        if name in public or name in keep or name in FACULTY:
+        if not tokens or name in public or name in keep or name in FACULTY or name in other:
+            continue
+        if name.isupper():  # acronyms the tagger mistakes for names (FRBMA, CAPEX)
+            continue
+        # ordinary words capitalised only because they open a sentence ("Nah.", "Lobby.");
+        # mid-sentence capitals are treated as names (so a student called Rhea is caught)
+        if len(tokens) == 1 and tokens[0].lower() in words and ent.start == ent.sent.start:
             continue
         if len(tokens) == 1 and (tokens[0] in public_last or tokens[0] in allowed_tokens):
             continue
@@ -186,12 +211,13 @@ def redact(segments_path: Path, audio: Path | None, header_md: Path, out_md: Pat
 
     nlp = _nlp()
     known = json.loads(names.read_text())
-    public, single = set(known["full"]), set(known["single"])
+    public, single, other = set(known["full"]), set(known["single"]), set(known.get("other", []))
+    words = _dictionary()
     keep_set = set(keep)
     total = 0
     for seg in kept:
         if seg["text"] != OMIT_NOTE:
-            seg["text"], n = redact_names(seg["text"], nlp, public, keep_set, single)
+            seg["text"], n = redact_names(seg["text"], nlp, public, keep_set, single, other, words)
             total += n
 
     header = header_md.read_text().split("\n[00:")[0].rstrip()
