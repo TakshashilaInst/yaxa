@@ -111,6 +111,7 @@ class SourceInfo(BaseModel):
     title: str = ""
     url: str = ""
     corpus: str = ""
+    byline: str = ""  # e.g. "co-written by Pranay Kotasthane & RSJ" for joint work
 
 
 class Settings(BaseModel):

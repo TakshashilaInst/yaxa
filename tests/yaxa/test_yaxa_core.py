@@ -113,6 +113,18 @@ def test_numbered_passages_mark_faculty_sources() -> None:
     assert "[2] Op-ed [by Pranay Kotasthane]" in block
 
 
+def test_coauthored_passages_are_marked_as_joint_work() -> None:
+    fac = catalog.get_catalog().faculty["pranay-kotasthane"]
+    block = prompting.number_passages(
+        [{"kb": fac.kb, "title": "Edition 300", "page": None, "text": "...",
+          "byline": "co-written by Pranay Kotasthane & RSJ"}],
+        fac,
+    )
+    assert "[1] Edition 300 [co-written by Pranay Kotasthane & RSJ]" in block
+    system = prompting.build_system(profile={}, learner_name="", module=None, unit=None, faculty=fac, socratic=False)
+    assert "joint work" in system
+
+
 # --------------------------------------------------------------- citations
 def test_cited_numbers_in_order_without_duplicates() -> None:
     answer = "Cost [2]. Again [2]. Both [1, 3]. Junk [x] [12]"

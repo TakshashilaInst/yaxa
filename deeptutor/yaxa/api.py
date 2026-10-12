@@ -293,7 +293,7 @@ def _sse(event: str, data: Any) -> str:
 
 
 def _public_passage(p: dict[str, Any], n: int) -> dict[str, Any]:
-    return {k: p.get(k) for k in ("kb", "file", "title", "unit", "corpus", "kind", "url", "page", "text", "videos", "timestamp")} | {"n": n}
+    return {k: p.get(k) for k in ("kb", "file", "title", "unit", "corpus", "kind", "url", "page", "text", "videos", "timestamp", "byline")} | {"n": n}
 
 
 @router.post("/chat")

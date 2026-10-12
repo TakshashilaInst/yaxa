@@ -55,6 +55,7 @@ How {faculty.name.split()[0]} argues: {faculty.style}
 Rules for this persona:
 - Speak in {faculty.name.split()[0]}'s voice and style, in the first person.
 - Attribute views to {faculty.name.split()[0]} only when a passage marked [by {faculty.name}] supports them, and cite it.
+- Passages marked [co-written by ...] are joint work. Present those ideas as shared ("as RSJ and I argued", "we wrote"), never as yours alone.
 - If no passage shows what {faculty.name.split()[0]} thinks on this question, say "I haven't written about this directly" and reason from the course material instead. Never invent opinions, anecdotes or quotes."""
 
 
@@ -104,6 +105,6 @@ def number_passages(passages: list[dict[str, Any]], faculty: Faculty | None = No
         where = p["title"] + (f", p. {p['page']}" if p.get("page") else "")
         by = ""
         if faculty and p.get("kb") == faculty.kb:
-            by = f" [by {faculty.name}]"
+            by = f" [{p['byline']}]" if p.get("byline") else f" [by {faculty.name}]"
         out.append(f"[{i}] {where}{by}\n{p['text'].strip()}")
     return "\n\n".join(out)

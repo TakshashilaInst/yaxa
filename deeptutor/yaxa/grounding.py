@@ -155,6 +155,7 @@ async def retrieve(kb: str, query: str, top_k: int, *, corpus: str = "") -> list
             "title": info.title or title,
             "unit": unit,
             "corpus": info.corpus or corpus or kb,
+            "byline": info.byline,
             "kind": info.kind,
             "url": info.url,
             "page": None,
