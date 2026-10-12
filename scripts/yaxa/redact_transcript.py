@@ -1,6 +1,10 @@
-"""Remove students' voices and names from a webinar transcript before it is indexed.
+"""Remove student names from a webinar transcript before it is indexed.
 
-Takshashila policy: student comments and names never enter Yaxa's libraries.
+Takshashila policy (Pranay, 2026-10-12): student NAMES never enter Yaxa's
+libraries. Student questions and comments stay; they are part of the class.
+
+Default: names only. Optional --lecturer-only also drops every voice but the
+lecturer's (not used by default):
 
 1. Speakers. Whisper doesn't know who spoke, so each transcript segment gets a
    voice fingerprint (SpeechBrain ECAPA). The lecturer is the dominant voice:
@@ -14,7 +18,7 @@ Takshashila policy: student comments and names never enter Yaxa's libraries.
     uv run --no-project --with speechbrain --with torchaudio --with soundfile \\
       --with scikit-learn --with spacy --with <en_core_web_sm wheel> \\
       python scripts/yaxa/redact_transcript.py known-names <dir>... --out names.json
-    ... python scripts/yaxa/redact_transcript.py redact segments.json audio.flac header.md out.md \\
+    ... python scripts/yaxa/redact_transcript.py redact segments.json header.md out.md \\
       --names names.json --keep "Anupam Manur"
 """
 
@@ -159,9 +163,15 @@ def redact_names(text: str, nlp, public: set[str], keep: set[str], single: set[s
     return "".join(out), count
 
 
-def redact(segments_path: Path, audio: Path, header_md: Path, out_md: Path, names: Path, keep: list[str]) -> None:
+def redact(segments_path: Path, audio: Path | None, header_md: Path, out_md: Path, names: Path,
+           keep: list[str], lecturer_only: bool = False) -> None:
     segments = json.loads(segments_path.read_text())
-    mask = lecturer_mask(segments, audio)
+    if lecturer_only:
+        if audio is None:
+            raise SystemExit("--lecturer-only needs --audio")
+        mask = lecturer_mask(segments, audio)
+    else:
+        mask = [True] * len(segments)
 
     kept: list[dict] = []
     gap_start = None
@@ -185,10 +195,9 @@ def redact(segments_path: Path, audio: Path, header_md: Path, out_md: Path, name
             total += n
 
     header = header_md.read_text().split("\n[00:")[0].rstrip()
-    header = header.replace(
-        "- Machine transcript (Whisper).",
-        "- Lecturer's voice only: student comments and names removed. Machine transcript (Whisper).",
-    )
+    note = ("Lecturer's voice only; student names removed." if lecturer_only
+            else "Student names replaced with 'a participant'.")
+    header = header.replace("- Machine transcript (Whisper).", f"- {note} Machine transcript (Whisper).")
     body = [f"[{hms(start)}] {text}\n" for start, text in paragraphs(kept)]
     out_md.write_text(header + "\n\n" + "\n".join(body), encoding="utf-8")
     print(f"  {total} names replaced -> {out_md.name}")
@@ -202,16 +211,17 @@ def main() -> None:
     kn.add_argument("--out", type=Path, required=True)
     rd = sub.add_parser("redact")
     rd.add_argument("segments", type=Path)
-    rd.add_argument("audio", type=Path)
     rd.add_argument("header_md", type=Path)
     rd.add_argument("out_md", type=Path)
     rd.add_argument("--names", type=Path, required=True)
     rd.add_argument("--keep", action="append", default=[], help="extra names to keep (the speaker)")
+    rd.add_argument("--lecturer-only", action="store_true", help="also drop all non-lecturer speech")
+    rd.add_argument("--audio", type=Path, help="16 kHz mono audio (needed for --lecturer-only)")
     args = ap.parse_args()
     if args.cmd == "known-names":
         build_known_names(args.dirs, args.out)
     else:
-        redact(args.segments, args.audio, args.header_md, args.out_md, args.names, args.keep)
+        redact(args.segments, args.audio, args.header_md, args.out_md, args.names, args.keep, args.lecturer_only)
 
 
 if __name__ == "__main__":
