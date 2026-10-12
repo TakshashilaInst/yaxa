@@ -1,0 +1,12 @@
+code: APP-CS
+title: Complexity Science
+kb: APP
+description: Advanced Public Policy specialisation. Seeing policy problems as complex adaptive systems,
+  and the tools for working with them.
+units:
+- id: U01
+  title: Introduction to Complexity Science
+  outcomes: ''
+- id: U02
+  title: Tools in Complexity Science
+  outcomes: ''

@@ -1,0 +1,18 @@
+code: APP-PAF
+title: Policy Analysis and Frameworks
+kb: APP
+description: Advanced Public Policy specialisation. Why markets, governments and societies fail, how change
+  happens, and how policies get implemented.
+units:
+- id: U01
+  title: Market, Government and Societal Failures
+  outcomes: ''
+- id: U02
+  title: Effecting Change
+  outcomes: ''
+- id: U03
+  title: Implementation Frameworks
+  outcomes: ''
+- id: U04
+  title: Reflections on Policy Practice
+  outcomes: ''

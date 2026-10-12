@@ -26,6 +26,7 @@ from .store import yaxa_root
 logger = logging.getLogger(__name__)
 
 _WORD = re.compile(r"[a-z0-9]+")
+_TIMESTAMP = re.compile(r"\[(\d{2}:\d{2}:\d{2})\]")
 _YOUTUBE = re.compile(r"https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[A-Za-z0-9_-]{11}")
 
 
@@ -160,6 +161,8 @@ async def retrieve(kb: str, query: str, top_k: int, *, corpus: str = "") -> list
             "text": text,
             "score": src.get("score"),
             "videos": sorted(set(_YOUTUBE.findall(text)))[:3],
+            # webinar transcripts carry [hh:mm:ss] marks; show where the passage starts
+            "timestamp": (m.group(1) if (m := _TIMESTAMP.search(text)) else None),
         }
         if file_name.lower().endswith(".pdf") and info.kind == "pdf":
             pdf = kb_raw_path(kb, file_name)

@@ -73,6 +73,7 @@ export interface Passage {
   page: number | null;
   text: string;
   videos: string[];
+  timestamp?: string | null; // webinar transcripts: where the passage starts
 }
 
 export interface Citation {

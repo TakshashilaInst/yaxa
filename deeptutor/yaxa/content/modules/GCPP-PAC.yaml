@@ -1,0 +1,24 @@
+code: GCPP-PAC
+title: Policy Analysis and Concepts
+kb: GCPP-PAC
+description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the
+  Constitution, what governments try to do and the paradoxes they face.'
+units:
+- id: U01
+  title: Introduction to Public Policy
+  outcomes: ''
+- id: U02
+  title: Nations, States, and Governments
+  outcomes: ''
+- id: U03
+  title: Democracy, Republic and the Constitution
+  outcomes: ''
+- id: U04
+  title: Goals of the Government
+  outcomes: ''
+- id: U05
+  title: Introduction to Kautilya's Arthashastra
+  outcomes: ''
+- id: U06
+  title: Basics of Strategic Studies
+  outcomes: ''

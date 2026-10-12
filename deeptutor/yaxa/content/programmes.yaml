@@ -4,21 +4,21 @@
 programmes:
   - code: GCPP
     name: Graduate Certificate in Public Policy
-    summary: Twelve weeks, online, for working professionals. Core policy modules, then a specialisation track.
+    summary: Twelve weeks, online, for working professionals. Five weeks of core modules shared by every track, then seven weeks of specialisation.
     tracks:
+      - code: APP
+        name: Advanced Public Policy
+        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        specialisation: [APP-PAF, APP-ER2, APP-CS]
       - code: TP
         name: Technology and Policy
-        core: [GCPP101, GCPP102, GCPP103]
-        specialisation: [GCPP-TP-AI, GCPP-TP-RS, GCPP-TP-IE, GCPP-TP-HTG]
-      - code: PP
-        name: Public Policy
-        core: [GCPP101, GCPP102, GCPP103]
-        specialisation: [GCPP173]
+        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        specialisation: [TP-AI, TP-RS, TP-IE, TP-HTG]
 
   - code: PGP
     name: Postgraduate Programme in Public Policy
-    summary: Takshashila's long-form programme. Module list to be confirmed.
-    modules: [GCPP101, GCPP102, GCPP173]
+    summary: Takshashila's long-form programme. Modules coming soon.
+    modules: []
 
   - code: CAPSULE-PF
     name: "Expert Capsule: Public Finance"
@@ -27,8 +27,7 @@ programmes:
 
 # Display names for modules that don't have a content file yet.
 placeholders:
-  GCPP103: Effective Communication and Media Engagement
-  GCPP-TP-AI: Politics and Policy in the AI Age
-  GCPP-TP-RS: Responsible Strategy
-  GCPP-TP-IE: Information Economics
-  GCPP-TP-HTG: High-Tech Geopolitics
+  TP-AI: Politics and Policy in the AI Age
+  TP-RS: Responsible Strategy
+  TP-IE: Information Economics
+  TP-HTG: High-Tech Geopolitics

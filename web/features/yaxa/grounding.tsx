@@ -183,7 +183,7 @@ function SourceRow({
         <span className="yx-src-n">{label}</span>
         <span className="yx-src-title">
           {src.title}
-          {src.kind === "video" && <span className="yx-badge">VIDEO</span>}
+          {src.kind === "video" && <span className="yx-badge">{src.timestamp ? "WEBINAR" : "VIDEO"}</span>}
           {src.kind === "anecdote" && <span className="yx-badge">ANECDOTE</span>}
         </span>
       </div>
@@ -191,6 +191,7 @@ function SourceRow({
         {src.corpus}
         {src.unit ? ` · ${src.unit}` : ""}
         {src.page ? ` · page ${src.page}` : ""}
+        {src.timestamp ? ` · at ${src.timestamp}` : ""}
         {src.url && src.kind !== "video" && (
           <>
             {" · "}

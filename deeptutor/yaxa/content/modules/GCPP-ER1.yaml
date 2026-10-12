@@ -1,0 +1,24 @@
+code: GCPP-ER1
+title: Economic Reasoning I
+kb: GCPP-ER1
+description: 'Core module, weeks 1-5. Thinking like an economist about public policy: incentives, prices,
+  markets, macroeconomic indicators and trade.'
+units:
+- id: U01
+  title: Introduction to Economic Reasoning
+  outcomes: ''
+- id: U02
+  title: The Price System
+  outcomes: ''
+- id: U03
+  title: Market Dynamics
+  outcomes: ''
+- id: U04
+  title: Introduction to Macroeconomics
+  outcomes: ''
+- id: U05
+  title: Trade
+  outcomes: ''
+- id: U06
+  title: Government Intervention in Markets
+  outcomes: ''

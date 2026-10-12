@@ -1,0 +1,24 @@
+code: APP-ER2
+title: Economic Reasoning II
+kb: APP
+description: Advanced Public Policy specialisation. Government failures and price controls, market failures,
+  currency and the balance of payments, fiscal and monetary policy.
+units:
+- id: U01
+  title: Government Failures and Price Controls
+  outcomes: ''
+- id: U02
+  title: 'Market Failures: Externalities'
+  outcomes: ''
+- id: U03
+  title: 'Market Failures: Public Goods'
+  outcomes: ''
+- id: U04
+  title: 'Market Failures: Information Asymmetry'
+  outcomes: ''
+- id: U05
+  title: Currency and Balance of Payments
+  outcomes: ''
+- id: U06
+  title: Fiscal and Monetary Policy
+  outcomes: ''

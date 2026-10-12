@@ -32,15 +32,17 @@ def test_gcpp_has_tracks_and_pgp_does_not() -> None:
     cat = catalog.get_catalog()
     gcpp, pgp = cat.programme("GCPP"), cat.programme("PGP")
     assert gcpp.tracks and not pgp.tracks
-    tp = gcpp.module_codes("TP")
-    assert tp[:2] == ["GCPP101", "GCPP102"]  # core modules come first
-    assert "GCPP173" not in tp
+    app, tp = gcpp.module_codes("APP"), gcpp.module_codes("TP")
+    core = ["GCPP-PAC", "GCPP-ER1", "GCPP-COMM"]
+    assert app[:3] == core and tp[:3] == core  # every track shares the core weeks
+    assert "APP-ER2" in app and "APP-ER2" not in tp
 
 
 def test_indexed_modules_have_units_and_placeholders_are_unavailable() -> None:
     cat = catalog.get_catalog()
-    assert cat.module("GCPP102").available and len(cat.module("GCPP102").units) == 12
-    assert not cat.module("GCPP-TP-AI").available
+    assert cat.module("GCPP-ER1").available and len(cat.module("GCPP-ER1").units) == 6
+    assert cat.module("APP-ER2").kb == "APP"  # APP modules share one library
+    assert not cat.module("TP-AI").available
 
 
 def test_server_override_wins(tmp_path: Path) -> None:
@@ -83,7 +85,7 @@ def test_conversation_round_trip() -> None:
 # ----------------------------------------------------------------- prompts
 def test_prompt_carries_profile_unit_persona_and_mode() -> None:
     cat = catalog.get_catalog()
-    mod = cat.module("GCPP102")
+    mod = cat.module("GCPP-ER1")
     fac = cat.faculty["pranay-kotasthane"]
     text = prompting.build_system(
         profile={"current_role": "Lecturer at NUS", "field": "AI & education policy"},
