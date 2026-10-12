@@ -372,6 +372,7 @@ class LlamaIndexPipeline:
                 {
                     "title": meta.get("file_name", meta.get("title", f"Document {i + 1}")),
                     "content": node.node.text[:200],
+                    "text": node.node.text,  # yaxa-overlay
                     "source": meta.get("file_path", meta.get("file_name", "")),
                     "page": meta.get("page_label", meta.get("page", "")),
                     "chunk_id": node.node.node_id or str(i),

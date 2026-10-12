@@ -1,0 +1,31 @@
+code: GCPP173
+title: Public Finance and Indian Development Policy
+kb: GCPP173
+description: This course introduces the students to the fundamentals of public finance and Indian Development
+  policy.
+units:
+- id: U01
+  title: Introduction to Public Finance
+  outcomes: 1. The role of the State in development; allocation, distribution and stabilization functions.
+    2. Market failure and government intervention – public finance and public choice.
+- id: U02
+  title: Macroeconomics of Public Finance
+  outcomes: 1. Government Deficits and Debt. 2. Optimal debt and Domar rule. 3. Sustainable deficits and
+    debt. 4. Fiscal Deficit and debt in India.5. Implications for growth and Stabilisation
+- id: U03
+  title: 'Tax Policy and Reforms in India: Taxation and development'
+  outcomes: 1. Features of a good tax system 2. Lessons from theories of taxation; Taxation and redistribution.
+    3. Trends in Indian tax revenue 4. Shortcomings of the Indian tax system and reform proposals 5. Goods
+    and Services Tax for India
+- id: U04
+  title: Public Expenditures Management (Allocative and Technical Efficiency)
+  outcomes: 1. Trends in size and composition of Public expenditures. 2. Trends in development expenditures.
+- id: U05
+  title: Fiscal Decentralisation and Federalism
+  outcomes: 2. Lessons from the first and second generation theories of federalism. 2. Federalism and
+    decentralisation. 3. Rationale for intergovernmental transfers. 4. Fiscal federalism and intergovernmental
+    transfers in India. 5. Finance Commissions
+- id: U06
+  title: Local Finance in India
+  outcomes: 1. Decentralisation to urban and rural local governments. 2. Lessons from fiscal federalism
+    theory. 3. Issues in Panchayat finances4. Urban governance and finance in India

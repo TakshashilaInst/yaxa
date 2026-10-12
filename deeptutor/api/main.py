@@ -737,6 +737,10 @@ app.include_router(
 )
 app.include_router(personas.router, prefix="/api", tags=["personas"], dependencies=_auth)
 app.include_router(plugins.router, prefix="/api/plugins", tags=["plugins"])
+# yaxa-overlay: api
+from deeptutor.yaxa.api import router as yaxa_router  # noqa: E402
+
+app.include_router(yaxa_router, prefix="/api/yaxa", tags=["yaxa"], dependencies=[Depends(require_auth)])
 app.include_router(tools_router.router, prefix="/api/tools", tags=["tools"], dependencies=_auth)
 app.include_router(system.router, prefix="/api/system", tags=["system"], dependencies=_auth)
 app.include_router(voice.router, prefix="/api/voice", tags=["voice"], dependencies=_auth)

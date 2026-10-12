@@ -1,0 +1,15 @@
+# Yaxa Learn runtime settings. A copy at <data>/yaxa/content/config.yaml overrides this file.
+
+# shared   = every student uses one admin model (demo).
+# per_user = each student uses their own ChatGPT/Codex sign-in (real deployment; not built yet).
+model_mode: shared
+
+# Shared model: the admin LLM profile + model to use. Leave profile_id empty to use the first
+# admin (non-owner-bound) profile that offers `model`.
+shared_model:
+  profile_id: ""
+  model: claude-sonnet-5-5
+
+retrieval_top_k: 8          # passages retrieved from each knowledge base per question
+daily_turn_limit: 150       # per student per day; protects the shared key
+allow_self_enrol: true     # demo only: students pick their own programme at onboarding

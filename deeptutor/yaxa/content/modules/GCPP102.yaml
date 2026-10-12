@@ -1,0 +1,101 @@
+code: GCPP102
+title: Economic Reasoning and Public Policy
+kb: GCPP102
+description: This module concerns the application of economic reasoning to the design, implementation
+  and outcome evaluation of public policies in India. The module will first provide an overview of analytical
+  insights and international experiences on factors contributing to sustained high long-term economic
+  growth. It will then introduce the basic concepts of demand and supply, and how these can be used to
+  analyse such policies as price controls, minimum wage, import and export duties, subsidies and others.
+  The key point which would be emphasised is the need to maintain a reasonable balance between demand
+  and supply in a dynamic context. The module will then discuss the primary socio-economic function of
+  public sector enterprises and organisations involved in providing basic amenities and services, su
+units:
+- id: U01
+  title: What makes Countries Grow? Why Nations Falter? Implications for Public Policies in India
+  outcomes: Be able to identify key growth drivers of the economy. To gain an appreciation of the role
+    of ideas and institutions in economic progress and economic failure. Understand the meaning of economy
+    and knowledge management. Gain an understanding to countries that have experienced high growth over
+    a period of time. Understand relevance of growth diagnostics instead of growth theory.
+- id: U02
+  title: Introduction to Economics as a Discipline
+  outcomes: 'What are the three questions which each economy must answer? What are the three broad mechanisms
+    which are available to answer them? Distinguish between microeconomics and macroeconomics; and between
+    positive and normative statements. What are the two main definitions of economics as a discipline?
+    What aspects does each question emphasize? How can rational behavior be defined? Is an enlightened
+    self-interest consistent with rational behavior? What the significance of the concept of ‘invisible
+    hand’ is as explained by Adam Smith in his book “The Wealth of Nations” Published in 1776? Understand '
+- id: U03
+  title: 'The Theory of Demand and Supply: An Introduction'
+  outcomes: In technical terms, how are public goods, private goods defined? What is theory of Demand
+    and why does normally demand curve slow downward? What is theory of supply and why does supply curve
+    slope occur? When does market equilibrium occur; and what is the reasoning which will push the price
+    towards equilibrium? What is meant by elasticity of demand? What factors impact on price elasticity
+    of demand? What is the significance of public policy for price elasticity of demand, and of income
+    elasticity of demand? How is income elasticity of demand related to the share and composition of food
+    expendi
+- id: U04
+  title: Selected Applications of Theory of Demand and Supply
+  outcomes: Implications of setting a minimum wage for employment guarantee scheme, which is also indexed
+    to the consumer price index, when other minimum wages are not indexed Differentiate between hard and
+    soft rent controls. Initiatives would you suggest to current rent controls towards softer version
+    Significance of the concept of consumer surplus and producer surplus for public policies Factors that
+    determine the economic burden of taxes between producers and consumers. The difference between tariff
+    and quota as a method to regulate imports and the basis for preferring one over the other. Definition
+    o
+- id: U05
+  title: Economic of Grants and Subsidies
+  outcomes: 'The main difference between a cash subsidy and a subsidy, which reduces the relative price
+    of a good, service or an asset Justification for unconditional cash subsidy (or grant) and subsidies
+    reducing relative price, from the public policy perspective How would you explain the behavior of
+    the households when in spite of a good (grains from public distribution system), or a service (such
+    as education and health services) being available at prices substantially below cost, a household
+    may prefer to forgo the subsidy and spend from the house hold budget. An example would be free municipal
+    school '
+- id: U06
+  title: Economic Concepts for Public Policies (I)
+  outcomes: 'Key Economic Concepts Transaction Costs Opportunity Costs Cost, Value, Price: The Three Pillars
+    of Profit Learning Curve Economic Value Added Economies of Scale and Scope Network externalities'
+- id: U07
+  title: Economic Concepts for Public Policies (II)
+  outcomes: Principal-Agent Issues Moral Hazard Economic Role of Insurance Asymmetric Information Adverse
+    Selection
+- id: U08
+  title: Introduction to Public Financial Management
+  outcomes: The five main component of Public Finance Management The concepts of spending less, spending
+    well, spending wisely and its application on a city budget (example for repairing roads, and for solid
+    waste management)? the concept of getting “the basics right” The general avenues for broadening the
+    tax based of income tax, and the sales tax Requirements for obtaining revenue from auctions ( example
+    coal blocks auctioning, or auctioning space to various businesses at railway station, bus stations
+    and airports)
+- id: U09
+  title: 'Government Accounting Methods and Budgeting Systems: An Introduction'
+  outcomes: Understand the basic principles of budgeting. Appreciate the significance of budgeting as
+    a tool of control and management. Understand the difference between cash and accrual budgeting and
+    their characteristics. Familiarise with result based monitoring and evaluation (M&E) systems. Get
+    acquainted with recent performance management initiatives in India.
+- id: U10
+  title: Public Sector Enterprises – Their Primary Socio-Economic Function & Reforms
+  outcomes: 'Learning Outcomes: What is the main rational for setting up public sector enterprises? Can
+    this rationale change over-time? If public sector enterprises are not effective in performing their
+    responsibilities, what would that imply for the market power of the private sector? Who do the performing
+    public sector enterprises, most with high degree of monopoly power benefit? Is ownership the main
+    factor in enterprise performance? What are non-ownership factors which are relevant for enterprise
+    performance? How does divestment with control differ from change of both ownership and control of
+    public e'
+- id: U11
+  title: Preparing for India’s Ageing Society
+  outcomes: Review Demographic trends globally and in India, portending rapid ageing. Differentiate between
+    defined contribution and defined benefit methods in pension schemes advantages and disadvantages.
+    Why is a multi-pillar system of managing risks in old age (identify longevity, inflation, and survivors
+    risks) desirable? How can India construct sustainable and fair social protection system which substantially
+    expanding coverage? Understand main issues in Accumulation and pay-out phases of India’s EPF scheme
+    administered by the EPFO, and the pension system administered by the PFRDA.
+- id: U12
+  title: Managing Urbanization
+  outcomes: What are the emerging urbanization trends in India? Understand the challenges arising from
+    rapid urbanization for providing urban amenities. Understand the feasible mix of funding including
+    to government funding, for investing in urban infrastructure .This understanding should include the
+    requirements for obtaining such a mix of financing. Role of markets in urban management. Understand
+    the likely positive and adverse consequences arising from rapid urbanization. Approach to developing
+    100 smart cities by the PM Modi-led government. In India, what is the context in which the term PURA
+    (Provisi
