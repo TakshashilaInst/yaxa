@@ -288,6 +288,11 @@ function ChatScreen() {
                   ))}
                 </select>
                 {module && <span className="yx-tag">{module.code}{unit ? ` · ${unit.id.replace("U", "U.")}` : ""}</span>}
+                {module && (
+                  <a className="yx-tag" href={`/learn/practice?${new URLSearchParams({ module: module.code, ...(unitId ? { unit: unitId } : {}) })}`} title="Test yourself on this unit">
+                    Practise this →
+                  </a>
+                )}
               </div>
               <form
                 onSubmit={(e) => {

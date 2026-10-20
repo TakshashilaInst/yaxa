@@ -189,3 +189,60 @@
   .yx-header { padding: 8px 12px; }
   .yx-header-center { justify-content: flex-start; }
 }
+
+/* --------------------------------------------------- module actions */
+.yx-module-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.yx-header-title { font-family: var(--font-serif), Georgia, serif; font-size: 16px; opacity: .9; }
+
+/* ---------------------------------------------------------- practice */
+.yx-practice-units button { display: flex; align-items: center; gap: 8px; }
+.yx-practice-units .yx-unit-current { border-color: var(--yx-saffron); background: var(--yx-saffron-soft); }
+.yx-status { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.yx-status-new { color: var(--yx-muted); background: #f1ece2; }
+.yx-status-practising { color: #8a5a00; background: var(--yx-saffron-soft); }
+.yx-status-mastered { color: #fff; background: #2e7d4f; }
+.yx-scores { display: inline-flex; gap: 3px; vertical-align: middle; }
+.yx-score-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #c9b99c; background: transparent; }
+.yx-score-1 { background: #f6d48a; border-color: #e3b34d; }
+.yx-score-2 { background: var(--yx-saffron); border-color: var(--yx-saffron); }
+.yx-score-3 { background: #2e7d4f; border-color: #2e7d4f; }
+.yx-practice-card { display: grid; gap: 12px; }
+.yx-practice-q { font-family: var(--font-serif), Georgia, serif; font-size: 19px; color: var(--yx-maroon); margin: 0; line-height: 1.4; }
+.yx-practice-answer { width: 100%; border: 1px solid var(--yx-line); border-radius: 10px; padding: 10px 12px; font: inherit; background: var(--yx-surface-2); color: var(--yx-ink); resize: vertical; }
+.yx-practice-answer:focus { outline: 2px solid var(--yx-saffron); outline-offset: 1px; }
+.yx-your-answer { background: var(--yx-surface-2); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+.yx-your-answer p { margin: 4px 0 0; white-space: pre-wrap; }
+.yx-verdict { font-family: var(--font-serif), Georgia, serif; font-size: 20px; font-weight: 600; }
+.yx-verdict span { font-family: var(--font-sans), system-ui, sans-serif; font-size: 13px; color: var(--yx-muted); font-weight: 400; }
+.yx-verdict-0 { color: var(--yx-danger); }
+.yx-verdict-1 { color: #a35f00; }
+.yx-verdict-2 { color: #8a5a00; }
+.yx-verdict-3 { color: #2e7d4f; }
+.yx-marking summary { cursor: pointer; color: var(--yx-maroon); font-weight: 600; font-size: 14px; }
+.yx-marking ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; }
+
+/* ------------------------------------------------------------- panel */
+.yx-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--yx-line); border-radius: 999px; padding: 3px 12px; font-size: 13px; color: var(--yx-maroon); background: var(--yx-surface); cursor: pointer; }
+.yx-chip input { accent-color: var(--yx-maroon); margin: 0; }
+.yx-chip-on { border-color: var(--yx-saffron); background: var(--yx-saffron-soft); }
+.yx-panel-turn .yx-msg-who .yx-tag { margin-left: 6px; }
+.yx-panel-response .yx-bubble { border-left: 3px solid var(--yx-saffron); }
+.yx-panel-summary .yx-bubble { background: var(--yx-saffron-soft); }
+
+/* ------------------------------------------------------ cohort brief */
+.yx-stats { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.yx-stat { display: grid; gap: 2px; }
+.yx-stat b { font-family: var(--font-serif), Georgia, serif; font-size: 30px; color: var(--yx-maroon); line-height: 1.1; }
+.yx-stat span { color: var(--yx-muted); font-size: 13px; }
+.yx-brief { margin-top: 20px; }
+.yx-brief h2 { font-size: 18px; margin: 18px 0 6px; }
+.yx-brief h2:first-child { margin-top: 0; }
+.yx-table { width: 100%; border-collapse: collapse; background: var(--yx-surface); border: 1px solid var(--yx-line); border-radius: 12px; overflow: hidden; font-size: 14px; }
+.yx-table th, .yx-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--yx-line); }
+.yx-table th { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--yx-muted); background: var(--yx-surface-2); }
+.yx-table .yx-unit-id { color: #c07a10; font-weight: 700; font-size: 12px; margin-right: 4px; }
+.yx-gaps { padding-left: 20px; }
+.yx-gaps li { margin: 4px 0; }
+@media (max-width: 640px) {
+  .yx-table th:nth-child(3), .yx-table td:nth-child(3) { display: none; }
+}

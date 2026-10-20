@@ -88,10 +88,12 @@ export interface Turn {
   faculty: string | null;
   sources: Passage[];
   citations: Citation[];
+  phase?: "opening" | "response" | "summary" | null;
 }
 
 export interface Conversation {
   id: string;
+  kind: "chat" | "panel";
   module: string | null;
   unit: string | null;
   title: string;
@@ -100,10 +102,60 @@ export interface Conversation {
 
 export interface ConversationSummary {
   id: string;
+  kind: "chat" | "panel";
   title: string;
   module: string | null;
   unit: string | null;
   updated_at: string;
+}
+
+// ---------------------------------------------------------------- practice
+export type UnitStatus = "new" | "practising" | "mastered";
+
+export interface UnitProgress {
+  id: string;
+  title: string;
+  answered: number;
+  last_scores: number[];
+  status: UnitStatus;
+}
+
+export interface PracticeProgress {
+  module: string;
+  title: string;
+  units: UnitProgress[];
+  recent: { id: string; unit: string | null; question: string; score: number; verdict: string }[];
+}
+
+export interface PracticeQuestion {
+  item_id: string;
+  unit: string | null;
+  unit_title: string;
+  question: string;
+}
+
+export interface PracticeResult {
+  item_id: string;
+  score: number;
+  verdict: string;
+  feedback: string;
+  missing: string[];
+  marking_points: string[];
+  citations: Citation[];
+  sources: Passage[];
+  unit: UnitProgress | null;
+}
+
+// ------------------------------------------------------------ cohort brief
+export interface CohortBrief {
+  module: string;
+  title: string;
+  days: number;
+  stats: { students: number; questions: number; socratic: number; with_faculty_persona: number; unsupported: number; practice_attempts: number };
+  units: { id: string; title: string; questions: number; practice_attempts: number; practice_avg: number | null }[];
+  gaps: string[];
+  summary: string;
+  summary_error: string | null;
 }
 
 export interface DemoStudent {
@@ -155,6 +207,14 @@ export const yaxa = {
     if (conversationId) q.set("conversation_id", conversationId);
     return json<string[]>(`/socratic/topics?${q}`);
   },
+  practiceProgress: (module: string) => json<PracticeProgress>(`/practice/progress?module=${encodeURIComponent(module)}`),
+  practiceQuestion: (module: string, unit?: string | null) =>
+    json<PracticeQuestion>("/practice/question", send("POST", { module, unit: unit || null })),
+  practiceAnswer: (itemId: string, answer: string) =>
+    json<PracticeResult>("/practice/answer", send("POST", { item_id: itemId, answer })),
+  cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
+  cohortBrief: (module: string, days: number, refresh = false) =>
+    json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),
   demoStudents: () => json<DemoStudent[]>("/demo/students"),
   demoEnter: (userId: string) => json<{ ok: boolean }>(`/demo/enter/${encodeURIComponent(userId)}`, send("POST")),
   demoExit: () => json<{ ok: boolean }>("/demo/exit", send("POST")),
@@ -250,5 +310,97 @@ export async function streamChat(req: ChatRequest, h: ChatHandlers, signal?: Abo
     }
   } catch {
     if (!signal?.aborted) h.onError?.("Connection lost mid-answer.");
+  }
+}
+
+// ----------------------------------------------------------- panel stream
+export interface PanelRequest {
+  question: string;
+  module?: string | null;
+  faculty: string[];
+}
+
+export interface PanelSpeaker {
+  speaker: string; // faculty slug, or "moderator"
+  name: string;
+  label: string;
+  phase: "opening" | "response" | "summary";
+}
+
+export interface PanelHandlers {
+  onMeta?: (meta: { conversation_id: string; panel: { slug: string; name: string; label: string }[] }) => void;
+  onSources?: (sources: Passage[]) => void;
+  onTurnStart?: (speaker: PanelSpeaker) => void;
+  onDelta?: (text: string) => void;
+  onTurnEnd?: (end: { speaker: string; phase: string; citations: Citation[] }) => void;
+  onDone?: (done: { conversation_id: string }) => void;
+  onError?: (message: string) => void;
+}
+
+/** POST /api/yaxa/panel and dispatch its server-sent events. */
+export async function streamPanel(req: PanelRequest, h: PanelHandlers, signal?: AbortSignal): Promise<void> {
+  await streamEvents("/api/yaxa/panel", req, h.onError, signal, (event, payload) => {
+    if (event === "meta") h.onMeta?.(payload as never);
+    else if (event === "sources") h.onSources?.(payload as never);
+    else if (event === "turn_start") h.onTurnStart?.(payload as never);
+    else if (event === "delta") h.onDelta?.(payload as never);
+    else if (event === "turn_end") h.onTurnEnd?.(payload as never);
+    else if (event === "done") h.onDone?.(payload as never);
+    else if (event === "error") h.onError?.(payload as never);
+  });
+}
+
+/** Shared SSE reader: POST `body`, then call `dispatch` once per event. */
+async function streamEvents(
+  path: string,
+  body: unknown,
+  onError: ((message: string) => void) | undefined,
+  signal: AbortSignal | undefined,
+  dispatch: (event: string, payload: unknown) => void,
+): Promise<void> {
+  let res: Response;
+  try {
+    res = await apiFetch(apiUrl(path), { ...send("POST", body), signal });
+  } catch {
+    onError?.("Yaxa is unreachable right now.");
+    return;
+  }
+  if (!res.ok || !res.body) {
+    let detail = res.status === 401 ? "Your session expired. Refresh and log in again." : "Yaxa is unreachable right now.";
+    try {
+      const err = await res.json();
+      if (typeof err?.detail === "string") detail = err.detail;
+    } catch {
+      /* keep default */
+    }
+    onError?.(detail);
+    return;
+  }
+  const handle = (block: string) => {
+    let event = "message";
+    const data: string[] = [];
+    for (const line of block.split("\n")) {
+      if (line.startsWith("event: ")) event = line.slice(7).trim();
+      else if (line.startsWith("data: ")) data.push(line.slice(6));
+    }
+    if (data.length) dispatch(event, JSON.parse(data.join("\n")));
+  };
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      let cut: number;
+      while ((cut = buf.indexOf("\n\n")) !== -1) {
+        const block = buf.slice(0, cut);
+        buf = buf.slice(cut + 2);
+        if (block.trim()) handle(block);
+      }
+    }
+  } catch {
+    if (!signal?.aborted) onError?.("Connection lost mid-answer.");
   }
 }

@@ -39,9 +39,15 @@ function ModuleCard({ m }: { m: ModuleView }) {
           </li>
         ))}
       </ul>
-      <div>
+      <div className="yx-module-actions">
         <Link className="yx-btn yx-btn-primary yx-btn-sm" href={chatHref(m.code)}>
           Ask about this module →
+        </Link>
+        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/practice?module=${encodeURIComponent(m.code)}`} title="Yaxa asks, you answer, it marks">
+          Practise
+        </Link>
+        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/panel?module=${encodeURIComponent(m.code)}`} title="Put a question to a faculty panel">
+          Faculty panel
         </Link>
       </div>
     </div>
@@ -131,8 +137,8 @@ export default function LearnHome() {
             <h2 style={{ fontSize: 20 }}>Your conversations</h2>
             <div className="yx-grid">
               {recent.slice(0, 9).map((c) => (
-                <Link key={c.id} href={`/learn/chat/${c.id}`} className="yx-card" style={{ textDecoration: "none" }}>
-                  <div className="yx-eyebrow">{c.module}{c.unit ? ` · ${c.unit}` : ""}</div>
+                <Link key={c.id} href={c.kind === "panel" ? `/learn/panel?id=${c.id}` : `/learn/chat/${c.id}`} className="yx-card" style={{ textDecoration: "none" }}>
+                  <div className="yx-eyebrow">{c.kind === "panel" ? "Faculty panel" : ""}{c.kind === "panel" && c.module ? " · " : ""}{c.module}{c.unit ? ` · ${c.unit}` : ""}</div>
                   <div style={{ color: "var(--yx-maroon)", fontWeight: 600 }}>{c.title}</div>
                 </Link>
               ))}

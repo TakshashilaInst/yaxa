@@ -145,12 +145,14 @@ class Turn(BaseModel):
     faculty: str | None = None
     sources: list[dict[str, Any]] = Field(default_factory=list)
     citations: list[dict[str, Any]] = Field(default_factory=list)
+    phase: str | None = None  # faculty panel: opening | response | summary
     at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 class Conversation(BaseModel):
     id: str = Field(default_factory=lambda: uuid.uuid4().hex[:16])
     user_id: str
+    kind: str = "chat"  # chat | panel
     module: str | None = None
     unit: str | None = None
     title: str = ""
@@ -184,6 +186,7 @@ def list_conversations(user_id: str) -> list[dict[str, Any]]:
         items.append(
             {
                 "id": c.get("id"),
+                "kind": c.get("kind") or "chat",
                 "title": c.get("title") or "Untitled",
                 "module": c.get("module"),
                 "unit": c.get("unit"),
@@ -191,3 +194,61 @@ def list_conversations(user_id: str) -> list[dict[str, Any]]:
             }
         )
     return sorted(items, key=lambda c: c["updated_at"] or "", reverse=True)
+
+
+def all_conversations() -> list[Conversation]:
+    """Every user's conversations (for the faculty cohort brief)."""
+    root = yaxa_root() / "conversations"
+    if not root.is_dir():
+        return []
+    out = []
+    for p in sorted(root.glob("*/*.json")):
+        data = _read_json(p)
+        if data:
+            out.append(Conversation(**data))
+    return out
+
+
+# -------------------------------------------------------------------- practice
+class PracticeItem(BaseModel):
+    """One practice question, the hidden marking points, and the student's attempt."""
+
+    id: str = Field(default_factory=lambda: uuid.uuid4().hex[:16])
+    user_id: str
+    module: str
+    unit: str | None = None
+    question: str
+    rubric: list[str] = Field(default_factory=list)  # never sent to the student before they answer
+    sources: list[dict[str, Any]] = Field(default_factory=list)
+    answer: str = ""
+    score: int | None = None  # 0 not yet, 1 partly, 2 mostly, 3 got it
+    feedback: str = ""
+    missing: list[str] = Field(default_factory=list)
+    citations: list[dict[str, Any]] = Field(default_factory=list)
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    answered_at: str = ""
+
+
+def _practice_path(user_id: str, item_id: str) -> Path:
+    return yaxa_root() / "practice" / _safe(user_id) / f"{_safe(item_id)}.json"
+
+
+def save_practice(item: PracticeItem) -> None:
+    _write_json(_practice_path(item.user_id, item.id), item.model_dump())
+
+
+def load_practice(user_id: str, item_id: str) -> PracticeItem | None:
+    data = _read_json(_practice_path(user_id, item_id))
+    return PracticeItem(**data) if data else None
+
+
+def list_practice(user_id: str | None = None, module: str | None = None) -> list[PracticeItem]:
+    """Practice items, oldest first; one user's, or everyone's when user_id is None."""
+    root = yaxa_root() / "practice"
+    pattern = f"{_safe(user_id)}/*.json" if user_id else "*/*.json"
+    if not root.is_dir():
+        return []
+    items = [PracticeItem(**d) for p in root.glob(pattern) if (d := _read_json(p))]
+    if module:
+        items = [i for i in items if i.module == module]
+    return sorted(items, key=lambda i: i.created_at)
