@@ -37,6 +37,8 @@ FACULTY = {"Nitin Pai", "Pranay Kotasthane", "Anupam Manur", "Sarthak Pradhan", 
            "Ashish Kulkarni", "Manoj Kewalramani", "Suman Joshi", "Shambhavi Naik", "Aditya Ramanathan",
            "Mihir Mahajan", "Bharath Reddy", "Anwesha Sen", "Lokendra Sharma", "Ganesh", "Vanshika",
            "Aishwaria", "Kautilya", "Chanakya"}
+# Takshashila's own vocabulary ("Samaj, Sarkar, Bazaar") that the tagger reads as names.
+CONCEPTS = {"Samaj", "Sarkar", "Bazaar", "Swachh", "Bharat", "Atmanirbhar", "Kirana"}
 
 sys.path.insert(0, str(Path(__file__).parent))
 from transcribe import hms, paragraphs  # noqa: E402  (same paragraphing as the raw transcript)
@@ -105,8 +107,8 @@ def build_known_names(dirs: list[Path], out: Path) -> None:
 def lecturer_mask(segments: list[dict], audio: Path) -> list[bool]:
     import numpy as np
     import soundfile as sf
-    import torch
     from speechbrain.inference.speaker import EncoderClassifier
+    import torch
 
     wav, sr = sf.read(str(audio), dtype="float32")
     enc = EncoderClassifier.from_hparams(
@@ -155,12 +157,12 @@ def lecturer_mask(segments: list[dict], audio: Path) -> list[bool]:
 
 
 # -------------------------------------------------------------------- names
-def redact_names(text: str, nlp, public: set[str], keep: set[str], single: set[str] = frozenset(),
-                 other: set[str] = frozenset(), words: set[str] = frozenset()) -> tuple[str, int]:
+def redact_names(text: str, nlp, public: set[str], keep: set[str], single: frozenset[str] | set[str] = frozenset(),
+                 other: frozenset[str] | set[str] = frozenset(), words: frozenset[str] | set[str] = frozenset()) -> tuple[str, int]:
     # one-word names that are public: surnames of public full names ("Keynes"), and
     # one-word names the corpus itself uses ("Nixon")
     public_last = {n.split()[-1] for n in public} | set(single)
-    allowed_tokens = {t for n in keep | FACULTY for t in n.split()}
+    allowed_tokens = {t for n in keep | FACULTY for t in n.split()} | CONCEPTS
     doc = nlp(text)
     out, last, count = [], 0, 0
     for ent in doc.ents:
@@ -229,6 +231,60 @@ def redact(segments_path: Path, audio: Path | None, header_md: Path, out_md: Pat
     print(f"  {total} names replaced -> {out_md.name}")
 
 
+# ------------------------------------------------------------------- sweep
+# The tagger catches a name in one sentence and misses it in the next ("Ravi
+# asked..." vs "thanks Ravi"). So after redacting, every name redacted in ANY
+# transcript is removed from ALL transcripts, wherever it appears.
+NOT_NAMES = {"Samaj", "Samad", "Sahel", "Vijayanagara", "Karnatka", "Rameshwaram", "Cafe", "Logos",
+             "Oped", "Swatch", "Bharat", "Tilley", "Ostrom", "Eleanor", "Charles", "Nah"}
+
+
+def removed_names(raw: str, red: str) -> set[str]:
+    """Words of the raw transcript that redaction replaced with 'a participant'."""
+    import difflib
+
+    a, b = re.findall(r"\S+", raw), re.findall(r"\S+", red)
+    out: set[str] = set()
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
+        if op == "replace" and "participant" in " ".join(b[j1:j2]):
+            out.update(re.sub(r"[^\w]", "", w) for w in a[i1:i2])
+    return out
+
+
+def sweep(raw_dir: Path, red_dir: Path, names: Path, extra: Path | None = None) -> None:
+    known = json.loads(names.read_text())
+    public = set(known["single"]) | {t for n in known["full"] for t in n.split()} | set(known.get("other", []))
+    keep = public | {t for n in FACULTY for t in n.split()} | NOT_NAMES | CONCEPTS
+    full = set(known["full"])
+    words = _dictionary()
+    pairs = [(raw_dir / r.name, r) for r in sorted(red_dir.glob("*.md")) if (raw_dir / r.name).exists()]
+    found: set[str] = set()
+    for raw, red in pairs:
+        found |= removed_names(raw.read_text(), red.read_text())
+    targets = sorted(
+        w for w in found
+        if len(w) >= 3 and w[:1].isupper() and not w.isupper() and w not in keep and w.lower() not in words
+    )
+    if extra:  # names a human reviewer spotted that the tagger never caught (kept out of git)
+        targets = sorted(set(targets) | set(extra.read_text().split()))
+    print(f"{len(targets)} student names to remove everywhere")
+    pattern = re.compile(r"\b(" + "|".join(map(re.escape, targets)) + r")(['’]s)?\b", re.IGNORECASE)
+    for _, red in pairs:
+        text = red.read_text()
+        head, sep, body = text.partition("\n\n[")  # leave the header (title, speaker, links) alone
+        def repl(m: re.Match) -> str:
+            nxt = re.match(r"\s+([A-Z]\w+)", body[m.end():])
+            prv = re.search(r"([A-Z]\w+)\s+$", body[:m.start()])
+            if (nxt and f"{m.group(1)} {nxt.group(1)}" in full) or (prv and f"{prv.group(1)} {m.group(1)}" in full):
+                return m.group(0)  # part of a public figure's full name
+            return "a participant"
+
+        new_body, n = pattern.subn(repl, body)
+        if n:
+            red.write_text(head + sep + new_body, encoding="utf-8")
+        print(f"  {n:3} more removed -> {red.name}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -243,9 +299,16 @@ def main() -> None:
     rd.add_argument("--keep", action="append", default=[], help="extra names to keep (the speaker)")
     rd.add_argument("--lecturer-only", action="store_true", help="also drop all non-lecturer speech")
     rd.add_argument("--audio", type=Path, help="16 kHz mono audio (needed for --lecturer-only)")
+    sw = sub.add_parser("sweep", help="remove every name redacted anywhere from all transcripts")
+    sw.add_argument("raw_dir", type=Path)
+    sw.add_argument("red_dir", type=Path)
+    sw.add_argument("--names", type=Path, required=True)
+    sw.add_argument("--extra", type=Path, help="whitespace-separated extra student names to remove")
     args = ap.parse_args()
     if args.cmd == "known-names":
         build_known_names(args.dirs, args.out)
+    elif args.cmd == "sweep":
+        sweep(args.raw_dir, args.red_dir, args.names, args.extra)
     else:
         redact(args.segments, args.audio, args.header_md, args.out_md, args.names, args.keep, args.lecturer_only)
 
