@@ -1,0 +1,17 @@
+code: TP-HTG
+title: High-Tech Geopolitics
+kb: TP
+description: Technology and Policy specialisation. The relationship between technology and national power, and developments
+  in key sectors.
+units:
+- id: U01
+  title: Technology and National Power
+  outcomes: How technological change shifts national power and international relations; innovation and creative
+    insecurity.
+- id: U02
+  title: State of India's Tech Ecosystem
+  outcomes: India's innovation system, its strengths and gaps, and why it has not produced global tech champions.
+- id: U03
+  title: Case Studies in High-Tech Geopolitics
+  outcomes: Internet governance, cybersecurity, space and satellite internet, supply-chain security and strategic
+    technologies.

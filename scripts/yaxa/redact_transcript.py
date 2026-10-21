@@ -36,7 +36,11 @@ OMIT_NOTE = "[participant discussion omitted]"
 FACULTY = {"Nitin Pai", "Pranay Kotasthane", "Anupam Manur", "Sarthak Pradhan", "Ameya Naik",
            "Ashish Kulkarni", "Manoj Kewalramani", "Suman Joshi", "Shambhavi Naik", "Aditya Ramanathan",
            "Mihir Mahajan", "Bharath Reddy", "Anwesha Sen", "Lokendra Sharma", "Ganesh", "Vanshika",
-           "Aishwaria", "Kautilya", "Chanakya"}
+           "Aishwaria", "Kautilya", "Chanakya",
+           # Technology and Policy, and Defence and Foreign Affairs lecturers and guest speakers
+           "Prakash Menon", "Kajari Kamal", "Praveen Mehendru", "Vivek Chadha", "Das", "Latha Reddy",
+           "Talmiz Ahmad", "Raghavan", "Shivshankar Menon", "Arindam Goswami", "Shobhankita Reddy",
+           "Ashwin Prasad", "Srividya", "Rohan Seth"}
 # Takshashila's own vocabulary ("Samaj, Sarkar, Bazaar") that the tagger reads as names.
 CONCEPTS = {"Samaj", "Sarkar", "Bazaar", "Swachh", "Bharat", "Atmanirbhar", "Kirana"}
 

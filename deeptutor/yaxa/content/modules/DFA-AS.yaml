@@ -1,0 +1,18 @@
+code: DFA-AS
+title: Introduction to Arthashastra
+kb: DFA
+description: Defence and Foreign Affairs specialisation. Kautilya's treatise on statecraft and its relevance to
+  modern international relations and strategy.
+units:
+- id: U01
+  title: Introduction to Kautilya's Arthashastra
+  outcomes: The text, its author and vocabulary, and reading it beyond popular stereotypes.
+- id: U02
+  title: Concept Cluster I (Saptanga Theory, Rajadharma)
+  outcomes: Anvikshiki, matsya-nyaya, rajadharma and the saptanga theory of the state.
+- id: U03
+  title: Concept Cluster II (Rajamandala, Upayas)
+  outcomes: The rajamandala (circle of kings), the six measures of foreign policy (sadgunya), the upayas and yogakshema.
+- id: U04
+  title: Treaties and Alliances
+  outcomes: Kautilya on treaties and alliances, and their lessons for India's relations with its neighbours.

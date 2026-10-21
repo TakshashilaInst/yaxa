@@ -38,11 +38,13 @@ def test_gcpp_has_tracks_and_pgp_does_not() -> None:
     assert "APP-ER2" in app and "APP-ER2" not in tp
 
 
-def test_indexed_modules_have_units_and_placeholders_are_unavailable() -> None:
+def test_indexed_modules_have_units() -> None:
     cat = catalog.get_catalog()
     assert cat.module("GCPP-ER1").available and len(cat.module("GCPP-ER1").units) == 6
     assert cat.module("APP-ER2").kb == "APP"  # APP modules share one library
-    assert not cat.module("TP-AI").available
+    for code, kb in {"TP-AI": "TP", "TP-HTG": "TP", "DFA-SSIR": "DFA", "DFA-SE": "DFA"}.items():
+        mod = cat.module(code)
+        assert mod.available and mod.kb == kb and mod.units  # track modules share one library each
 
 
 def test_server_override_wins(tmp_path: Path) -> None:

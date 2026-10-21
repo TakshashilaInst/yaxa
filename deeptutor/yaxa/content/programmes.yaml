@@ -14,6 +14,10 @@ programmes:
         name: Technology and Policy
         core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
         specialisation: [TP-AI, TP-RS, TP-IE, TP-HTG]
+      - code: DFA
+        name: Defence and Foreign Affairs
+        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        specialisation: [DFA-SSIR, DFA-AS, DFA-SE]
 
   - code: PGP
     name: Postgraduate Programme in Public Policy
@@ -26,8 +30,4 @@ programmes:
     modules: [GCPP173]
 
 # Display names for modules that don't have a content file yet.
-placeholders:
-  TP-AI: Politics and Policy in the AI Age
-  TP-RS: Responsible Strategy
-  TP-IE: Information Economics
-  TP-HTG: High-Tech Geopolitics
+placeholders: {}

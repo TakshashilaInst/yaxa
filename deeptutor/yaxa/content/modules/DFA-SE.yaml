@@ -1,0 +1,18 @@
+code: DFA-SE
+title: Strategic Economics
+kb: DFA
+description: Defence and Foreign Affairs specialisation. How economic strength underpins military power and statecraft.
+units:
+- id: U01
+  title: Origins and Military Power Dynamics
+  outcomes: Foundations of national power, economic development and military effectiveness, measuring military capability.
+- id: U02
+  title: Instruments of Economic Power I & II
+  outcomes: Geoeconomics, sanctions, weaponised interdependence, foreign aid and lending as instruments of power;
+    economic coercion.
+- id: U03
+  title: Economic-Military Power Dynamics
+  outcomes: How economic and military power reinforce or constrain each other.
+- id: U04
+  title: Currency and Balance of Payments
+  outcomes: Currency, the balance of payments and their strategic implications, including sovereign wealth funds.

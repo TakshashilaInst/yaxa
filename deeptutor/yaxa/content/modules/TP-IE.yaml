@@ -1,0 +1,22 @@
+code: TP-IE
+title: Information Economics
+kb: TP
+description: Technology and Policy specialisation. How information goods differ from conventional goods, and what
+  that means for markets and regulation.
+units:
+- id: U01
+  title: Nature and Pricing of Information Goods
+  outcomes: High fixed and near-zero marginal costs, versioning and pricing of information goods, intangible capital.
+- id: U02
+  title: Switching Costs and Lock-In
+  outcomes: How switching costs create lock-in and shape competition.
+- id: U03
+  title: Network Effects
+  outcomes: Direct, indirect and data network effects, tipping and market concentration.
+- id: U04
+  title: Setting Standards
+  outcomes: Standards competition, coordination and who sets technology standards.
+- id: U05
+  title: Market Power and Regulation
+  outcomes: Platform power, aggregation theory, antitrust and regulating digital platforms; market failures as grounds
+    for intervention.

@@ -1,0 +1,27 @@
+code: DFA-SSIR
+title: Strategic Studies and International Relations
+kb: DFA
+description: Defence and Foreign Affairs specialisation. The role of force, foreign policy, internal security, cyberspace
+  and nuclear policy in geopolitics.
+units:
+- id: U01
+  title: Basics of Strategic Studies
+  outcomes: Core concepts of strategy, game theory and the logic of war and peace.
+- id: U02
+  title: Understanding Geopolitics
+  outcomes: Geography as an aid to statecraft, classical geopolitical thinkers and India's grand strategy.
+- id: U03
+  title: Tools of Statecraft (Force, Diplomacy, Intelligence)
+  outcomes: Use of force, diplomacy and foreign policy, intelligence analysis and technology as tools of statecraft.
+- id: U04
+  title: National Security Challenges
+  outcomes: India's internal security challenges and national security architecture.
+- id: U05
+  title: Strategic Communication
+  outcomes: Strategic communication, the media in foreign policy, information and cognitive warfare.
+- id: U06
+  title: High-Tech Geopolitics
+  outcomes: Cyber power, cyber conflict and technology competition between states.
+- id: U07
+  title: India's Nuclear Doctrine
+  outcomes: India's nuclear doctrine, its operationalisation, and nuclear stability in the subcontinent.

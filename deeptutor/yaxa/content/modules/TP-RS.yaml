@@ -1,0 +1,17 @@
+code: TP-RS
+title: Responsible Strategy
+kb: TP
+description: Technology and Policy specialisation. Anticipating how society reacts to technology and building it
+  responsibly.
+units:
+- id: U01
+  title: Social Impact Analysis and Responsible Strategy
+  outcomes: 'Anticipating second-order and social effects of a technology before deploying it, and complex-systems
+    thinking: feedback loops, stocks and flows.'
+- id: U02
+  title: Ethics in Technology and Policy
+  outcomes: Ethical frameworks for technology choices, and how increasingly capable and integrated systems change
+    political theory.
+- id: U03
+  title: Policy Simulation Exercise
+  outcomes: Applying responsible-strategy tools in a simulated policy decision.
