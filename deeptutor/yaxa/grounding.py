@@ -144,10 +144,12 @@ async def retrieve(kb: str, query: str, top_k: int, *, corpus: str = "") -> list
         if len(text.strip()) < 80:
             continue  # fragments too short to ground anything
         file_name = Path(str(src.get("source") or src.get("title") or "")).name
+        info = source_info(kb, file_name)
+        if info.retired:
+            continue  # removed from the library; DeepTutor can't drop one document from an index
         per_file[file_name] = per_file.get(file_name, 0) + 1
         if per_file[file_name] > MAX_PER_FILE:
             continue
-        info = source_info(kb, file_name)
         title, unit = _title_from_file(file_name)
         passage = {
             "kb": kb,

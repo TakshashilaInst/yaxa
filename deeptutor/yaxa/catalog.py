@@ -112,6 +112,18 @@ class SourceInfo(BaseModel):
     url: str = ""
     corpus: str = ""
     byline: str = ""  # e.g. "co-written by Pranay Kotasthane & RSJ" for joint work
+    retired: bool = False  # taken out of Yaxa (moved to _Retired, deleted or replaced); grounding skips it
+    drive_id: str = ""  # set on files the library sync manages
+    module: str = ""
+    unit: str = ""
+
+
+class LibrarySettings(BaseModel):
+    """The shared-Drive library sync (deeptutor/yaxa/library)."""
+
+    root_folder_id: str = "1lDJWNQMgvf2ccSygdVcyyuLNPCRojut3"  # "0012 Yaxa Library"
+    max_audio_hours_per_sync: float = 20  # Sarvam spend cap per run
+    nightly_hour_ist: int = 2
 
 
 class Settings(BaseModel):
@@ -120,6 +132,7 @@ class Settings(BaseModel):
     retrieval_top_k: int = 8
     daily_turn_limit: int = 150
     allow_self_enrol: bool = True  # demo: students pick their own programme
+    library: LibrarySettings = Field(default_factory=LibrarySettings)
 
 
 class Catalog(BaseModel):
@@ -177,10 +190,28 @@ def get_catalog(*, fresh: bool = False) -> Catalog:
     return _cached()
 
 
+def sources_path(kb: str) -> Path:
+    """The server-side label file for a KB (the one the library sync writes)."""
+    return override_root() / "sources" / f"{kb}.yaml"
+
+
+def _sources_mtime(kb: str) -> int:
+    for root in (override_root(), PACKAGE_CONTENT):
+        path = root / "sources" / f"{kb}.yaml"
+        if path.is_file():
+            return path.stat().st_mtime_ns
+    return 0
+
+
 @lru_cache(maxsize=64)
-def _sources_for(kb: str) -> dict[str, SourceInfo]:
+def _sources_cached(kb: str, mtime: int) -> dict[str, SourceInfo]:
     raw = _read_yaml(f"sources/{kb}.yaml") or {}
     return {name: SourceInfo(**info) for name, info in (raw.get("files") or {}).items()}
+
+
+def _sources_for(kb: str) -> dict[str, SourceInfo]:
+    # keyed on the file's mtime: the library sync rewrites labels from another process
+    return _sources_cached(kb, _sources_mtime(kb))
 
 
 def source_info(kb: str, file_name: str) -> SourceInfo:
