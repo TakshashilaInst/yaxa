@@ -158,6 +158,23 @@ export interface CohortBrief {
   summary_error: string | null;
 }
 
+// ------------------------------------------------------------ library sync
+export interface LibraryStatus {
+  last_run: { started?: string; finished?: string; summary?: Record<string, number>; error?: string } | null;
+  running: boolean;
+  queued: boolean;
+  needs_review: number;
+  libraries: { kb: string; counts: Record<string, number> }[];
+  problems: { drive_id: string; path: string; status: string; error: string }[];
+}
+
+export interface ReviewItem {
+  drive_id: string;
+  path: string;
+  title: string;
+  flags: { name: string; context: string; at: string }[];
+}
+
 export interface DemoStudent {
   user_id: string;
   name: string;
@@ -215,6 +232,11 @@ export const yaxa = {
   cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
   cohortBrief: (module: string, days: number, refresh = false) =>
     json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),
+  library: () => json<LibraryStatus>("/library"),
+  librarySync: () => json<{ queued: boolean }>("/library/sync", send("POST")),
+  libraryReview: () => json<ReviewItem[]>("/library/review"),
+  libraryDecide: (driveId: string, body: { decisions?: Record<string, "keep" | "remove">; reject?: boolean }) =>
+    json<{ status: string }>(`/library/review/${encodeURIComponent(driveId)}`, send("POST", body)),
   demoStudents: () => json<DemoStudent[]>("/demo/students"),
   demoEnter: (userId: string) => json<{ ok: boolean }>(`/demo/enter/${encodeURIComponent(userId)}`, send("POST")),
   demoExit: () => json<{ ok: boolean }>("/demo/exit", send("POST")),

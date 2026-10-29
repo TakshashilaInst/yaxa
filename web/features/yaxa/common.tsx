@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { ClipboardList, LayoutDashboard, LogOut, Users } from "lucide-react";
+import { ClipboardList, LayoutDashboard, Library, LogOut, Users } from "lucide-react";
 
 import { logout } from "@/lib/auth";
 import { yaxa, type Avatar as AvatarSpec, type Me } from "@/lib/yaxa-api";
@@ -85,9 +85,14 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
           </button>
         )}
         {me && (me.is_admin || me.role === "faculty") && !me.in_demo_session && (
-          <Link className="yx-iconbtn" href="/learn/faculty" title="Cohort brief (for faculty)">
-            <ClipboardList size={18} />
-          </Link>
+          <>
+            <Link className="yx-iconbtn" href="/learn/faculty" title="Cohort brief (for faculty)">
+              <ClipboardList size={18} />
+            </Link>
+            <Link className="yx-iconbtn" href="/learn/library" title="Libraries: readings and recordings">
+              <Library size={18} />
+            </Link>
+          </>
         )}
         {me?.is_admin && !me.in_demo_session && (
           <>
