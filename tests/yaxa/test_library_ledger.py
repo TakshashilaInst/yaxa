@@ -118,3 +118,11 @@ def test_indexed_name_avoids_collisions() -> None:
     assert indexed_name(READ, f("a", "CS22 - A.pdf"), set()) == "CS22 - A.pdf"
     assert indexed_name(READ, f("a", "CS22 - A.pdf"), {"CS22 - A.pdf"}) == "CS22 - A (2).pdf"
     assert indexed_name(REC, rec_file, set()) == "Webinar - CS22 - Concept Cluster I - K.md"
+
+
+def test_rejected_recording_stays_rejected_until_the_file_changes(tmp_path: Path) -> None:
+    rej = Entry(drive_id="a", kb="DFA", kind="recording", indexed_as="W.md", md5="m1", status="rejected")
+    same = f("a", "x.mp4", mime="video/mp4")
+    assert diff([same], {"a": REC}, ledger(tmp_path, rej)) == []
+    changed = f("a", "x.mp4", mime="video/mp4", md5="m2")
+    assert kinds(diff([changed], {"a": REC}, ledger(tmp_path, rej))) == [("add", "a")]

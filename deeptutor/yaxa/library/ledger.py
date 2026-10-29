@@ -21,7 +21,7 @@ from typing import Any
 from .drive import DriveFile
 from .layout import Placement
 
-STATUSES = ("new", "processing", "review", "approved", "live", "failed", "skipped", "retired")
+STATUSES = ("new", "processing", "review", "approved", "live", "failed", "skipped", "rejected", "retired")
 
 
 @dataclass
@@ -125,8 +125,12 @@ def diff(files: list[DriveFile], placements: dict[str, Any], ledger: Ledger) -> 
                 extra["vtt_id"] = vtt
         if entry is None or entry.status in ("skipped", "retired"):
             actions.append(Action("add", file=file, placement=where, extra=extra))
-        elif entry.status in ("review",):
+        elif entry.status == "review":
             continue  # waiting for a person on the Libraries page
+        elif entry.status == "rejected":
+            if file.md5 and file.md5 != entry.md5:  # a new upload under the same file: try again
+                actions.append(Action("add", file=file, entry=None, placement=where, extra=extra))
+            continue
         elif entry.status == "approved":
             actions.append(Action("index", file=file, entry=entry, placement=where))
         elif entry.status in ("new", "processing", "failed"):
@@ -139,7 +143,7 @@ def diff(files: list[DriveFile], placements: dict[str, Any], ledger: Ledger) -> 
         elif entry.path != _drive_path(file) or entry.placement != where.__dict__:
             actions.append(Action("relabel", file=file, entry=entry, placement=where))
     for drive_id, entry in ledger.entries.items():
-        if drive_id not in seen and entry.status not in ("retired", "skipped"):
+        if drive_id not in seen and entry.status not in ("retired", "skipped", "rejected"):
             actions.append(Action("retire", entry=entry))
     return actions
 
