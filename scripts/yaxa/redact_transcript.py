@@ -33,78 +33,20 @@ import sys
 LECTURER_SIM = 0.45  # cosine similarity to the lecturer's voice needed to keep a segment
 MIN_EMBED_SECONDS = 1.0
 OMIT_NOTE = "[participant discussion omitted]"
-FACULTY = {"Nitin Pai", "Pranay Kotasthane", "Anupam Manur", "Sarthak Pradhan", "Ameya Naik",
-           "Ashish Kulkarni", "Manoj Kewalramani", "Suman Joshi", "Shambhavi Naik", "Aditya Ramanathan",
-           "Mihir Mahajan", "Bharath Reddy", "Anwesha Sen", "Lokendra Sharma", "Ganesh", "Vanshika",
-           "Aishwaria", "Kautilya", "Chanakya",
-           # Technology and Policy, and Defence and Foreign Affairs lecturers and guest speakers
-           "Prakash Menon", "Kajari Kamal", "Praveen Mehendru", "Vivek Chadha", "Das", "Latha Reddy",
-           "Talmiz Ahmad", "Raghavan", "Shivshankar Menon", "Arindam Goswami", "Shobhankita Reddy",
-           "Ashwin Prasad", "Srividya", "Rohan Seth"}
-# Takshashila's own vocabulary ("Samaj, Sarkar, Bazaar") that the tagger reads as names.
-CONCEPTS = {"Samaj", "Sarkar", "Bazaar", "Swachh", "Bharat", "Atmanirbhar", "Kirana"}
-
-sys.path.insert(0, str(Path(__file__).parent))
-from transcribe import hms, paragraphs  # noqa: E402  (same paragraphing as the raw transcript)
-
-
-def _nlp():
-    import spacy
-
-    return spacy.load("en_core_web_sm", disable=["lemmatizer"])
-
-
-def _norm(text: str) -> str:
-    """'the Bretton  Woods' / "Ajay Shah's" -> 'Bretton Woods' / 'Ajay Shah'."""
-    name = " ".join(text.split())
-    name = re.sub(r"^(the|The)\s+", "", name)
-    return re.sub(r"['’]s$", "", name).strip(".,;:!?")
-
-
-def _dictionary() -> set[str]:
-    path = Path("/usr/share/dict/words")
-    return {w.strip().lower() for w in path.read_text().split()} if path.exists() else set()
-
-
-# --------------------------------------------------------------- known names
-def build_known_names(dirs: list[Path], out: Path) -> None:
-    """Names that occur in the course/faculty corpus are public figures.
-
-    Saves {"full": [multi-word names], "single": [one-word names seen at least twice],
-    "other": [places / organisations / groups]} -- the last so that a transcript
-    entity the tagger mislabels as a person ("Tamil Nadu") is not redacted.
-    """
-    from collections import Counter
-    import subprocess
-
-    nlp = _nlp()
-    nlp.max_length = 3_000_000
-    names: set[str] = set()
-    singles: Counter[str] = Counter()
-    other: set[str] = set()
-    for d in dirs:
-        for f in sorted(d.rglob("*")):
-            if f.suffix == ".md" and not f.name.startswith("Webinar"):
-                text = f.read_text(errors="ignore")
-            elif f.suffix == ".pdf":
-                text = subprocess.run(["pdftotext", str(f), "-"], capture_output=True, text=True).stdout
-            else:
-                continue
-            for i in range(0, len(text), 500_000):
-                for ent in nlp(text[i : i + 500_000]).ents:
-                    name = _norm(ent.text)
-                    if ent.label_ in {"GPE", "LOC", "ORG", "NORP", "FAC", "EVENT", "LAW"}:
-                        other.add(name)
-                        continue
-                    if ent.label_ != "PERSON" or not name[:1].isupper():
-                        continue
-                    if len(name.split()) >= 2:
-                        names.add(name)
-                    else:
-                        singles[name] += 1
-    single = sorted(n for n, c in singles.items() if c >= 2)
-    out.write_text(json.dumps({"full": sorted(names), "single": single, "other": sorted(other)}, ensure_ascii=False))
-    print(f"{len(names)} full + {len(single)} single public names from {len(dirs)} folders")
+# Shared with the server-side library sync (deeptutor/yaxa/library/redaction.py).
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from deeptutor.yaxa.library.redaction import (  # noqa: E402
+    CONCEPTS,
+    FACULTY,
+    NOT_NAMES,
+    _dictionary,
+    _nlp,
+    build_known_names,
+    hms,
+    paragraphs,
+    redact_names,
+    removed_names,
+)
 
 
 # ------------------------------------------------------------------ speakers
@@ -160,40 +102,6 @@ def lecturer_mask(segments: list[dict], audio: Path) -> list[bool]:
     return mask
 
 
-# -------------------------------------------------------------------- names
-def redact_names(text: str, nlp, public: set[str], keep: set[str], single: frozenset[str] | set[str] = frozenset(),
-                 other: frozenset[str] | set[str] = frozenset(), words: frozenset[str] | set[str] = frozenset()) -> tuple[str, int]:
-    # one-word names that are public: surnames of public full names ("Keynes"), and
-    # one-word names the corpus itself uses ("Nixon")
-    public_last = {n.split()[-1] for n in public} | set(single)
-    allowed_tokens = {t for n in keep | FACULTY for t in n.split()} | CONCEPTS
-    doc = nlp(text)
-    out, last, count = [], 0, 0
-    for ent in doc.ents:
-        if ent.label_ != "PERSON":
-            continue
-        name = _norm(ent.text)
-        tokens = name.split()
-        if not tokens or name in public or name in keep or name in FACULTY or name in other:
-            continue
-        if name.isupper():  # acronyms the tagger mistakes for names (FRBMA, CAPEX)
-            continue
-        # ordinary words capitalised only because they open a sentence ("Nah.", "Lobby.");
-        # mid-sentence capitals are treated as names (so a student called Rhea is caught)
-        if len(tokens) == 1 and tokens[0].lower() in words and ent.start == ent.sent.start:
-            continue
-        if len(tokens) == 1 and (tokens[0] in public_last or tokens[0] in allowed_tokens):
-            continue
-        if len(tokens) > 1 and all(t in allowed_tokens or t in public_last for t in tokens):
-            continue
-        out.append(text[last : ent.start_char])
-        out.append("a participant")
-        last = ent.end_char
-        count += 1
-    out.append(text[last:])
-    return "".join(out), count
-
-
 def redact(segments_path: Path, audio: Path | None, header_md: Path, out_md: Path, names: Path,
            keep: list[str], lecturer_only: bool = False) -> None:
     segments = json.loads(segments_path.read_text())
@@ -239,22 +147,6 @@ def redact(segments_path: Path, audio: Path | None, header_md: Path, out_md: Pat
 # The tagger catches a name in one sentence and misses it in the next ("Ravi
 # asked..." vs "thanks Ravi"). So after redacting, every name redacted in ANY
 # transcript is removed from ALL transcripts, wherever it appears.
-NOT_NAMES = {"Samaj", "Samad", "Sahel", "Vijayanagara", "Karnatka", "Rameshwaram", "Cafe", "Logos",
-             "Oped", "Swatch", "Bharat", "Tilley", "Ostrom", "Eleanor", "Charles", "Nah"}
-
-
-def removed_names(raw: str, red: str) -> set[str]:
-    """Words of the raw transcript that redaction replaced with 'a participant'."""
-    import difflib
-
-    a, b = re.findall(r"\S+", raw), re.findall(r"\S+", red)
-    out: set[str] = set()
-    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
-        if op == "replace" and "participant" in " ".join(b[j1:j2]):
-            out.update(re.sub(r"[^\w]", "", w) for w in a[i1:i2])
-    return out
-
-
 def sweep(raw_dir: Path, red_dir: Path, names: Path, extra: Path | None = None) -> None:
     known = json.loads(names.read_text())
     public = set(known["single"]) | {t for n in known["full"] for t in n.split()} | set(known.get("other", []))
