@@ -14,7 +14,11 @@
   --yx-saffron-soft: #fdecc8;
   --yx-mark: #fbe3a3;
   --yx-danger: #b3261e;
-  min-height: 100vh;
+  /* DeepTutor's globals.css sets html, body { overflow: hidden } (its app shell scrolls in
+     panels), so Yaxa pages scroll inside this wrapper instead of the window. */
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
   background: var(--yx-bg);
   color: var(--yx-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
