@@ -144,3 +144,15 @@ def test_sarvam_failed_job_or_missing_part_raises(tmp_path: Path) -> None:
     client = FakeClient({})  # job "completed" but one part has no output
     with pytest.raises(tr.TranscribeError):
         tr.sarvam_transcribe([(tmp_path / "chunk_000.mp3", 0.0)], [], "key", client=client, work=tmp_path)
+
+
+def test_keyterms_never_contain_commas_or_semicolons(tmp_path: Path) -> None:
+    # Sarvam rejects "Tools of Statecraft (Force, Diplomacy, Intelligence)" (found in the live test)
+    client = FakeClient({"chunk_000.mp3": {"transcript": "x", "timestamps": {"chunks": ["x"], "start_time_seconds": [0],
+                                                                             "end_time_seconds": [1]}}})
+    tr.sarvam_transcribe([(tmp_path / "chunk_000.mp3", 0.0)],
+                         ["Tools of Statecraft (Force, Diplomacy, Intelligence)", "Samaj; Sarkar", "Kautilya"],
+                         "key", client=client, work=tmp_path)
+    terms = client.kwargs["keyterms"]
+    assert not any("," in t or ";" in t for t in terms)
+    assert {"Tools of Statecraft (Force", "Diplomacy", "Intelligence)", "Samaj", "Sarkar", "Kautilya"} <= set(terms)

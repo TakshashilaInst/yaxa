@@ -114,7 +114,9 @@ def sarvam_transcribe(chunks: list[tuple[Path, float]], keyterms: list[str], api
         from sarvamai import SarvamAI
 
         client = SarvamAI(api_subscription_key=api_key)
-    terms = [t[:64] for t in dict.fromkeys(k.strip() for k in keyterms if k and k.strip())][:MAX_KEYTERMS]
+    # Sarvam wants one term per item and rejects commas/semicolons inside a term
+    pieces = (part.strip() for k in keyterms if k for part in re.split(r"[,;]", k))
+    terms = [t[:64] for t in dict.fromkeys(p for p in pieces if p)][:MAX_KEYTERMS]
     out_dir = (work or chunks[0][0].parent) / "sarvam-out"
     out_dir.mkdir(parents=True, exist_ok=True)
     segments: list[Segment] = []
