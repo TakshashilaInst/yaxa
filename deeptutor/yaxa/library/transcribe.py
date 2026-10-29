@@ -123,21 +123,18 @@ def sarvam_transcribe(chunks: list[tuple[Path, float]], keyterms: list[str], api
         job = client.speech_to_text_job.create_job(
             model=SARVAM_MODEL, mode="transcribe", language_code="en-IN", with_diarization=True, keyterms=terms,
         )
-        job.upload_files(file_paths=[str(p) for p, _ in batch])
+        job.upload_files(file_paths=[str(p) for p, _ in batch], timeout=900)  # ~40 MB per 2-hour part
         job.start()
-        job.wait_until_complete(poll_interval=15, timeout=4 * 3600)
+        status = job.wait_until_complete(poll_interval=15, timeout=4 * 3600)
+        if str(getattr(status, "job_state", "completed")).lower() == "failed":
+            raise TranscribeError("Sarvam job failed")
         job.download_outputs(output_dir=str(out_dir))
-        outputs = sorted(out_dir.glob("*.json"))
-        for i, (part, offset) in enumerate(batch):
-            # outputs are named after the input when the SDK can; otherwise in upload order
-            match = next((o for o in outputs if o.stem in (part.stem, part.name)), None)
-            if match is None and i < len(outputs):
-                match = outputs[i]
-            if match is None:
-                raise TranscribeError(f"Sarvam returned no output for part {part.name}")
-            segments += _segments_from_output(json.loads(match.read_text()), offset)
-        for o in outputs:
-            o.unlink()
+        for part, offset in batch:
+            out = out_dir / f"{part.name}.json"  # the SDK saves each result as "<input file>.json"
+            if not out.is_file():
+                raise TranscribeError(f"Sarvam returned no transcript for part {part.name}")
+            segments += _segments_from_output(json.loads(out.read_text()), offset)
+            out.unlink()
     return segments
 
 

@@ -41,18 +41,21 @@ class FakeJob:
     def __init__(self, outputs: dict[str, dict]) -> None:
         self.outputs, self.uploaded = outputs, []
 
-    def upload_files(self, file_paths):
+    state = "Completed"
+
+    def upload_files(self, file_paths, timeout=60.0):
         self.uploaded = list(file_paths)
 
     def start(self):
         pass
 
     def wait_until_complete(self, **_):
-        pass
+        return type("Status", (), {"job_state": self.state})()
 
-    def download_outputs(self, output_dir):
-        for i, path in enumerate(self.uploaded):
-            Path(output_dir, Path(path).stem + ".json").write_text(json.dumps(self.outputs[Path(path).name]))
+    def download_outputs(self, output_dir):  # like sarvamai 0.1.40: "<input file name>.json"
+        for path in self.uploaded:
+            if Path(path).name in self.outputs:
+                Path(output_dir, Path(path).name + ".json").write_text(json.dumps(self.outputs[Path(path).name]))
 
 
 class FakeClient:
@@ -131,3 +134,13 @@ def test_transcribe_with_neither_raises(monkeypatch, tmp_path: Path) -> None:
     _stub_media(monkeypatch, tmp_path)
     with pytest.raises(tr.TranscribeError):
         tr.transcribe(tmp_path / "a.mp4", None, [], None, tmp_path)
+
+
+def test_sarvam_failed_job_or_missing_part_raises(tmp_path: Path) -> None:
+    client = FakeClient({"chunk_000.mp3": {"transcript": ""}})
+    client.job.state = "Failed"
+    with pytest.raises(tr.TranscribeError):
+        tr.sarvam_transcribe([(tmp_path / "chunk_000.mp3", 0.0)], [], "key", client=client, work=tmp_path)
+    client = FakeClient({})  # job "completed" but one part has no output
+    with pytest.raises(tr.TranscribeError):
+        tr.sarvam_transcribe([(tmp_path / "chunk_000.mp3", 0.0)], [], "key", client=client, work=tmp_path)
