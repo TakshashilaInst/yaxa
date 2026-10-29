@@ -184,3 +184,16 @@ def test_nightly_run_is_due_once_after_the_hour_ist() -> None:
     assert due(utc(20, 45, 28), last_finished="", hour_ist=2)               # 02:15 IST, never ran
     assert not due(utc(21, 0, 28), last_finished="2026-10-28T20:40:00+00:00", hour_ist=2)  # ran tonight
     assert due(utc(21, 0, 29), last_finished="2026-10-28T20:40:00+00:00", hour_ist=2)      # next night
+
+
+def test_labels_written_once_per_library_per_run(home: Path, monkeypatch) -> None:
+    from deeptutor.yaxa.library import labels as lab
+    fake = Fake([pdf(str(i), f"CS22 - R{i}.pdf") for i in range(6)])
+    sync.run(fake.deps())
+    fake.files = [pdf(str(i), f"CS22 - R{i} renamed.pdf") for i in range(6)]
+    saves: list[str] = []
+    real_save = lab._save
+    monkeypatch.setattr(lab, "_save", lambda kb, data: (saves.append(kb), real_save(kb, data)))
+    assert sync.run(fake.deps())["relabelled"] == 6
+    assert saves == ["DFA"]
+    assert all("renamed" in v["title"] for v in labels("DFA").values())

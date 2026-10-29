@@ -261,38 +261,9 @@ def run(deps: Deps, *, dry_run: bool = False) -> dict[str, Any]:
         if dry_run:
             return dict(Counter(a.kind for a in actions))
         started = now()
-        for action in actions:
-            entry = action.entry
-            try:
-                if action.kind == "skip":
-                    entry = entry or Entry(drive_id=action.file.id, kb="", kind="", indexed_as="")
-                    entry.status, entry.error, entry.md5 = "skipped", action.reason, action.file.md5
-                    entry.path, entry.updated = "/".join(action.file.path + (action.file.name,)), now()
-                    r.ledger.entries[action.file.id] = entry
-                    r.counts["skipped"] += 1
-                elif action.kind == "retire":
-                    r.retire(entry)
-                    r.counts["retired"] += 1
-                elif action.kind == "relabel":
-                    r.relabel(action)
-                    r.counts["relabelled"] += 1
-                elif action.kind == "replace":
-                    r.retire(entry)
-                    r.ledger.entries.pop(entry.drive_id, None)
-                    r.add(Action("add", file=action.file, placement=action.placement, extra=action.extra))
-                    r.counts["replaced"] += 1
-                elif action.kind == "index":
-                    r.index_approved(action)
-                else:
-                    r.add(action)
-            except Exception as exc:
-                target = r.ledger.entries.get(action.file.id if action.file else entry.drive_id) or entry
-                if target is not None:
-                    target.status, target.error, target.updated = "failed", f"{type(exc).__name__}: {str(exc)[:200]}", now()
-                r.counts["failed"] += 1
-                logger.warning("yaxa library: %s failed for one file", action.kind, exc_info=True)
-            r.ledger.save()
-        r.index_staged()
+        with labels.batch():
+            _apply(r, actions)
+            r.index_staged()
         r.ledger.save()
         summary = {k: r.counts.get(k, 0) for k in ("added", "relabelled", "replaced", "retired", "review", "failed",
                                                    "skipped", "waiting")}
@@ -300,6 +271,40 @@ def run(deps: Deps, *, dry_run: bool = False) -> dict[str, Any]:
         # "replaced" files are also counted in "added" once indexed
         summary["added"] -= summary["replaced"]
         return summary
+
+
+def _apply(r: _Run, actions: list[Action]) -> None:
+    for action in actions:
+        entry = action.entry
+        try:
+            if action.kind == "skip":
+                entry = entry or Entry(drive_id=action.file.id, kb="", kind="", indexed_as="")
+                entry.status, entry.error, entry.md5 = "skipped", action.reason, action.file.md5
+                entry.path, entry.updated = "/".join(action.file.path + (action.file.name,)), now()
+                r.ledger.entries[action.file.id] = entry
+                r.counts["skipped"] += 1
+            elif action.kind == "retire":
+                r.retire(entry)
+                r.counts["retired"] += 1
+            elif action.kind == "relabel":
+                r.relabel(action)
+                r.counts["relabelled"] += 1
+            elif action.kind == "replace":
+                r.retire(entry)
+                r.ledger.entries.pop(entry.drive_id, None)
+                r.add(Action("add", file=action.file, placement=action.placement, extra=action.extra))
+                r.counts["replaced"] += 1
+            elif action.kind == "index":
+                r.index_approved(action)
+            else:
+                r.add(action)
+        except Exception as exc:
+            target = r.ledger.entries.get(action.file.id if action.file else entry.drive_id) or entry
+            if target is not None:
+                target.status, target.error, target.updated = "failed", f"{type(exc).__name__}: {str(exc)[:200]}", now()
+            r.counts["failed"] += 1
+            logger.warning("yaxa library: %s failed for one file", action.kind, exc_info=True)
+        r.ledger.save()
 
 
 # -------------------------------------------------------------- real deps
