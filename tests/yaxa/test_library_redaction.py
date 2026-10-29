@@ -85,3 +85,22 @@ def test_names_never_logged(caplog) -> None:
     caplog.set_level(logging.DEBUG)
     redact_segments([seg(0, "Thanks Ravi.", "Kajari Kamal"), seg(5, "Hi", "ravi.k")], HEADER, "Kajari Kamal", PUBLIC, {"Meera"})
     assert "ravi" not in caplog.text.lower() and "meera" not in caplog.text.lower()
+
+
+def test_takshashila_names_are_not_people() -> None:
+    r = redact_segments([seg(0, "He co-hosts Puliyabaazi, a popular Hindi-Urdu podcast.", "Kajari Kamal")],
+                        HEADER, "Kajari Kamal", PUBLIC, set())
+    assert "Puliyabaazi" in r.markdown and "Puliyabaazi" not in r.removed
+    from deeptutor.yaxa.library.redaction import CONCEPTS
+    assert "Puliyabaazi" in CONCEPTS  # the tagger read it as a person in the live test (29 Oct 2026)
+
+
+def test_only_names_actually_removed_are_learned() -> None:
+    r = redact_segments([seg(0, "Thanks Ravi, and Keynes would agree.", "Kajari Kamal")],
+                        HEADER, "Kajari Kamal", PUBLIC, {"Ravi", "Meera", "Sunita"})
+    assert r.removed == {"Ravi"}  # Meera and Sunita weren't in this transcript; Keynes is public
+
+
+def test_tagger_false_positives_on_dictionary_words_are_not_learned() -> None:
+    r = redact_segments([seg(0, "Thanks Ravi. Liberty matters here.", "Kajari Kamal")], HEADER, "Kajari Kamal", PUBLIC, set())
+    assert all(w.lower() not in {"liberty", "thanks"} for w in r.removed)

@@ -42,7 +42,8 @@ FACULTY = {"Nitin Pai", "Pranay Kotasthane", "Anupam Manur", "Sarthak Pradhan", 
            "Talmiz Ahmad", "Raghavan", "Shivshankar Menon", "Arindam Goswami", "Shobhankita Reddy",
            "Ashwin Prasad", "Srividya", "Rohan Seth"}
 # Takshashila's own vocabulary ("Samaj, Sarkar, Bazaar") that the tagger reads as names.
-CONCEPTS = {"Samaj", "Sarkar", "Bazaar", "Swachh", "Bharat", "Atmanirbhar", "Kirana"}
+CONCEPTS = {"Samaj", "Sarkar", "Bazaar", "Swachh", "Bharat", "Atmanirbhar", "Kirana",
+            "Puliyabaazi", "Takshashila", "Technopolitik"}  # also Takshashila's own shows and newsletters
 NOT_NAMES = {"Samad", "Sahel", "Vijayanagara", "Karnatka", "Rameshwaram", "Cafe", "Logos",
              "Oped", "Swatch", "Tilley", "Ostrom", "Eleanor", "Charles", "Nah"}
 # words in Zoom display names that aren't names ("Ravi's iPhone", "Guest 2")
@@ -295,7 +296,16 @@ def redact_segments(segments: list[dict], header: str, lecturer: str, public: di
         replaced += m
         out_segments.append(s | {"text": text, "label": roles.get(s.get("speaker", ""), ""),
                                  "_removed": removed_here})
-    removed = set(certain) | {w for s in out_segments for w in s["_removed"] if w[:1].isupper() and len(w) >= 3}
+    # names learned for future transcripts: only what was really removed here, filtered like the
+    # old cross-transcript sweep (no dictionary words, public names or Takshashila vocabulary)
+    said = " ".join(s["text"] for s in segments)
+    found_listed = {n for n in certain - from_labels if re.search(rf"\b{re.escape(n)}\b", said, re.IGNORECASE)}
+    public_tokens = public_parts | {w.lower() for w in single}
+    not_names = {w.lower() for w in CONCEPTS | NOT_NAMES}
+    tagged_names = {w for s in out_segments for w in s["_removed"]
+                    if len(w) >= 3 and w[:1].isupper() and not w.isupper() and w.lower() not in words
+                    and w.lower() not in public_tokens and w.lower() not in not_names and w.lower() not in keep_tokens}
+    removed = from_labels | found_listed | tagged_names
 
     # body: paragraphs that break when the speaker changes
     body: list[str] = []
