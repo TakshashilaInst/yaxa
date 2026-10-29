@@ -161,7 +161,7 @@ def test_curated_labels_survive_first_relabel(home: Path) -> None:
     path = catalog.sources_path("DFA")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump({"files": {"CS1 - A.pdf": {"kind": "pdf", "title": "Hand-made title", "url": "https://x",
-                                                             "corpus": "Course readings"}}}))
+                                                             "corpus": "Anticipating the Unintended"}}}))
     led = Ledger(sync.library_root() / "ledger.json")
     from deeptutor.yaxa.library.ledger import seed
     seed(led, {"a": {"path": "/".join(AS + ("Readings", "CS1 - A.pdf")), "kb": "DFA", "indexed_as": "CS1 - A.pdf", "kind": "file"}},
@@ -171,6 +171,7 @@ def test_curated_labels_survive_first_relabel(home: Path) -> None:
     label = labels("DFA")["CS1 - A.pdf"]
     assert summary["relabelled"] == 1
     assert (label["title"], label["url"], label["drive_id"], label["module"]) == ("Hand-made title", "https://x", "a", "DFA-AS")
+    assert label["corpus"] == "Anticipating the Unintended"  # curated corpus survives too
 
 
 def test_nightly_run_is_due_once_after_the_hour_ist() -> None:

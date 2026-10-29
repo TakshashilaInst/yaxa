@@ -14,7 +14,7 @@ import yaml
 
 from ..catalog import PACKAGE_CONTENT, sources_path
 
-CURATED = ("title", "url", "byline", "kind")
+CURATED = ("title", "url", "byline", "kind", "corpus")
 
 
 def _load(kb: str) -> dict[str, Any]:
