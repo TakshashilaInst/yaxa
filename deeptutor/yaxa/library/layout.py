@@ -62,6 +62,18 @@ def _split_name(stem: str) -> tuple[str, list[str]]:
     return "", pieces
 
 
+def _track_kb(parts: list[str], cat: Catalog) -> str:
+    """The one library every specialisation module of the track folder in `parts` shares, else ""."""
+    for part in reversed(parts):
+        code = part.split(" ", 1)[0]
+        for prog in cat.programmes:
+            track = prog.track(code)
+            if track:
+                kbs = {m.kb for c in track.specialisation if (m := cat.modules.get(c))}
+                return kbs.pop() if len(kbs) == 1 else ""
+    return ""
+
+
 def place(path: list[str] | tuple[str, ...], name: str, mime: str, cat: Catalog) -> Placement | str | None:
     parts = list(path)
     if any(p.startswith(EXCLUDED) for p in parts):
@@ -98,6 +110,9 @@ def place(path: list[str] | tuple[str, ...], name: str, mime: str, cat: Catalog)
         if "-" in code or re.search(r"\d", code):
             return f"unknown module {code}"
     if module is None:
+        kb = _track_kb(parts, cat)
+        if kb and ext in READING_EXT:  # a track-wide guide, e.g. "GCPP › APP Advanced Public Policy › APP - Module guide.md"
+            return Placement(kb=kb, kind="reading", title=_clean(stem), corpus="Course readings")
         return "not inside a module folder"
     if not module.kb:
         return f"module {module.code} has no library yet"

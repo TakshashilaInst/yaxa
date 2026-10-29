@@ -1,0 +1,6 @@
+# Extra packages for the shared-Drive library sync (deeptutor/yaxa/library).
+# Also needs: apt-get install ffmpeg wamerican poppler-utils; python -m spacy download en_core_web_sm
+google-api-python-client>=2.130
+google-auth>=2.29
+sarvamai>=0.1.40
+spacy>=3.7,<4

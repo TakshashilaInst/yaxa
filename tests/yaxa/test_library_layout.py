@@ -66,3 +66,9 @@ def test_problems_come_back_as_reasons() -> None:  # [RF2]
     assert place(DFA_AS + ["Readings"], "Notes", "application/vnd.google-apps.document", CAT) == (
         "unsupported type Google Doc (download it as PDF and upload that)")
     assert place(DFA_AS + ["Readings"], "x.pdf", "shortcut/unreadable", CAT) == "shortcut to a file Yaxa can't open"
+
+
+def test_track_level_file_goes_to_the_track_library() -> None:
+    p = place(["GCPP", "APP Advanced Public Policy"], "APP - Module guide.md", "text/markdown", CAT)
+    assert isinstance(p, Placement) and (p.kb, p.kind, p.module) == ("APP", "reading", "")
+    assert place(["GCPP", "Core"], "x.pdf", PDF, CAT) == "not inside a module folder"  # core modules have separate libraries

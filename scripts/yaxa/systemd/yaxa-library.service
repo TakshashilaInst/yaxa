@@ -1,0 +1,21 @@
+# Yaxa library sync worker: syncs the shared Drive folder "0012 Yaxa Library"
+# into Yaxa's libraries nightly (02:00 IST) or when the Libraries page asks.
+# Install: cp to /etc/systemd/system/, then systemctl enable --now yaxa-library
+[Unit]
+Description=Yaxa library sync (shared Drive -> Yaxa libraries)
+After=network-online.target yaxa.service
+Wants=network-online.target
+
+[Service]
+User=yaxa
+Group=yaxa
+WorkingDirectory=/home/yaxa/yaxa
+Environment=DEEPTUTOR_HOME=/home/yaxa/yaxa-home
+EnvironmentFile=/home/yaxa/yaxa-home/secrets/sarvam.env
+ExecStart=/home/yaxa/yaxa/.venv/bin/python -m deeptutor.yaxa.library worker
+Nice=10
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
