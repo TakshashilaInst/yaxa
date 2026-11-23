@@ -177,3 +177,192 @@ def test_debrief_prompt_has_answer_key_and_every_card() -> None:
     ctx = prompts.outcome_context(s, run)
     for r in s.roles:
         assert r.private in ctx
+
+
+# ------------------------------------------------------------------ routes
+import asyncio  # noqa: E402
+import json  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+from fastapi import HTTPException  # noqa: E402
+
+from deeptutor.yaxa import store  # noqa: E402
+from deeptutor.yaxa.sim import api as sim_api  # noqa: E402
+
+
+def test_transcript_parsing() -> None:
+    text = "**Chair:** Let us begin.\n\n**Finance Department:** The deficit\nis tight.\nnoise"
+    turns = engine.parse_transcript(text)
+    assert turns == [
+        {"speaker": "Chair", "text": "Let us begin."},
+        {"speaker": "Finance Department", "text": "The deficit\nis tight.\nnoise"},
+    ]
+
+
+class FakeModel:
+    """Answers each kind of simulation call by looking at its system prompt."""
+
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+        self.bad_scores = 0  # how many scoring replies to garble first
+
+    async def __call__(self, config, messages, **kw) -> str:
+        system = messages[0]["content"]
+        if "score a student's memo" in system:
+            self.calls.append("score")
+            if self.bad_scores:
+                self.bad_scores -= 1
+                return "not json"
+            return json.dumps({"scores": {c: {"score": 3, "reason": "ok"} for c in engine.RUBRIC}, "feedback": "Good."})
+        if "game master" in system:
+            self.calls.append("positions")
+            return json.dumps({"positions": {"discom": "B", "union": "A"}, "note": "DISCOM moved."})
+        if "transcript of a meeting" in system:
+            user = messages[-1]["content"]
+            if "Reply with JSON only" in user:
+                self.calls.append("close")
+                return json.dumps({"option": "B", "text": "Recommend B with a pilot.", "closing": "Thank you."})
+            self.calls.append("meeting")
+            return "**Chief Minister's Office:** We begin.\n\n**DISCOM:** Pay us first."
+        if "You close a Takshashila policy simulation" in system:
+            self.calls.append("outcome")
+            return json.dumps({"option": "B", "decision": "B, piloted.", "consequences": "Uptake grows [1].", "debrief": "## What you traded\n..."})
+        self.calls.append("actor")
+        return "We can talk, if you pay us in advance [1]."
+
+
+@pytest.fixture
+def sim_env(monkeypatch: pytest.MonkeyPatch):
+    model = FakeModel()
+    who = {"id": "stu1", "admin": False, "role": "student"}
+
+    def fake_me():
+        user = store.load_user(who["id"], display_name="Stu")
+        user.role = who["role"]
+        user.enrolments = [store.Enrolment(programme="GCPP", track="TP", cohort="TP27")]
+        return SimpleNamespace(id=who["id"], is_admin=who["admin"], username="stu"), user
+
+    async def no_passages(kbs, query, k):
+        return [{"kb": "GCPP-ER1", "file": "f.pdf", "title": "Reading", "text": "A passage about subsidies. " * 5, "score": 0.5}]
+
+    monkeypatch.setattr(sim_api, "_me", fake_me)
+    monkeypatch.setattr(sim_api, "complete_text", model)
+    monkeypatch.setattr(sim_api, "resolve_for", lambda uid: object())
+    monkeypatch.setattr(sim_api.grounding, "retrieve_across", no_passages)
+    monkeypatch.setattr(sim_api.engine, "assign_role", lambda s, runs, rng=None: "finance")
+    return SimpleNamespace(model=model, who=who)
+
+
+def _go(coro):
+    return asyncio.run(coro)
+
+
+def test_full_run_through_five_days(sim_env) -> None:
+    state.set_open_all("running-dry", True)
+    view = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    rid = view["run"]["id"]
+    assert view["my_role"]["id"] == "finance" and view["run"]["stage"] == 1
+
+    view = _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Cap it. " * 20)))
+    assert view["run"]["stage"] == 2 and view["run"]["memos"][0]["total"] == 18
+
+    reply = _go(sim_api.talk(rid, sim_api.TalkBody(role="discom", message="What would it take?")))
+    assert "advance" in reply["reply"] and reply["sources"]
+    view = _go(sim_api.finish_talks(rid))
+    assert view["run"]["stage"] == 3 and view["shock"] is not None
+
+    view = _go(sim_api.memo(rid, sim_api.MemoBody(day=3, option="B", text="Revised. " * 20)))
+    assert view["run"]["stage"] == 4
+
+    view = _go(sim_api.meeting_open(rid))
+    assert view["run"]["meeting"][0]["speaker"] == "Chief Minister's Office"
+    view = _go(sim_api.meeting_intervene(rid, sim_api.InterveneBody(text="Finance can fund a pilot.")))
+    assert any(t["speaker"] == "Finance Department" for t in view["run"]["meeting"])
+    view = _go(sim_api.meeting_close(rid))
+    assert view["run"]["stage"] == 5 and view["run"]["draft"]["option"] == "B"
+
+    view = _go(sim_api.memo(rid, sim_api.MemoBody(day=5, option="B", text="Concur. " * 20, stance="conditions")))
+    assert view["run"]["stage"] == 6
+    assert view["run"]["outcome"]["option"] == "B" and "What you traded" in view["run"]["outcome"]["debrief"]
+    assert view["run"]["positions"]  # revealed once finished
+
+
+def test_locked_day_and_double_memo_are_refused(sim_env) -> None:
+    view = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    rid = view["run"]["id"]
+    _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Cap it. " * 20)))
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Again. " * 20)))
+    assert e.value.status_code == 409
+    with pytest.raises(HTTPException) as e:  # Day 2 opens tomorrow
+        _go(sim_api.talk(rid, sim_api.TalkBody(role="discom", message="Hello")))
+    assert e.value.status_code == 403
+
+
+def test_garbled_score_retries_then_fails_without_saving(sim_env) -> None:
+    view = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    rid = view["run"]["id"]
+    sim_env.model.bad_scores = 1
+    view = _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Cap it. " * 20)))
+    assert view["run"]["stage"] == 2  # one retry was enough
+    run2 = _go(sim_api.start(sim_api.StartBody(scenario="chokepoint", force_new=False)))
+    sim_env.model.bad_scores = 2
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.memo(run2["run"]["id"], sim_api.MemoBody(day=1, option="A", text="Align. " * 20)))
+    assert e.value.status_code == 502
+    assert state.load_run("stu1", run2["run"]["id"]).memos == []
+
+
+def test_start_resumes_an_unfinished_run(sim_env) -> None:
+    a = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    b = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    assert a["run"]["id"] == b["run"]["id"]
+
+
+def test_student_view_never_carries_other_private_cards(sim_env) -> None:
+    s = sc.get_scenario("running-dry")
+    view = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))
+    text = json.dumps(_go(sim_api.get_run(view["run"]["id"])))
+    for r in s.roles:
+        if r.id != "finance":
+            assert json.dumps(r.private)[1:-1] not in text
+
+
+def test_talk_rules(sim_env) -> None:
+    state.set_open_all("running-dry", True)
+    rid = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))["run"]["id"]
+    _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Cap it. " * 20)))
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.talk(rid, sim_api.TalkBody(role="finance", message="Me?")))  # your own role
+    assert e.value.status_code == 400
+    _go(sim_api.talk(rid, sim_api.TalkBody(role="discom", message="Hi")))
+    _go(sim_api.talk(rid, sim_api.TalkBody(role="union", message="Hi")))
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.talk(rid, sim_api.TalkBody(role="water", message="Hi")))  # a third actor
+    assert e.value.status_code == 409
+
+
+def test_faculty_routes(sim_env) -> None:
+    rid = _go(sim_api.start(sim_api.StartBody(scenario="running-dry")))["run"]["id"]
+    _go(sim_api.memo(rid, sim_api.MemoBody(day=1, option="C", text="Cap it. " * 20)))
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.faculty_runs("running-dry"))
+    assert e.value.status_code == 403
+
+    sim_env.who.update(id="fac1", role="faculty")
+    rows = _go(sim_api.faculty_runs("running-dry"))
+    assert len(rows["runs"]) == 1 and rows["runs"][0]["role"] == "finance"
+    assert rows["runs"][0]["memos"][0]["total"] == 18
+
+    body = sim_api.OverrideBody(user_id="stu1", run_id=rid, day=1, scores={"fiscal": 1})
+    _go(sim_api.faculty_override(body))
+    assert state.load_run("stu1", rid).memo(1).override == {"fiscal": 1}
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.faculty_override(sim_api.OverrideBody(user_id="stu1", run_id=rid, day=3, scores={"fiscal": 1})))
+    assert e.value.status_code == 400
+    with pytest.raises(HTTPException) as e:
+        _go(sim_api.faculty_override(sim_api.OverrideBody(user_id="stu1", run_id=rid, day=1, scores={"vibes": 2})))
+    assert e.value.status_code == 400
+
+    _go(sim_api.faculty_settings(sim_api.SettingsBody(scenario="running-dry", open_all=True)))
+    assert state.open_all("running-dry")

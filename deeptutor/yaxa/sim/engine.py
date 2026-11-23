@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 import random
+import re
 from typing import Any
 
 from .scenario import Role, Scenario, Shock
@@ -176,3 +177,18 @@ def public_view(run: SimRun, scenario: Scenario, unlocked: int) -> dict[str, Any
         "rubric": {k: v["label"] for k, v in RUBRIC.items()},
         "run": run_view,
     }
+
+
+_TURN = re.compile(r"^\*\*(.+?):\*\*\s*", re.M)
+
+
+def parse_transcript(text: str) -> list[dict[str, str]]:
+    """[{speaker, text}] from '**Name:** words' turns; text outside a turn is dropped."""
+    marks = list(_TURN.finditer(text or ""))
+    turns = []
+    for i, m in enumerate(marks):
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+        body = text[m.end() : end].strip()
+        if body:
+            turns.append({"speaker": m.group(1).strip(), "text": body})
+    return turns

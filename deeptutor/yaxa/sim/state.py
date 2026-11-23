@@ -27,6 +27,7 @@ class Memo(BaseModel):
     stance: str = ""  # day 5: concur | conditions | dissent (with the chair's draft)
     scores: dict[str, dict[str, Any]] = Field(default_factory=dict)  # criterion -> {score, reason}
     override: dict[str, int] = Field(default_factory=dict)  # criterion -> faculty score
+    feedback: str = ""  # Yaxa's 2-3 sentences to the student
     at: str = Field(default_factory=_now)
 
 

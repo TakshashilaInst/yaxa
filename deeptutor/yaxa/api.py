@@ -18,6 +18,7 @@ from pydantic import BaseModel
 from deeptutor.multi_user.context import get_current_user
 
 from . import cohort, grounding, library_api, panel, practice, prompting, store
+from .sim import api as sim_api
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
     _allowed_modules,
     _cited_numbers,
@@ -39,6 +40,7 @@ router.include_router(practice.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(library_api.router)
+router.include_router(sim_api.router)
 
 HISTORY_TURNS = 10  # earlier turns sent back to the model for context
 DEMO_RETURN_COOKIE = "yaxa_demo_return"
