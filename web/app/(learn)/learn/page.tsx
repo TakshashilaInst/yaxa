@@ -128,6 +128,15 @@ export default function LearnHome() {
             </p>
           </Link>
         )}
+        {(!!me.enrolments.length || me.is_admin) && (
+          <Link href="/learn/sim" className="yx-card" style={{ display: "block", marginTop: 12, textDecoration: "none" }}>
+            <div className="yx-eyebrow">New</div>
+            <div style={{ color: "var(--yx-maroon)", fontWeight: 600, fontSize: 17 }}>Policy simulations →</div>
+            <p className="yx-muted" style={{ margin: "4px 0 0" }}>
+              Take a role in a real policy decision over five days. Yaxa plays everyone else, each with their own interests and secrets.
+            </p>
+          </Link>
+        )}
         {!me.enrolments.length && !me.is_admin && <EnrolPicker onDone={reload} />}
         {me.enrolments.map((p) => (
           <ProgrammeSection key={p.code} p={p} />

@@ -182,6 +182,53 @@ export interface DemoStudent {
   avatar: Avatar;
 }
 
+// -------------------------------------------------------------- simulations
+export interface SimOption { id: string; label: string; summary: string }
+export interface SimRoleCard {
+  id: string; name: string; mandate: string; wants: string; secondary: string;
+  red_line: string; private: string; batna: string; opening: string; leans: string;
+}
+export interface SimScore { score: number; reason: string; overridden?: boolean }
+export interface SimMemo {
+  day: number; option: string; text: string; stance: string; feedback: string; at: string;
+  scores: Record<string, SimScore>; total: number; override?: Record<string, number>;
+}
+export interface SimTalk { role: string; turns: { who: "student" | "actor"; content: string; sources?: Passage[]; citations?: Citation[] }[] }
+export interface SimRun {
+  id: string; scenario: string; role: string; started: string; cohort: string | null; stage: number; unlocked: number;
+  memos: SimMemo[]; talks: SimTalk[]; shock: string | null;
+  meeting: { speaker: string; text: string; student?: string }[]; interventions: number;
+  draft: { option?: string; text?: string };
+  outcome: { option?: string; decision?: string; consequences?: string; debrief?: string; sources?: Passage[]; citations?: Citation[] };
+  history?: { day: number; positions: Record<string, string>; student: string | null }[];
+  positions?: Record<string, string>;
+}
+export interface SimView {
+  scenario: {
+    id: string; title: string; tagline: string; setting: string; brief: string; decision: string; body: string; decider: string;
+    options: SimOption[]; days: string[]; roles: { id: string; name: string; mandate: string }[]; chair: string;
+  };
+  my_role: SimRoleCard | null;
+  shock: { id: string; headline: string; body: string } | null;
+  rubric: Record<string, string>;
+  run: SimRun;
+}
+export interface SimScenarioCard {
+  id: string; title: string; tagline: string; setting: string; module: string; module_title: string;
+  runs: { id: string; stage: number; role: string; started: string }[];
+}
+export interface SimTalkReply { reply: string; sources: Passage[]; citations: Citation[]; turns_left: number }
+export interface SimFacultyRow {
+  user_id: string; run_id: string; student: string; cohort: string | null; role: string; role_name: string;
+  stage: number; started: string; history: SimRun["history"]; memos: SimMemo[]; draft: SimRun["draft"]; outcome_option: string | null;
+}
+export interface SimFacultyView {
+  scenario: { id: string; title: string; options: SimOption[]; roles: { id: string; name: string }[]; answer_key: string };
+  rubric: Record<string, string>;
+  open_all: boolean;
+  runs: SimFacultyRow[];
+}
+
 /** Throws with the server's `detail` message, so the UI can show it as is. */
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await apiFetch(apiUrl(`/api/yaxa${path}`), init);
@@ -237,6 +284,23 @@ export const yaxa = {
   libraryReview: () => json<ReviewItem[]>("/library/review"),
   libraryDecide: (driveId: string, body: { decisions?: Record<string, "keep" | "remove">; reject?: boolean }) =>
     json<{ status: string }>(`/library/review/${encodeURIComponent(driveId)}`, send("POST", body)),
+  simScenarios: () => json<SimScenarioCard[]>("/sim/scenarios"),
+  simStart: (scenario: string) => json<SimView>("/sim/runs", send("POST", { scenario })),
+  simRun: (id: string) => json<SimView>(`/sim/runs/${encodeURIComponent(id)}`),
+  simMemo: (id: string, body: { day: number; option: string; text: string; stance?: string }) =>
+    json<SimView>(`/sim/runs/${encodeURIComponent(id)}/memo`, send("POST", body)),
+  simTalk: (id: string, role: string, message: string) =>
+    json<SimTalkReply>(`/sim/runs/${encodeURIComponent(id)}/talk`, send("POST", { role, message })),
+  simFinishTalks: (id: string) => json<SimView>(`/sim/runs/${encodeURIComponent(id)}/talks/done`, send("POST")),
+  simMeetingOpen: (id: string) => json<SimView>(`/sim/runs/${encodeURIComponent(id)}/meeting/open`, send("POST")),
+  simIntervene: (id: string, text: string) =>
+    json<SimView>(`/sim/runs/${encodeURIComponent(id)}/meeting/intervene`, send("POST", { text })),
+  simMeetingClose: (id: string) => json<SimView>(`/sim/runs/${encodeURIComponent(id)}/meeting/close`, send("POST")),
+  simFacultyRuns: (scenario: string) => json<SimFacultyView>(`/sim/faculty/runs?scenario=${encodeURIComponent(scenario)}`),
+  simOverride: (body: { user_id: string; run_id: string; day: number; scores: Record<string, number> }) =>
+    json<SimMemo>("/sim/faculty/scores", send("PUT", body)),
+  simSettings: (scenario: string, open_all: boolean) =>
+    json<{ open_all: boolean }>("/sim/faculty/settings", send("PUT", { scenario, open_all })),
   demoStudents: () => json<DemoStudent[]>("/demo/students"),
   demoEnter: (userId: string) => json<{ ok: boolean }>(`/demo/enter/${encodeURIComponent(userId)}`, send("POST")),
   demoExit: () => json<{ ok: boolean }>("/demo/exit", send("POST")),

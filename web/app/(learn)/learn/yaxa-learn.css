@@ -110,6 +110,9 @@
   border-radius: 10px; background: var(--yx-surface); font: inherit; color: var(--yx-ink);
 }
 .yx-form textarea { min-height: 70px; resize: vertical; }
+/* free-standing inputs (simulations) styled like form fields */
+.yx-input { width: 100%; padding: 9px 11px; border: 1px solid var(--yx-line); border-radius: 8px; background: var(--yx-surface); color: var(--yx-ink); font: inherit; resize: vertical; box-sizing: border-box; }
+.yx-input:focus { outline: 2px solid var(--yx-saffron); border-color: transparent; }
 .yx-form input:focus, .yx-form textarea:focus, .yx-form select:focus { outline: 2px solid var(--yx-saffron); border-color: transparent; }
 
 /* -------------------------------------------------------------- chat */
