@@ -9,7 +9,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse
@@ -28,6 +28,7 @@ from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
     _require_module,
     _short,
     _sse,
+    programme_kbs,
 )
 from .catalog import Catalog, get_catalog
 from .llm import ModelUnavailable, complete_text, resolve_for, stream_text
@@ -239,6 +240,7 @@ class ChatBody(BaseModel):
     unit: str | None = None
     faculty: str | None = None
     socratic: bool = False
+    scope: Literal["module", "programme"] = "module"  # programme: search every library the student can use
 
 
 @router.post("/chat")
@@ -254,9 +256,11 @@ async def chat(body: ChatBody) -> StreamingResponse:
     conv = store.load_conversation(cu.id, body.conversation_id) if body.conversation_id else None
     if body.conversation_id and not conv:
         raise HTTPException(404, "Conversation not found")
-    module = _require_module(cat, cu, user, body.module or (conv.module if conv else None))
+    across = (conv.kind == "programme") if conv else body.scope == "programme"
+    module = None if across else _require_module(cat, cu, user, body.module or (conv.module if conv else None))
     unit = module.unit(body.unit or (conv.unit if conv else None)) if module else None
     fac = _faculty(cat, body.faculty)
+    programme_modules = [m for c in _allowed_modules(cat, cu, user) if (m := cat.module(c)) and m.available] if across else []
 
     try:
         config = resolve_for(cu.id)
@@ -268,6 +272,7 @@ async def chat(body: ChatBody) -> StreamingResponse:
     if not conv:
         conv = store.Conversation(
             user_id=cu.id,
+            kind="programme" if across else "chat",
             module=module.code if module else None,
             unit=unit.id if unit else None,
             title=_short(message, 70),
@@ -282,9 +287,11 @@ async def chat(body: ChatBody) -> StreamingResponse:
             query = f"{conv.title}. {message}"
         k = cat.settings.retrieval_top_k
         jobs = []
-        if module and module.kb:
+        if across:
+            jobs.append(grounding.retrieve_across(programme_kbs(cat, cu, user), query, k))
+        elif module and module.kb:
             jobs.append(grounding.retrieve(module.kb, query, k, corpus=module.title))
-        if fac and fac.kb:
+        if fac and fac.kb and not across:  # across already searches the faculty libraries
             jobs.append(grounding.retrieve(fac.kb, query, max(3, k // 2), corpus=f"{fac.name}'s work"))
         results = await asyncio.gather(*jobs) if jobs else []
         passages = [p for group in results for p in group]
@@ -298,6 +305,7 @@ async def chat(body: ChatBody) -> StreamingResponse:
             unit=unit,
             faculty=fac,
             socratic=body.socratic,
+            programme_modules=programme_modules,
         )
         history = [
             {"role": t.role, "content": t.content}
@@ -328,7 +336,8 @@ async def chat(body: ChatBody) -> StreamingResponse:
         cited_files = {passages[n - 1]["file"] for n in cited if 1 <= n <= len(passages)}
         worth, seen_files = [], set(cited_files)
         for i, p in enumerate(passages, 1):
-            if p["file"] not in seen_files and p["kb"] == (module.kb if module else None):
+            course_kb = (p["kb"] in {m.kb for m in programme_modules}) if across else p["kb"] == (module.kb if module else None)
+            if p["file"] not in seen_files and course_kb:
                 worth.append(_public_passage(p, i))
                 seen_files.add(p["file"])
             if len(worth) == 2:

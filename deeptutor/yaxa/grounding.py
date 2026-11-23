@@ -174,3 +174,26 @@ async def retrieve(kb: str, query: str, top_k: int, *, corpus: str = "") -> list
                 passage["url"] = f"/api/yaxa/files/{kb}/{file_name}"
         passages.append(passage)
     return passages[:top_k]
+
+
+async def retrieve_across(kbs: list[str], query: str, top_k: int) -> list[dict[str, Any]]:
+    """The best `top_k` passages from several libraries, merged by similarity score.
+
+    All libraries share one embedding model, so their cosine scores compare.
+    A library that fails to search is skipped; passages without a score sort last.
+    """
+    per_kb = max(3, top_k // 2)
+    results = await asyncio.gather(*(retrieve(kb, query, per_kb) for kb in kbs), return_exceptions=True)
+    merged: list[dict[str, Any]] = []
+    for kb, group in zip(kbs, results):
+        if isinstance(group, BaseException):
+            logger.warning("yaxa: programme search skipped kb=%s: %s", kb, group)
+            continue
+        merged += group
+
+    def score(p: dict[str, Any]) -> float:
+        s = p.get("score")
+        return float(s) if isinstance(s, (int, float)) else -1.0
+
+    merged.sort(key=score, reverse=True)  # stable: equal scores keep library order
+    return merged[:top_k]

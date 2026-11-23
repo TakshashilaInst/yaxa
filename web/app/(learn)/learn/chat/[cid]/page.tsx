@@ -27,6 +27,13 @@ interface Msg {
   error?: string;
 }
 
+// Starters for a whole-programme chat: questions that need more than one module
+const ACROSS_STARTERS = [
+  "Which ideas from my modules keep coming back, and how do they connect?",
+  "How would economic reasoning change the way I analyse a policy problem?",
+  "Pick a current Indian policy debate and walk me through it using everything I've studied.",
+];
+
 function ChatScreen() {
   const params = useParams<{ cid: string }>();
   const search = useSearchParams();
@@ -35,6 +42,8 @@ function ChatScreen() {
   const [convId, setConvId] = useState<string | null>(params.cid === "new" ? null : params.cid);
   const [moduleCode, setModuleCode] = useState<string | null>(search.get("module"));
   const [unitId, setUnitId] = useState<string | null>(search.get("unit"));
+  // "programme": one chat across every module and the faculty libraries
+  const [across, setAcross] = useState(search.get("scope") === "programme");
   const [module, setModule] = useState<ModuleView | null>(null);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [loaded, setLoaded] = useState(params.cid === "new");
@@ -60,6 +69,7 @@ function ChatScreen() {
       .then((c) => {
         setModuleCode(c.module);
         setUnitId(c.unit);
+        setAcross(c.kind === "programme");
         setMsgs(
           c.turns.map((t) => ({
             role: t.role === "assistant" ? "assistant" : "user",
@@ -122,7 +132,7 @@ function ChatScreen() {
           return copy;
         });
       await streamChat(
-        { message, conversation_id: convId, module: moduleCode, unit: unitId, faculty: faculty || null, socratic },
+        { message, conversation_id: convId, module: across ? null : moduleCode, unit: across ? null : unitId, faculty: faculty || null, socratic, scope: across ? "programme" : "module" },
         {
           onMeta: (meta) => {
             if (!convId) {
@@ -142,7 +152,7 @@ function ChatScreen() {
       patchLast((m) => ({ ...m, pending: false }));
       setBusy(false);
     },
-    [busy, convId, faculty, facultyView, moduleCode, socratic, unitId],
+    [across, busy, convId, faculty, facultyView, moduleCode, socratic, unitId],
   );
 
   // ---- Socratic toggle: announce it and offer threads to pick up
@@ -225,13 +235,15 @@ function ChatScreen() {
                 <p>
                   {socratic
                     ? "Yaxa asks the questions this time, still grounded in the course material. Pick a thread and think it through together."
-                    : `Ask anything from ${module ? module.title : "the course"}. Answers stay grounded in the course material, and the passages used appear in the margin.${field ? ` Examples are drawn from your world: ${field}.` : ""}`}
+                    : across
+                      ? `Ask about anything in your programme. Yaxa searches all your modules and the faculty's writing, and connects ideas across modules. The passages used appear in the margin.${field ? ` Examples are drawn from your world: ${field}.` : ""}`
+                      : `Ask anything from ${module ? module.title : "the course"}. Answers stay grounded in the course material, and the passages used appear in the margin.${field ? ` Examples are drawn from your world: ${field}.` : ""}`}
                 </p>
                 {unit && <p className="yx-eyebrow">{module?.code} · {unit.title}</p>}
-                {!socratic && !!starters.length && (
+                {!socratic && !!(across ? ACROSS_STARTERS : starters).length && (
                   <div className="yx-suggest">
                     <span className="yx-suggest-label">Ask whatever you want, or start with one of these.</span>
-                    {starters.map((s) => (
+                    {(across ? ACROSS_STARTERS : starters).map((s) => (
                       <button key={s} onClick={() => send(s)}>{s}</button>
                     ))}
                   </div>
@@ -287,6 +299,7 @@ function ChatScreen() {
                     <option key={f.slug} value={f.slug}>Discuss with {f.name} (AI)</option>
                   ))}
                 </select>
+                {across && <span className="yx-tag" title="Searches every module and the faculty libraries">Whole programme</span>}
                 {module && <span className="yx-tag">{module.code}{unit ? ` · ${unit.id.replace("U", "U.")}` : ""}</span>}
                 {module && (
                   <a className="yx-tag" href={`/learn/practice?${new URLSearchParams({ module: module.code, ...(unitId ? { unit: unitId } : {}) })}`} title="Test yourself on this unit">

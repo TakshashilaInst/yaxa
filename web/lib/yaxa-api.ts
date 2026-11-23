@@ -93,7 +93,7 @@ export interface Turn {
 
 export interface Conversation {
   id: string;
-  kind: "chat" | "panel";
+  kind: "chat" | "panel" | "programme";
   module: string | null;
   unit: string | null;
   title: string;
@@ -102,7 +102,7 @@ export interface Conversation {
 
 export interface ConversationSummary {
   id: string;
-  kind: "chat" | "panel";
+  kind: "chat" | "panel" | "programme";
   title: string;
   module: string | null;
   unit: string | null;
@@ -264,6 +264,7 @@ export interface ChatRequest {
   unit?: string | null;
   faculty?: string | null;
   socratic: boolean;
+  scope?: "module" | "programme";
 }
 
 export interface ChatHandlers {

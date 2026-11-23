@@ -119,6 +119,15 @@ export default function LearnHome() {
           <Link href="/learn/onboarding">Edit your profile</Link>
         </p>
 
+        {(!!me.enrolments.length || me.is_admin) && (
+          <Link href="/learn/chat/new?scope=programme" className="yx-card" style={{ display: "block", marginTop: 20, textDecoration: "none" }}>
+            <div className="yx-eyebrow">New</div>
+            <div style={{ color: "var(--yx-maroon)", fontWeight: 600, fontSize: 17 }}>Ask across my programme →</div>
+            <p className="yx-muted" style={{ margin: "4px 0 0" }}>
+              One conversation that draws on all your modules and the faculty&apos;s writing, for questions that cut across modules.
+            </p>
+          </Link>
+        )}
         {!me.enrolments.length && !me.is_admin && <EnrolPicker onDone={reload} />}
         {me.enrolments.map((p) => (
           <ProgrammeSection key={p.code} p={p} />
@@ -138,7 +147,7 @@ export default function LearnHome() {
             <div className="yx-grid">
               {recent.slice(0, 9).map((c) => (
                 <Link key={c.id} href={c.kind === "panel" ? `/learn/panel?id=${c.id}` : `/learn/chat/${c.id}`} className="yx-card" style={{ textDecoration: "none" }}>
-                  <div className="yx-eyebrow">{c.kind === "panel" ? "Faculty panel" : ""}{c.kind === "panel" && c.module ? " · " : ""}{c.module}{c.unit ? ` · ${c.unit}` : ""}</div>
+                  <div className="yx-eyebrow">{c.kind === "panel" ? "Faculty panel" : c.kind === "programme" ? "Whole programme" : ""}{c.kind === "panel" && c.module ? " · " : ""}{c.module}{c.unit ? ` · ${c.unit}` : ""}</div>
                   <div style={{ color: "var(--yx-maroon)", fontWeight: 600 }}>{c.title}</div>
                 </Link>
               ))}

@@ -41,6 +41,19 @@ def _allowed_modules(cat: Catalog, cu: Any, user: store.YaxaUser) -> list[str]:
     return codes
 
 
+def programme_kbs(cat: Catalog, cu: Any, user: store.YaxaUser) -> list[str]:
+    """Every library a programme-wide chat may search: the student's course
+    libraries (each once: TP, DFA and APP modules each share one library),
+    then the faculty writing libraries."""
+    kbs: list[str] = []
+    for code in _allowed_modules(cat, cu, user):
+        m = cat.modules.get(code)
+        if m and m.available and m.kb and m.kb not in kbs:
+            kbs.append(m.kb)
+    kbs += [f.kb for f in cat.faculty.values() if f.kb and f.kb not in kbs]
+    return kbs
+
+
 def _require_module(cat: Catalog, cu: Any, user: store.YaxaUser, code: str | None) -> Module | None:
     if not code:
         return None

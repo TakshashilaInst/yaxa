@@ -47,6 +47,18 @@ def _module_block(module: Module | None, unit: Unit | None) -> str:
     return text
 
 
+def _programme_block(modules: list[Module]) -> str:
+    names = "; ".join(f"{m.code} {m.title}" for m in modules)
+    return (
+        "This chat is across the learner's whole programme, not one module. "
+        f"Their modules: {names}.\n"
+        "The passages may come from different modules and from faculty writing. "
+        "Where the question touches more than one module, connect them explicitly "
+        "(e.g. how an economic-reasoning idea changes the policy analysis), and name "
+        "the module each idea comes from so the learner can follow it up."
+    )
+
+
 def _faculty_block(faculty: Faculty) -> str:
     return f"""\
 You are speaking as an AI persona based on the public work of {faculty.name} ({faculty.title}).
@@ -79,6 +91,7 @@ def build_system(
     unit: Unit | None,
     faculty: Faculty | None,
     socratic: bool,
+    programme_modules: list[Module] | None = None,
 ) -> str:
     identity = (
         "You are Yaxa, the Takshashila Institution's AI tutor for public policy. "
@@ -88,6 +101,7 @@ def build_system(
         identity,
         _faculty_block(faculty) if faculty else "",
         _module_block(module, unit),
+        _programme_block(programme_modules) if programme_modules and not module else "",
         _profile_block(profile, learner_name),
         TAKSHASHILA_FRAMING,
         CITATION_RULES,

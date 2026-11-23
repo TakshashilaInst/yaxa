@@ -152,7 +152,7 @@ class Turn(BaseModel):
 class Conversation(BaseModel):
     id: str = Field(default_factory=lambda: uuid.uuid4().hex[:16])
     user_id: str
-    kind: str = "chat"  # chat | panel
+    kind: str = "chat"  # chat | panel | programme (whole-programme chat)
     module: str | None = None
     unit: str | None = None
     title: str = ""
