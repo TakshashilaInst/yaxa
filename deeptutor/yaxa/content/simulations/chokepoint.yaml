@@ -1,0 +1,138 @@
+id: chokepoint
+title: Chokepoint
+tagline: Washington tightens controls on chipmaking tools. Should India align its own export controls, and at what price?
+module: TP-HTG
+libraries: [TP, FACULTY-PRANAY, FACULTY-NITIN]
+setting: New Delhi, early 2027 (a fictional but realistic scenario)
+body: the inter-ministerial group
+decider: the Cabinet Committee on Security
+chair: nscs
+default_option: D
+decision: Which option should the inter-ministerial group recommend to the Cabinet Committee on Security?
+
+brief: |
+  Washington has issued a new export-control rule on chipmaking tools. Firms in partner countries keep their licences to service and upgrade US-origin tools only if their government adopts "equivalent controls" on exports of chipmaking equipment, components and related services to China within 18 months. Japan and the Netherlands already have such controls. India does not.
+
+  India's stakes are real on every side:
+  - **Fabs.** Two fabs and several assembly-and-test (OSAT) plants have been approved under the India Semiconductor Mission (ISM), with large central and state subsidies. Their lines run on tools that need regular servicing from US, Japanese and Dutch vendors.
+  - **Design.** India's chip-design sector sells services worldwide, including to Chinese firms.
+  - **Electronics exports.** India's fast-growing electronics assembly exports depend on components imported from China.
+  - **Autonomy.** India has long avoided joining blocs, and any move will be read in Beijing and Washington as a signal.
+
+  The Cabinet Committee on Security (CCS) has asked an inter-ministerial group (IMG), chaired by the National Security Council Secretariat, to recommend one option by Friday.
+
+  **What happens if nothing is decided:** option D applies by default. India does not align, and fab timelines slip while alternatives are found.
+
+  **What you will do over the next five days**
+  1. Day 1: read your role card and write your opening position.
+  2. Day 2: meet up to two other members privately.
+  3. Day 3: something happens. Revise your position.
+  4. Day 4: the IMG meets. You can intervene up to three times.
+  5. Day 5: file your final note. The CCS decides, and you see what follows.
+
+options:
+  - id: A
+    label: Align
+    summary: Adopt equivalent controls through new SCOMET categories within 18 months, in exchange for guaranteed tool servicing and joint R&D programmes.
+  - id: B
+    label: Conditional align
+    summary: Align, but only after named US concessions (licence guarantees for Indian fabs, tariff relief, talent visas) and with a 24-month phase-in.
+  - id: C
+    label: Partial
+    summary: Accept end-use checks on US-origin tools inside Indian fabs, but impose no Indian export controls on China.
+  - id: D
+    label: Decline
+    summary: Do not align. Diversify tool supply and servicing towards Japan, Korea and Europe, and accept the delays.
+
+roles:
+  - id: meity
+    name: MeitY and the India Semiconductor Mission
+    mandate: You are the Secretary, MeitY, and you oversee the India Semiconductor Mission.
+    wants: Keep the approved fabs and OSAT plants on schedule.
+    secondary: A deal that secures servicing for the fabs already approved, even if future fabs face uncertainty.
+    red_line: Nothing that makes a foreign fab partner exit India.
+    private: The main tool vendor has told you privately that it cannot guarantee servicing for the 28nm line without alignment. Without it, the first fab slips by about 18 months, and the foreign partner has hinted it may reconsider.
+    batna: Fab timelines slip, a partner may walk away, and the mission's credibility suffers.
+    opening: Stress how close the fabs are to production and how much is already committed, and push for alignment with safeguards.
+    leans: A
+  - id: mea
+    name: Ministry of External Affairs
+    mandate: You are the Secretary handling the Americas and East Asia in MEA.
+    wants: Keep India's strategic autonomy while extracting technology access.
+    secondary: Alignment that is phased and framed as India's own national-security decision, not as joining a bloc.
+    red_line: No public framing of India joining a US-led bloc against China.
+    private: Through a back channel, Washington has signalled it would accept a phased 24-month alignment. Beijing has separately signalled that alignment would bring retaliation, including on pharmaceutical ingredients (APIs) India imports.
+    batna: Relations with Washington cool a little; no immediate cost, and autonomy is intact.
+    opening: Warn against a rushed decision, and argue for using the deadline to bargain for concessions.
+    leans: B
+  - id: commerce
+    name: Department of Commerce (DGFT and SCOMET)
+    mandate: You are the Secretary, Commerce. DGFT administers India's export-control list, SCOMET.
+    wants: Protect the growth of electronics exports.
+    secondary: Alignment only with a plan to protect component supply for assembly exports.
+    red_line: No step that invites Chinese retaliation on electronics components without a mitigation plan.
+    private: Your data shows that a large share of the components used in electronics assembly for export come from China, and that several product lines would stall within about 60 days if those imports were disrupted.
+    batna: Electronics exports keep growing; India's fab ambitions shrink.
+    opening: Put the export numbers on the table and ask what India's assembly industry would do if Beijing retaliated.
+    leans: C
+  - id: finance
+    name: Ministry of Finance (Department of Expenditure)
+    mandate: You are the Secretary, Expenditure.
+    wants: Contain the fiscal cost of semiconductor policy.
+    secondary: Any option, if no new money is needed this year.
+    red_line: No open-ended increase in semiconductor subsidies.
+    private: The ISM outlay is almost fully committed. Any new incentive, for example to compensate firms hit by alignment or to fund alternative suppliers, needs a fresh Cabinet note and a larger cost share from states.
+    batna: Lowest fiscal cost, but your ministry is blamed if the fabs fail.
+    opening: Ask what each option costs the exchequer, and who pays if firms need compensation.
+    leans: D
+  - id: nscs
+    name: National Security Council Secretariat
+    mandate: You are the Deputy National Security Adviser. You chair the IMG.
+    wants: Trusted supply of chips for defence and telecom.
+    secondary: At least a credible plan for trusted defence electronics, whatever is decided on commercial chips.
+    red_line: No dependence on any single foreign power's licensing for defence electronics.
+    private: An entity linked to China recently tried to buy a significant stake in an Indian OSAT firm. The attempt was blocked quietly, but it worries you.
+    batna: Security gaps in the supply chain stay open.
+    opening: Frame the decision as one about trusted supply chains, and ask each ministry what it can live with.
+    leans: B
+  - id: industry
+    name: Semiconductor industry association
+    mandate: You speak for an industry association of chip-design firms and OSAT companies, invited to the IMG as a special invitee.
+    wants: Market access in both directions.
+    secondary: Time to adjust and compensation if design services to China are restricted.
+    red_line: No controls on design services to China without a transition period and compensation.
+    private: Two of your largest member design firms earn more than 30% of their revenue from Chinese clients. Separately, a US chip firm has offered one of your OSAT members a joint venture, conditional on India aligning.
+    batna: Firms keep their China revenue, and the joint venture is lost.
+    opening: Argue that Indian firms should not pay for a decision made in Washington, and ask for a long transition.
+    leans: C
+
+shocks:
+  - id: critical-minerals
+    when: [A, B]
+    headline: "Beijing announces licensing for gallium, germanium and graphite exports to India"
+    body: China's commerce ministry says exports of gallium, germanium and graphite to India will need case-by-case licences "in view of recent developments". Indian electronics and battery makers warn of shortages within weeks.
+  - id: congress-letter
+    when: [C, D]
+    headline: "US lawmakers name India's first fab as a diversion risk"
+    body: A group of US lawmakers writes to the Commerce Department naming India's first fab as a possible route for tools to reach China. Licences for the fab's tool servicing are placed under review.
+  - id: leak
+    when: [any]
+    headline: "IMG deliberations leak to a newspaper"
+    body: A national newspaper reports the options before the IMG. The opposition calls alignment a "surrender of strategic autonomy", and an editorial accuses the government of dithering.
+
+answer_key: |
+  **What happened in real life**
+  - **October 2022:** the US imposed sweeping controls on advanced computing chips and chipmaking tools bound for China. They were tightened in October 2023 and again in December 2024.
+  - **2023:** Japan and the Netherlands, home to key toolmakers, adopted their own controls aligned with the US rules.
+  - **July 2023:** China announced export controls on gallium and germanium, and later tightened controls on graphite and other critical minerals.
+  - **January 2025:** the US "AI diffusion" rule placed India in a middle tier with capped access to advanced AI chips. The rule was rescinded in May 2025.
+  - **India's ISM approvals:** Micron's assembly and test plant at Sanand (2023), and the Tata-PSMC fab at Dholera (2024), among others.
+  - **iCET (2023)** created a US-India framework for critical and emerging technologies, followed by **TRUST (2025)**.
+
+  **Takeaways**
+  1. Leverage comes from what others need from you. India's leverage lies in talent, design and a large market, not in owning every layer of the stack (see Pranay Kotasthane on India's semiconductor leverage).
+  2. "India" does not decide; ministries with different mandates do. Every option is a trade between fab timelines, strategic autonomy, export growth and fiscal cost.
+  3. Export controls create second-order effects: retaliation on critical minerals, firms relocating supply chains, and new chokepoints elsewhere.
+  4. Politics is the art of the possible. A phased, conditional decision is often the one the system can actually carry out.
+
+  _Facts for faculty to verify before use: dates and ISM project details._

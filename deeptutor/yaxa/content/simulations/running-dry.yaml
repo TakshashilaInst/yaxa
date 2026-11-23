@@ -1,0 +1,137 @@
+id: running-dry
+title: Running Dry
+tagline: Free power for farm pumps, a falling water table and an election in 18 months. What should the state do?
+module: GCPP-ER1
+libraries: [GCPP-ER1, GCPP173, GCPP-PAC, FACULTY-PRANAY, FACULTY-ANUPAM]
+setting: Doaba Pradesh, a fictional state in north India, June
+body: the committee of secretaries
+decider: the state Cabinet
+chair: cmo
+default_option: A
+decision: Which option should the committee of secretaries recommend to the state Cabinet?
+
+brief: |
+  Doaba Pradesh has given farmers free electricity for their pumps since 1997. It was meant to protect small farmers and raise farm output, and for a while it did both.
+
+  Today the power subsidy is the state's single largest subsidy, a little over a tenth of its own revenue. Because the power is free and unmetered, nobody knows exactly how much the pumps use. Farmers pump as much as they want, and paddy, which needs a great deal of water, now covers most of the kharif area. The water table under most blocks falls every year, and in some villages tubewells have had to be bored twice as deep as a decade ago.
+
+  The state electricity distribution company (the DISCOM) books a large share of its supply as "agricultural consumption". It is in losses, and the state owes it several months of unpaid subsidy. The DISCOM in turn is late paying the power generators.
+
+  The Union government's power-sector loan scheme has offered the state a large tranche of cheap credit for the DISCOM. The next instalment comes only if the state adopts a credible plan to cut the DISCOM's losses within 60 days.
+
+  The Chief Minister has asked a committee of secretaries to recommend one option to the state Cabinet by the end of this week. Assembly elections are 18 months away.
+
+  **What happens if nothing is decided:** option A continues by default, and the loan instalment lapses.
+
+  **What you will do over the next five days**
+  1. Day 1: read your role card and write your opening position.
+  2. Day 2: meet up to two other members privately.
+  3. Day 3: something happens. Revise your position.
+  4. Day 4: the committee meets. You can intervene up to three times.
+  5. Day 5: file your final note. The Cabinet decides, and you see what follows.
+
+options:
+  - id: A
+    label: Status quo, rationed
+    summary: Power stays free and unmetered, but farm supply is cut to 8 fixed hours a day to contain consumption.
+  - id: B
+    label: Pay-to-save (voluntary)
+    summary: Meter farm pumps. Every farmer gets a fixed cash credit per acre in their bank account each season and keeps whatever they don't spend on power. No one pays more than today. Joining is voluntary.
+  - id: C
+    label: Free up to a cap
+    summary: Meter all farm pumps. Power is free up to a fixed number of units per connection each season; use above the cap is billed at a tariff.
+  - id: D
+    label: Target small farmers
+    summary: Free power continues for farmers with under 5 acres. Larger farmers pay a tariff, metered.
+
+roles:
+  - id: finance
+    name: Finance Department
+    mandate: You are the Principal Secretary, Finance. You guard the state's budget and its borrowing limit.
+    wants: Cut the power subsidy bill and keep the Union loan instalment.
+    secondary: Any plan that caps the subsidy's growth and is credible enough to unlock the loan, even if savings come later.
+    red_line: No new unfunded commitment. Every rupee promised must have a source in this year's budget.
+    private: The state has already borrowed close to its annual limit. If the loan instalment lapses, you will have to cut the capital budget for roads and schools by a matching amount. You also know the Union ministry would accept a phased plan if the first metering milestone is within six months.
+    batna: Arrears to the DISCOM keep growing and you cut capital spending to cover them. Your department is blamed for both.
+    opening: Put the size of the subsidy and the loan deadline on the table, and ask every option to show its cost in the first year.
+    leans: C
+  - id: discom
+    name: Power Department and DISCOM
+    mandate: You are the Managing Director of the state DISCOM, also representing the Power Department.
+    wants: Get the subsidy paid in advance and on time, and cut the DISCOM's losses.
+    secondary: A plan that at least clears the arrears and gets the loan instalment, even if metering is slow.
+    red_line: No scheme unless the state pays the DISCOM its subsidy before the season starts, not after.
+    private: A large part of what the DISCOM books as "farm consumption" is actually theft and line losses in villages. Booking it as free farm power hides it, because the state pays for it. Meters will expose this, and the losses will show up as the DISCOM's own. You have not told anyone outside the company.
+    batna: Losses stay hidden inside the subsidy, but the DISCOM keeps sliding towards default with the generators.
+    opening: Support reform in principle, but insist the state pays in advance, and be cautious about how fast meters are installed.
+    leans: A
+  - id: agriculture
+    name: Agriculture Department
+    mandate: You are the Secretary, Agriculture. You want farmers to move away from water-hungry paddy to crops like maize, pulses and cotton.
+    wants: A scheme that rewards farmers for using less water and pushes them away from paddy.
+    secondary: At least no scheme that cuts farm incomes before the procurement season.
+    red_line: No visible cut to farm incomes before the paddy procurement season.
+    private: A district study your department commissioned shows that farmers do shift crops when they are paid to save power and water, but only when the payment arrives on time for at least two seasons. Where payments were late, farmers went back to paddy.
+    batna: Paddy area keeps growing, the water table keeps falling, and your diversification schemes stay small.
+    opening: Argue that the choice is about cropping patterns, not just power, and back the option that pays farmers to save.
+    leans: B
+  - id: cmo
+    name: Chief Minister's Office
+    mandate: You are the Principal Secretary to the Chief Minister. You chair this committee and must carry its recommendation to the Cabinet.
+    wants: A reform the government can defend in the election in 18 months.
+    secondary: A decision that can be delayed or piloted without looking like a retreat.
+    red_line: No "electricity bill" reaches any farmer before the election.
+    private: An internal survey shows small farmers would support cash transfers if the first payment arrives before the meters go in. Large farmers oppose any metering, and they dominate the farmers' union leadership.
+    batna: Status quo is safe for now, but the government is blamed if power cuts hit during paddy transplanting.
+    opening: Ask each member what their option would look like on a front page, and steer the group towards something that can be sequenced.
+    leans: B
+  - id: union
+    name: Farmers' Union
+    mandate: You speak for the largest farmers' union in the state, invited to the committee as a special invitee.
+    wants: Keep free power as a right, with no meters.
+    secondary: If meters come, a cash payment guaranteed by law, paid before the season, and no tariff for anyone.
+    red_line: No meters that look like the first step towards billing farmers.
+    private: Your union is split. Younger members in the most water-scarce districts would accept a guaranteed cash credit, because their tubewells are failing. The leadership, mostly larger farmers, does not want this known.
+    batna: The status quo holds and the union stays united, but wells keep failing in the dry districts.
+    opening: Defend free power as a promise the state made, and demand guarantees before discussing any meter.
+    leans: A
+  - id: water
+    name: Water Resources Department and Groundwater Authority
+    mandate: You are the Secretary, Water Resources, and you chair the state Groundwater Authority.
+    wants: Cut groundwater extraction quickly.
+    secondary: A scheme that at least measures extraction, so it can be managed later.
+    red_line: No scheme that increases pumping.
+    private: Most blocks in the state are already classed as over-exploited, and your latest assessment shows a few will run out of usable groundwater within ten years at current rates.
+    batna: Extraction continues and your warnings are ignored until wells fail.
+    opening: Put the groundwater numbers first, and judge every option by how much pumping it cuts.
+    leans: C
+
+shocks:
+  - id: night-meters
+    when: [B, C, D]
+    headline: "Video of officials fitting meters at night goes viral"
+    body: A video shows DISCOM staff installing meters on farm pumps after dark in a dry district. Opposition leaders call it "billing by the back door". The farmers' union announces a highway blockade in three days unless metering stops.
+  - id: transplanting-cuts
+    when: [A]
+    headline: "Power cuts hit paddy transplanting"
+    body: The DISCOM cannot pay the generators, and two plants cut supply. Farm feeders get barely four hours a day in the week paddy is transplanted. Farmers block roads in four districts, and the Union ministry reminds the state that the loan instalment depends on a loss-reduction plan.
+  - id: late-monsoon
+    when: [any]
+    headline: "Monsoon delayed by three weeks"
+    body: The India Meteorological Department says the monsoon will reach the state three weeks late. Pump demand is at a record, and the DISCOM warns of rolling cuts.
+
+answer_key: |
+  **What happened in real life**
+  - **Punjab** has given free power to farm pumps since 1997. The subsidy grew into one of the state's largest items of spending, while groundwater in most blocks became over-exploited.
+  - **Paani Bachao Paisa Kamao (2018)**: Punjab piloted a voluntary scheme that metered pumps on a few feeders and paid farmers for the power they saved. Uptake was limited, and payments and trust were the sticking points.
+  - **Andhra Pradesh (2020-21)** moved to meter farm pumps and pay the farm power subsidy as a direct cash transfer, starting with a pilot district, and met resistance from farmers and the opposition.
+  - **The Electricity (Amendment) Bill 2020** proposed paying electricity subsidies as direct cash transfers. The provision became one of the farm protesters' demands, and the Union government agreed to set it aside in December 2021.
+  - **The Punjab Preservation of Subsoil Water Act 2009** delayed paddy transplanting to save groundwater. It worked on its own goal, but it squeezed the gap between the paddy harvest and wheat sowing, which made stubble burning worse across north India.
+
+  **Takeaways**
+  1. A free price hides a cost; it does not remove it. The cost moves to the water table, the DISCOM's books and the state budget.
+  2. Sequencing decides feasibility. Who gets paid first, and whether the first payment arrives before the meter, often matters more than the option chosen.
+  3. Measuring something changes who is accountable. Meters expose losses that some actors are glad to keep hidden, which is why measurement itself is resisted.
+  4. A policy can succeed on its own goal and cause a new problem elsewhere (the 2009 Act and stubble burning). Judge policies by their effects, not their intentions.
+
+  _Facts for faculty to verify before use: dates, PBPK design and uptake, Andhra Pradesh scheme details._
