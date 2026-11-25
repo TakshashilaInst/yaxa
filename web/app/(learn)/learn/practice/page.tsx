@@ -11,19 +11,8 @@ import { Suspense, useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
 import { AnswerText, GroundingMargin } from "@/features/yaxa/grounding";
+import { ReviewLabel, STATUS_LABEL } from "@/features/yaxa/progress";
 import { yaxa, type PracticeProgress, type PracticeQuestion, type PracticeResult, type UnitProgress } from "@/lib/yaxa-api";
-
-const STATUS_LABEL = { new: "Not started", practising: "Practising", mastered: "Mastered" } as const;
-
-/** "Review due", or when the next review falls, e.g. "Review 3 Dec". */
-function ReviewLabel({ review }: { review: UnitProgress["review"] }) {
-  if (!review) return null;
-  if (review.due) {
-    return <span className="yx-status yx-status-due" title={`About ${Math.round(review.recall * 100)}% likely you still remember this`}>Review due</span>;
-  }
-  const when = new Date(`${review.next_review}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
-  return <span className="yx-muted" style={{ fontSize: 12.5 }} title="Yaxa will ask you about this unit again then, so it sticks">Review {when}</span>;
-}
 
 /** One dot per recent answer, filled by score (0–3). */
 function ScoreDots({ scores }: { scores: number[] }) {

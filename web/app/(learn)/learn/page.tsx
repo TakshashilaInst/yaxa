@@ -1,22 +1,81 @@
 "use client";
 
-/** Yaxa Learn home: my programme → modules → learning units. */
+/**
+ * The student's home. Top to bottom: where to carry on (reviews due, last
+ * conversation, a simulation in progress), their modules as compact cards
+ * with progress (each opens the module page), the programme-wide tools, and
+ * their recent conversations.
+ */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { EnrolPicker } from "@/features/yaxa/enrol";
-import { yaxa, type ConversationSummary, type ModuleView, type ProgrammeView, type ReviewDue } from "@/lib/yaxa-api";
+import {
+  yaxa,
+  type ConversationSummary,
+  type ModuleSummary,
+  type ModuleView,
+  type ProgrammeView,
+  type ReviewDue,
+  type SimScenarioCard,
+} from "@/lib/yaxa-api";
 
-function chatHref(module: string, unit?: string) {
-  const q = new URLSearchParams({ module });
-  if (unit) q.set("unit", unit);
-  return `/learn/chat/new?${q}`;
+function convHref(c: ConversationSummary) {
+  return c.kind === "panel" ? `/learn/panel?id=${c.id}` : `/learn/chat/${c.id}`;
 }
 
-function ModuleCard({ m }: { m: ModuleView }) {
-  const router = useRouter();
+function convLabel(c: ConversationSummary) {
+  if (c.kind === "panel") return `Faculty panel${c.module ? ` · ${c.module}` : ""}`;
+  if (c.kind === "programme") return "Whole programme";
+  return [c.module, c.unit].filter(Boolean).join(" · ");
+}
+
+// ------------------------------------------------------------- carry on
+function CarryOn({ due, last, sim }: { due: ReviewDue[]; last?: ConversationSummary; sim?: { card: SimScenarioCard; run: SimScenarioCard["runs"][number] } }) {
+  if (!due.length && !last && !sim) return null;
+  return (
+    <section style={{ marginTop: 22 }}>
+      <h2 className="yx-section-title">Carry on</h2>
+      <div className="yx-grid">
+        {!!due.length && (
+          <div className="yx-card yx-carry">
+            <div className="yx-eyebrow">Due for review</div>
+            <ul className="yx-carry-list">
+              {due.slice(0, 3).map((d) => (
+                <li key={`${d.module}/${d.unit}`}>
+                  <Link href={`/learn/practice?module=${encodeURIComponent(d.module)}&unit=${encodeURIComponent(d.unit)}`}>{d.unit_title}</Link>
+                  <span className="yx-muted"> · {d.module}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="yx-muted yx-carry-note">
+              {due.length > 3 ? `and ${due.length - 3} more. ` : ""}One question each keeps the idea fresh.
+            </p>
+          </div>
+        )}
+        {last && (
+          <Link href={convHref(last)} className="yx-card yx-carry">
+            <div className="yx-eyebrow">Last conversation</div>
+            <div className="yx-carry-title">{last.title}</div>
+            <p className="yx-muted yx-carry-note">{convLabel(last) || "Conversation"} · pick up where you left off →</p>
+          </Link>
+        )}
+        {sim && (
+          <Link href={`/learn/sim/${sim.run.id}`} className="yx-card yx-carry">
+            <div className="yx-eyebrow">Simulation in progress</div>
+            <div className="yx-carry-title">{sim.card.title}</div>
+            <p className="yx-muted yx-carry-note">Day {sim.run.stage} as {sim.run.role} →</p>
+          </Link>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// -------------------------------------------------------------- modules
+function ModuleCard({ m, summary }: { m: ModuleView; summary?: ModuleSummary }) {
   if (!m.available) {
     return (
       <div className="yx-card yx-module yx-module-soon">
@@ -25,36 +84,26 @@ function ModuleCard({ m }: { m: ModuleView }) {
       </div>
     );
   }
+  const units = summary?.units ?? m.units.length;
+  const mastered = summary?.mastered ?? 0;
+  const pct = units ? Math.round((mastered / units) * 100) : 0;
   return (
-    <div className="yx-card yx-module">
+    <Link href={`/learn/module/${encodeURIComponent(m.code)}`} className="yx-card yx-module yx-module-link">
       <div className="yx-eyebrow">{m.code}</div>
       <h3>{m.title}</h3>
-      <ul className="yx-units">
-        {m.units.map((u) => (
-          <li key={u.id}>
-            <button type="button" title={u.outcomes} onClick={() => router.push(chatHref(m.code, u.id))}>
-              <span className="yx-unit-id">{u.id.replace("U", "U.")}</span>
-              {u.title}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div className="yx-module-actions">
-        <Link className="yx-btn yx-btn-primary yx-btn-sm" href={chatHref(m.code)}>
-          Ask about this module →
-        </Link>
-        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/practice?module=${encodeURIComponent(m.code)}`} title="Yaxa asks, you answer, it marks">
-          Practise
-        </Link>
-        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/panel?module=${encodeURIComponent(m.code)}`} title="Put a question to a faculty panel">
-          Faculty panel
-        </Link>
+      <div className="yx-progress" aria-label={`${mastered} of ${units} units mastered`}>
+        <span style={{ width: `${pct}%` }} />
       </div>
-    </div>
+      <p className="yx-muted yx-module-meta">
+        {summary?.practised ? `${mastered} of ${units} units mastered` : `${units} units`}
+        {summary?.due ? <> · <b className="yx-due-text">{summary.due} due for review</b></> : null}
+      </p>
+      <span className="yx-module-open">Open module →</span>
+    </Link>
   );
 }
 
-function ProgrammeSection({ p }: { p: ProgrammeView }) {
+function ProgrammeSection({ p, summary }: { p: ProgrammeView; summary: Record<string, ModuleSummary> }) {
   const track = p.tracks.find((t) => t.code === p.track);
   const groups: [string, ModuleView[]][] = track
     ? [
@@ -65,26 +114,42 @@ function ProgrammeSection({ p }: { p: ProgrammeView }) {
       ? p.tracks.map((t) => [t.name, [...t.core, ...t.specialisation]] as [string, ModuleView[]])
       : [["Modules", p.modules]];
   return (
-    <section style={{ marginTop: 28 }}>
+    <section style={{ marginTop: 30 }}>
       <div className="yx-eyebrow">
         {p.code}
         {track ? ` · ${track.name}` : ""}
         {p.cohort ? ` · Cohort ${p.cohort}` : ""}
       </div>
       <h2 style={{ margin: "4px 0 6px" }}>{p.name}</h2>
-      <p className="yx-muted" style={{ marginTop: 0 }}>{p.summary}</p>
       {groups.map(([label, mods]) =>
         mods.length ? (
-          <div key={label} style={{ marginTop: 16 }}>
-            <h3 style={{ fontSize: 15, margin: "0 0 8px" }}>{label}</h3>
+          <div key={label} style={{ marginTop: 14 }}>
+            <h3 className="yx-group-title">{label}</h3>
             <div className="yx-grid">
-              {mods.map((m) => (
-                <ModuleCard key={m.code} m={m} />
-              ))}
+              {mods.map((m) => <ModuleCard key={m.code} m={m} summary={summary[m.code]} />)}
             </div>
           </div>
         ) : null,
       )}
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------- tools
+function Tools() {
+  return (
+    <section style={{ marginTop: 34 }}>
+      <h2 className="yx-section-title">Across your programme</h2>
+      <div className="yx-grid">
+        <Link href="/learn/chat/new?scope=programme" className="yx-card yx-carry">
+          <div className="yx-carry-title">Ask across my programme →</div>
+          <p className="yx-muted yx-carry-note">For questions that cut across modules. Yaxa draws on all your modules and the faculty&apos;s writing.</p>
+        </Link>
+        <Link href="/learn/sim" className="yx-card yx-carry">
+          <div className="yx-carry-title">Policy simulations →</div>
+          <p className="yx-muted yx-carry-note">Take a role in a real policy decision over five days. Yaxa plays everyone else.</p>
+        </Link>
+      </div>
     </section>
   );
 }
@@ -95,14 +160,19 @@ export default function LearnHome() {
   const [recent, setRecent] = useState<ConversationSummary[]>([]);
   const [allProgrammes, setAllProgrammes] = useState<ProgrammeView[]>([]);
   const [due, setDue] = useState<ReviewDue[]>([]);
+  const [summary, setSummary] = useState<Record<string, ModuleSummary>>({});
+  const [sims, setSims] = useState<SimScenarioCard[]>([]);
 
   useEffect(() => {
     if (me && !me.onboarded && !me.is_admin) router.replace("/learn/onboarding");
   }, [me, router]);
   useEffect(() => {
     if (!me) return;
+    // each loads on its own: one failing never blanks the page
     yaxa.conversations().then(setRecent).catch(() => {});
     yaxa.practiceReview().then((r) => setDue(r.due)).catch(() => {});
+    yaxa.practiceSummary().then((r) => setSummary(r.modules)).catch(() => {});
+    yaxa.simScenarios().then(setSims).catch(() => {});
     if (me.is_admin && !me.enrolments.length) yaxa.catalog().then((c) => setAllProgrammes(c.programmes)).catch(() => {});
   }, [me]);
 
@@ -110,78 +180,46 @@ export default function LearnHome() {
   if (!me) return <div className="yx"><FullPageMessage><p className="yx-muted">Loading…</p></FullPageMessage></div>;
 
   const first = me.display_name.split(" ")[0];
+  const enrolled = !!me.enrolments.length || me.is_admin;
+  const activeSim = sims.flatMap((card) => card.runs.filter((r) => r.stage <= 5).map((run) => ({ card, run })))[0];
+  const fresh = !due.length && !recent.length && !activeSim;
+
   return (
     <div className="yx">
       <LearnHeader me={me} />
       <main className="yx-page">
         <h1 style={{ margin: 0 }}>Welcome, {first}.</h1>
-        <p className="yx-lede">
-          Pick a learning unit to start. Yaxa answers from Takshashila&apos;s course material, shows you the passages it used,
-          and draws its examples from your world{me.profile.field ? `: ${me.profile.field.toLowerCase()}` : ""}.{" "}
+        <p className="yx-lede" style={{ marginBottom: 0 }}>
+          {fresh && enrolled
+            ? "Open a module to start: read a unit, ask Yaxa to explain it, let it question you, then test yourself."
+            : "Yaxa answers from Takshashila's course material and shows you the passages it used."}{" "}
           <Link href="/learn/onboarding">Edit your profile</Link>
         </p>
 
-        {!!due.length && (
-          <section className="yx-card" style={{ marginTop: 20 }}>
-            <div className="yx-eyebrow">Due for review</div>
-            <p className="yx-muted" style={{ margin: "4px 0 10px" }}>
-              Ideas fade unless you use them. Answer one question on each of these units to keep them fresh;
-              Yaxa spaces the next review further out each time you get it right.
-            </p>
-            <ul className="yx-units">
-              {due.slice(0, 5).map((d) => (
-                <li key={`${d.module}/${d.unit}`}>
-                  <Link href={`/learn/practice?module=${encodeURIComponent(d.module)}&unit=${encodeURIComponent(d.unit)}`}>
-                    <span className="yx-unit-id">{d.module}</span> {d.unit_title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            {due.length > 5 && <p className="yx-muted" style={{ margin: "8px 0 0", fontSize: 13 }}>and {due.length - 5} more</p>}
-          </section>
-        )}
-        {(!!me.enrolments.length || me.is_admin) && (
-          <Link href="/learn/chat/new?scope=programme" className="yx-card" style={{ display: "block", marginTop: 20, textDecoration: "none" }}>
-            <div className="yx-eyebrow">New</div>
-            <div style={{ color: "var(--yx-maroon)", fontWeight: 600, fontSize: 17 }}>Ask across my programme →</div>
-            <p className="yx-muted" style={{ margin: "4px 0 0" }}>
-              One conversation that draws on all your modules and the faculty&apos;s writing, for questions that cut across modules.
-            </p>
-          </Link>
-        )}
-        {(!!me.enrolments.length || me.is_admin) && (
-          <Link href="/learn/sim" className="yx-card" style={{ display: "block", marginTop: 12, textDecoration: "none" }}>
-            <div className="yx-eyebrow">New</div>
-            <div style={{ color: "var(--yx-maroon)", fontWeight: 600, fontSize: 17 }}>Policy simulations →</div>
-            <p className="yx-muted" style={{ margin: "4px 0 0" }}>
-              Take a role in a real policy decision over five days. Yaxa plays everyone else, each with their own interests and secrets.
-            </p>
-          </Link>
-        )}
-        {!me.enrolments.length && !me.is_admin && <EnrolPicker onDone={reload} />}
-        {me.enrolments.map((p) => (
-          <ProgrammeSection key={p.code} p={p} />
-        ))}
+        <CarryOn due={due} last={recent[0]} sim={activeSim} />
+
+        {!enrolled && <EnrolPicker onDone={reload} />}
+        {me.enrolments.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
         {me.is_admin && !me.enrolments.length && (
           <>
             <p className="yx-muted" style={{ marginTop: 24 }}>You&apos;re an admin, so you see every programme.</p>
-            {allProgrammes.map((p) => (
-              <ProgrammeSection key={p.code} p={p} />
-            ))}
+            {allProgrammes.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
           </>
         )}
 
-        {!!recent.length && (
-          <section style={{ marginTop: 36 }}>
-            <h2 style={{ fontSize: 20 }}>Your conversations</h2>
-            <div className="yx-grid">
-              {recent.slice(0, 9).map((c) => (
-                <Link key={c.id} href={c.kind === "panel" ? `/learn/panel?id=${c.id}` : `/learn/chat/${c.id}`} className="yx-card" style={{ textDecoration: "none" }}>
-                  <div className="yx-eyebrow">{c.kind === "panel" ? "Faculty panel" : c.kind === "programme" ? "Whole programme" : ""}{c.kind === "panel" && c.module ? " · " : ""}{c.module}{c.unit ? ` · ${c.unit}` : ""}</div>
-                  <div style={{ color: "var(--yx-maroon)", fontWeight: 600 }}>{c.title}</div>
-                </Link>
+        {enrolled && <Tools />}
+
+        {recent.length > 1 && (
+          <section style={{ marginTop: 34 }}>
+            <h2 className="yx-section-title">Your conversations</h2>
+            <ul className="yx-conv-list">
+              {recent.slice(1, 9).map((c) => (
+                <li key={c.id}>
+                  <Link href={convHref(c)}>{c.title}</Link>
+                  <span className="yx-muted"> · {convLabel(c) || "Conversation"}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
         )}
       </main>

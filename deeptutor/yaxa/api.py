@@ -17,8 +17,7 @@ from pydantic import BaseModel
 
 from deeptutor.multi_user.context import get_current_user
 
-from . import cohort, grounding, library_api, panel, practice, prompting, store
-from .sim import api as sim_api
+from . import cohort, grounding, library_api, module_page, panel, practice, prompting, store
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
     _allowed_modules,
     _cited_numbers,
@@ -33,12 +32,14 @@ from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
 )
 from .catalog import Catalog, get_catalog
 from .llm import ModelUnavailable, complete_text, resolve_for, stream_text
+from .sim import api as sim_api
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 router.include_router(practice.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
+router.include_router(module_page.router)
 router.include_router(library_api.router)
 router.include_router(sim_api.router)
 
@@ -430,7 +431,9 @@ async def kb_file(kb: str, file_name: str) -> FileResponse:
     path = grounding.kb_raw_path(kb, file_name)
     if not path:
         raise HTTPException(404, "File not found")
-    media = "application/pdf" if path.suffix.lower() == ".pdf" else None
+    suffix = path.suffix.lower()
+    # transcripts and notes open as readable text in the browser, not as a download
+    media = "application/pdf" if suffix == ".pdf" else "text/plain; charset=utf-8" if suffix in {".md", ".txt"} else None
     return FileResponse(path, media_type=media, content_disposition_type="inline", filename=path.name)
 
 

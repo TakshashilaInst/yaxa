@@ -123,6 +123,32 @@ export interface UnitProgress {
   review: { due: boolean; next_review: string; recall: number } | null;
 }
 
+export interface ModuleReading {
+  title: string;
+  kind: string; // pdf | video (webinar transcript) | note | anecdote
+  open: string; // opens inside Yaxa (PDF / transcript) or the published article
+  corpus: string;
+  byline: string;
+}
+
+export interface ModuleUnitDetail {
+  id: string;
+  title: string;
+  outcomes: string;
+  readings: ModuleReading[];
+  progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
+}
+
+export interface ModuleDetail {
+  code: string;
+  title: string;
+  description: string;
+  units: ModuleUnitDetail[];
+  other_readings: ModuleReading[];
+}
+
+export interface ModuleSummary { units: number; mastered: number; practised: number; due: number }
+
 export interface ReviewDue {
   module: string;
   module_title: string;
@@ -283,6 +309,8 @@ export const yaxa = {
     if (conversationId) q.set("conversation_id", conversationId);
     return json<string[]>(`/socratic/topics?${q}`);
   },
+  moduleDetail: (code: string) => json<ModuleDetail>(`/module/${encodeURIComponent(code)}`),
+  practiceSummary: () => json<{ modules: Record<string, ModuleSummary> }>("/practice/summary"),
   practiceReview: () => json<{ due: ReviewDue[] }>("/practice/review"),
   practiceProgress: (module: string) => json<PracticeProgress>(`/practice/progress?module=${encodeURIComponent(module)}`),
   practiceQuestion: (module: string, unit?: string | null) =>

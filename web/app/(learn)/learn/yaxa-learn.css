@@ -265,3 +265,29 @@
 /* Composer: neutral border, maroon when typing. */
 .yx-composer form:focus-within { border-color: var(--yx-maroon-2); }
 .yx-status-due { color: #fff; background: var(--yx-maroon-2); }
+
+/* ------------------------------------------------- home: carry on, modules */
+.yx-section-title { font-size: 20px; margin: 0 0 10px; }
+.yx-group-title { font-size: 15px; margin: 0 0 8px; font-family: var(--font-sans), system-ui, sans-serif; color: var(--yx-muted); text-transform: uppercase; letter-spacing: .06em; }
+.yx-carry { display: block; text-decoration: none; color: inherit; }
+a.yx-carry:hover, a.yx-module-link:hover { border-color: var(--yx-maroon-2); }
+.yx-carry-title { color: var(--yx-maroon); font-weight: 600; font-size: 17px; margin-top: 2px; }
+.yx-carry-note { margin: 4px 0 0; font-size: 14px; }
+.yx-carry-list { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 4px; }
+.yx-module-link { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit; }
+.yx-module-link h3 { margin: 0; }
+.yx-module-meta { margin: 0; font-size: 13.5px; font-family: var(--font-sans), system-ui, sans-serif; }
+.yx-module-open { margin-top: auto; color: var(--yx-maroon-2); font-weight: 600; font-size: 14px; font-family: var(--font-sans), system-ui, sans-serif; }
+.yx-due-text { color: var(--yx-maroon-2); }
+.yx-progress { height: 6px; border-radius: 999px; background: var(--yx-line); overflow: hidden; }
+.yx-progress > span { display: block; height: 100%; background: var(--yx-maroon-2); border-radius: 999px; }
+.yx-conv-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+
+/* ------------------------------------------------------------ module page */
+.yx-unit-card { padding: 18px 20px; }
+.yx-unit-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.yx-unit-card-progress { display: flex; gap: 8px; align-items: center; }
+.yx-study-modes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.yx-unit-sub { font-size: 13px; margin: 16px 0 4px; font-family: var(--font-sans), system-ui, sans-serif; color: var(--yx-muted); text-transform: uppercase; letter-spacing: .06em; }
+.yx-readings { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 6px; font-size: 15.5px; }
+.yx-reading-kind { display: inline-block; min-width: 64px; margin-right: 8px; font-family: var(--font-sans), system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--yx-muted); }

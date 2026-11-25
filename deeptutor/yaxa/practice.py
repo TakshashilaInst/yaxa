@@ -136,6 +136,26 @@ async def review_due() -> dict[str, Any]:
     return {"due": review.due_units(cu.id, modules)}
 
 
+@router.get("/summary")
+async def summary() -> dict[str, Any]:
+    """Per module: how many units, how many mastered, practised at all, and due for review."""
+    cu, user = _me()
+    cat = get_catalog()
+    out: dict[str, Any] = {}
+    for code in _allowed_modules(cat, cu, user):
+        mod = cat.module(code)
+        if not mod or not mod.units:
+            continue
+        rows = _progress(cu.id, mod)
+        out[code] = {
+            "units": len(rows),
+            "mastered": sum(r["status"] == "mastered" for r in rows),
+            "practised": sum(r["answered"] > 0 for r in rows),
+            "due": sum(bool((r["review"] or {}).get("due")) for r in rows),
+        }
+    return {"modules": out}
+
+
 @router.post("/question")
 async def new_question(body: QuestionBody) -> dict[str, Any]:
     cu, user = _me()

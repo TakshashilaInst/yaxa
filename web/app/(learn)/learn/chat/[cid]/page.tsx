@@ -49,7 +49,7 @@ function ChatScreen() {
   const [loaded, setLoaded] = useState(params.cid === "new");
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [socratic, setSocratic] = useState(false);
+  const [socratic, setSocratic] = useState(search.get("mode") === "socratic"); // "Question me" on the module page
   const [faculty, setFaculty] = useState<string>("");
   const [facultyList, setFacultyList] = useState<FacultyView[]>([]);
   const [starters, setStarters] = useState<string[]>([]);
