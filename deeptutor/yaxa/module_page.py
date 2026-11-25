@@ -124,21 +124,30 @@ def group_readings(
     return groups
 
 
+def module_groups(cat: Any, module: Module) -> dict[str, list[dict[str, Any]]]:
+    """The module's readings grouped by unit, from its library on disk."""
+    siblings = [m for m in cat.modules.values() if m.kb and m.kb == module.kb]
+    owners = {m.code: {c for u in m.units for c in _codes(u)} for m in siblings}  # modules sharing this library
+    return group_readings(module, _files(module.kb) if module.kb else {}, shared_kb=len(siblings) > 1, owners=owners)
+
+
 @router.get("/{code}")
 async def module_view(code: str) -> dict[str, Any]:
     cu, user = _me()
     cat = get_catalog()
     module = _require_module(cat, cu, user, code)
     assert module is not None
-    siblings = [m for m in cat.modules.values() if m.kb and m.kb == module.kb]
-    owners = {m.code: {c for u in m.units for c in _codes(u)} for m in siblings}  # modules sharing this library
-    groups = group_readings(module, _files(module.kb) if module.kb else {}, shared_kb=len(siblings) > 1, owners=owners)
+    groups = module_groups(cat, module)
     if not (cu.is_admin or getattr(user, "role", "") == "faculty"):
         # Recordings on Drive are shared with staff only; students watch them on the LMS session page.
         for rows in groups.values():
             for r in rows:
                 r.pop("watch", None)
     progress = {row["id"]: row for row in practice._progress(cu.id, module)}
+    from . import schedule  # here, not at the top: schedule imports this module
+
+    cohort = schedule.learner_cohort(user)
+    dated = {s.code: s for s in cohort.sessions} if cohort else {}
     return {
         "code": module.code,
         "title": module.title,
@@ -149,6 +158,9 @@ async def module_view(code: str) -> dict[str, Any]:
                 "title": u.title,
                 "outcomes": u.outcomes,
                 "lms_url": u.lms_url,
+                "session": {"starts_at": schedule.starts_at(dated[u.id]).isoformat(), "host": dated[u.id].host}
+                if u.id in dated
+                else None,
                 "readings": groups.get(u.id, []),
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
             }

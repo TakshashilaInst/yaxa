@@ -432,6 +432,10 @@ async def kb_file(kb: str, file_name: str) -> FileResponse:
     path = grounding.kb_raw_path(kb, file_name)
     if not path:
         raise HTTPException(404, "File not found")
+    try:
+        store.mark_opened(cu.id, kb, file_name)
+    except Exception:  # a tick is never worth blocking the reading
+        logger.warning("yaxa: could not record an opened reading", exc_info=True)
     suffix = path.suffix.lower()
     # transcripts and notes open as readable text in the browser, not as a download
     media = "application/pdf" if suffix == ".pdf" else "text/plain; charset=utf-8" if suffix in {".md", ".txt"} else None

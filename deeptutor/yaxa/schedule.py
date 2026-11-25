@@ -23,7 +23,8 @@ from pydantic import BaseModel, Field
 import yaml
 
 from . import store
-from .access import _me, _privileged
+from . import module_page
+from .access import _allowed_modules, _me, _privileged
 from .catalog import get_catalog
 
 router = APIRouter()
@@ -319,3 +320,76 @@ async def staff_set_member(code: str, user_id: str, body: MemberBody) -> dict:
     e.cohort, e.track, e.programme = target.code, body.track, target.programme
     store.save_user(user)
     return {"ok": True}
+
+
+# ------------------------------------------------------------------ the learner's week
+JOIN_BEFORE = timedelta(minutes=60)  # webinar link shows from an hour before the start ...
+JOIN_AFTER = timedelta(hours=3)  # ... until three hours after (the session also stays listed that long)
+WEEK = timedelta(days=7)
+DATES_AHEAD = timedelta(days=14)
+FILES = "/api/yaxa/files/"
+
+
+def learner_cohort(user: store.YaxaUser) -> Cohort | None:
+    for e in user.enrolments:
+        if e.cohort:
+            try:
+                c = load_cohort(e.cohort)
+            except ValueError:
+                continue
+            if c:
+                return c
+    return None
+
+
+def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
+    """The learner's next seven days: their sessions with prep readings, and key dates."""
+    c = learner_cohort(user)
+    if not c:
+        return {"cohort": None, "sessions": [], "dates": []}
+    now = (now or datetime.now(IST)).astimezone(IST)
+    cat = get_catalog()
+    track = next((e.track for e in user.enrolments if e.cohort == c.code), None)
+    modules = [cat.modules[m] for m in _allowed_modules(cat, cu, user) if m in cat.modules]
+    home = {u.id: m for m in modules for u in m.units}  # session code -> module
+    opened = store.opened(user.user_id)
+    groups_cache: dict[str, dict] = {}
+    rows = []
+    for s in sorted(c.sessions, key=starts_at):
+        start = starts_at(s)
+        mod = home.get(s.code)
+        if not mod or not (now - JOIN_AFTER <= start <= now + WEEK):
+            continue
+        if mod.code not in groups_cache:
+            groups_cache[mod.code] = module_page.module_groups(cat, mod)
+        items = groups_cache[mod.code].get(s.code, [])
+        unit = next(u for u in mod.units if u.id == s.code)
+        rows.append({
+            "code": s.code,
+            "module": mod.code,
+            "module_title": mod.title,
+            "title": unit.title,
+            "starts_at": start.isoformat(),
+            "host": s.host,
+            "note": s.note,
+            "webinar_url": s.webinar_url if start - JOIN_BEFORE <= now <= start + JOIN_AFTER else "",
+            "readings": [
+                {"title": r["title"], "open": r["open"],
+                 "opened": r["open"].startswith(FILES) and r["open"][len(FILES):] in opened}
+                for r in items if r["kind"] != "video"
+            ],
+            "transcript_ready": any(r["kind"] == "video" and c.code in (r.get("corpus") or "") for r in items),
+        })
+    today = now.date()
+    dates = [
+        {"date": d.date, "label": d.label}
+        for d in sorted(c.dates, key=lambda d: d.date)
+        if (not d.track or d.track == track) and today <= date.fromisoformat(d.date) <= today + DATES_AHEAD
+    ]
+    return {"cohort": c.code, "sessions": rows, "dates": dates}
+
+
+@router.get("/schedule/week")
+async def my_week() -> dict:
+    cu, user = _me()
+    return week(cu, user)

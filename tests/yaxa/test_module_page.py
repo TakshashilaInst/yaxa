@@ -181,3 +181,18 @@ def test_students_get_no_drive_links_until_recordings_are_shared_with_them(monke
     staff = SimpleNamespace(id="a1", is_admin=True)
     monkeypatch.setattr(module_page, "_me", lambda: (staff, store.load_user("a1", display_name="Admin")))
     assert asyncio.run(module_page.module_view(code))["units"][0]["readings"][0]["watch"].startswith("https://drive")
+
+
+def test_unit_carries_my_session_date(monkeypatch):
+    from deeptutor.yaxa import schedule
+
+    schedule.save_cohort(schedule.Cohort(code="GCPP45", programme="GCPP", join_code="abcDEF1234",
+                                         sessions=[schedule.Session(code="CS12", date="2026-11-29", time="11:30", host="Gen. Menon")]))
+    user = store.load_user("s2", display_name="Student")
+    user.enrolments = [store.Enrolment(programme="GCPP", track="DFA", cohort="GCPP45")]
+    store.save_user(user)
+    monkeypatch.setattr(module_page, "_me", lambda: (SimpleNamespace(id="s2", is_admin=False), user))
+    monkeypatch.setattr(module_page, "_files", lambda kb: {})
+    units = {u["id"]: u for u in asyncio.run(module_page.module_view("DFA-SSIR"))["units"]}
+    assert units["CS12"]["session"] == {"starts_at": "2026-11-29T11:30:00+05:30", "host": "Gen. Menon"}
+    assert units["CS13"]["session"] is None

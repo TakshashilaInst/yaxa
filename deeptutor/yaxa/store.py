@@ -118,6 +118,22 @@ def save_user(user: YaxaUser) -> None:
     _write_json(_user_path(user.user_id), user.model_dump())
 
 
+def _opened_path(user_id: str) -> Path:
+    return yaxa_root() / "opened" / f"{_safe(user_id)}.json"
+
+
+def mark_opened(user_id: str, kb: str, file_name: str) -> None:
+    """Remember that the learner opened this reading in Yaxa (for the ticks on their week)."""
+    have = set(_read_json(_opened_path(user_id)) or [])
+    key = f"{kb}/{file_name}"
+    if key not in have:
+        _write_json(_opened_path(user_id), sorted(have | {key}))
+
+
+def opened(user_id: str) -> set[str]:
+    return set(_read_json(_opened_path(user_id)) or [])
+
+
 def list_users() -> list[YaxaUser]:
     folder = yaxa_root() / "users"
     if not folder.is_dir():

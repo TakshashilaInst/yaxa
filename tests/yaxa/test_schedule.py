@@ -179,3 +179,70 @@ def test_members_lists_enrolled_users_and_sets_track(monkeypatch):
     assert members == [{"user_id": "asha", "display_name": "Asha", "track": None}]
     asyncio.run(schedule.staff_set_member("GCPP45", "asha", schedule.MemberBody(track="DFA", cohort="GCPP46")))
     assert store.load_user("asha").enrolments == [store.Enrolment(programme="GCPP", track="DFA", cohort="GCPP46")]
+
+
+# ------------------------------------------------------------------ task 4
+from datetime import datetime, timedelta  # noqa: E402
+
+from deeptutor.yaxa import module_page  # noqa: E402
+from deeptutor.yaxa.catalog import SourceInfo  # noqa: E402
+
+IST = schedule.IST
+CS12_FILES = {
+    "CS12 - a.pdf": SourceInfo(title="CS12 Windows of War", kind="pdf", unit="CS12", module="DFA-SSIR"),
+    "CS12 - b.pdf": SourceInfo(title="CS12 Another Bloody Century", kind="pdf", unit="CS12", module="DFA-SSIR"),
+    "Webinar - CS12.md": SourceInfo(title="Webinar: CS12 Force, Prakash Menon", kind="video", unit="CS12",
+                                    module="DFA-SSIR", corpus="Webinar recording, GCPP45 (Nov 2026)"),
+}
+
+
+def _asha(monkeypatch, files=CS12_FILES):
+    monkeypatch.setattr(module_page, "_files", lambda kb: dict(files) if kb == "DFA" else {})
+    cu = _as(monkeypatch, "asha", enrolments=[store.Enrolment(programme="GCPP", track="DFA", cohort="GCPP45")])
+    return cu, store.load_user("asha")
+
+
+def test_week_shows_only_my_track_and_window(monkeypatch):
+    schedule.save_cohort(_gcpp45(sessions=[
+        Session(code="CS12", date="2026-11-29", time="11:30", host="Gen. Menon", webinar_url="https://zoom/x"),
+        Session(code="CT31", date="2026-11-29", time="11:30"),
+        Session(code="CS13", date="2026-12-06", time="11:30"),
+    ]))
+    cu, user = _asha(monkeypatch)
+    w = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))
+    assert w["cohort"] == "GCPP45"
+    assert [s["code"] for s in w["sessions"]] == ["CS12"]
+    row = w["sessions"][0]
+    assert row["module"] == "DFA-SSIR" and row["starts_at"] == "2026-11-29T11:30:00+05:30" and row["host"] == "Gen. Menon"
+    assert [r["title"] for r in row["readings"]] == ["CS12 Another Bloody Century", "CS12 Windows of War"]
+    assert row["transcript_ready"] is True
+    assert [d["label"] for d in w["dates"]] == ["Final assignment problem statement released"]
+
+
+def test_week_ist_boundary(monkeypatch):
+    schedule.save_cohort(_gcpp45(sessions=[Session(code="CS12", date="2026-12-07", time="09:00")]))
+    cu, user = _asha(monkeypatch)
+    w = schedule.week(cu, user, now=datetime(2026, 11, 30, 23, 30, tzinfo=IST))  # 18:00 UTC, still Sunday in UTC terms
+    assert [s["starts_at"] for s in w["sessions"]] == ["2026-12-07T09:00:00+05:30"]
+
+
+def test_webinar_link_only_in_window(monkeypatch):
+    schedule.save_cohort(_gcpp45(sessions=[Session(code="CS12", date="2026-11-29", time="11:30", webinar_url="https://zoom/x")]))
+    cu, user = _asha(monkeypatch)
+    start = datetime(2026, 11, 29, 11, 30, tzinfo=IST)
+    assert schedule.week(cu, user, now=start - timedelta(hours=2))["sessions"][0]["webinar_url"] == ""
+    assert schedule.week(cu, user, now=start - timedelta(minutes=30))["sessions"][0]["webinar_url"] == "https://zoom/x"
+    assert schedule.week(cu, user, now=start + timedelta(hours=4))["sessions"] == []
+
+
+def test_no_cohort_returns_empty(monkeypatch):
+    cu = _as(monkeypatch, "ravi", enrolments=[store.Enrolment(programme="GCPP", track="APP")])
+    assert schedule.week(cu, store.load_user("ravi")) == {"cohort": None, "sessions": [], "dates": []}
+
+
+def test_opened_ticks(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    cu, user = _asha(monkeypatch)
+    store.mark_opened("asha", "DFA", "CS12 - a.pdf")
+    row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]
+    assert {r["title"]: r["opened"] for r in row["readings"]} == {"CS12 Windows of War": True, "CS12 Another Bloody Century": False}
