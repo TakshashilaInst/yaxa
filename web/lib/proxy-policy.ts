@@ -88,3 +88,28 @@ export function classifyToken(
 
   return "valid";
 }
+
+// ------------------------------------------------------------ Yaxa overlay
+/**
+ * The role claim of a login token ("admin" | "user"), or null. Read without
+ * verifying the signature: this only decides where to send someone; the
+ * backend still checks every request.
+ */
+export function tokenRole(token: string | undefined): string | null {
+  const parts = token?.split(".");
+  if (!parts || parts.length !== 3) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf-8"));
+    return typeof payload.role === "string" ? payload.role : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Pages a non-admin may open: Yaxa Learn plus login and assets. Students and
+ * faculty never need DeepTutor's own workspace, so the proxy sends them to /learn.
+ */
+export function isLearnOnlyPath(pathname: string): boolean {
+  return pathname === "/learn" || pathname.startsWith("/learn/") || isAuthExempt(pathname);
+}

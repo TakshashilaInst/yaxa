@@ -10,8 +10,10 @@ import {
   isAuthExempt,
   isBackendPath,
   isCodexCallbackPath,
+  isLearnOnlyPath,
   isRetiredPagePath,
   isWebSocketPath,
+  tokenRole,
 } from "./lib/proxy-policy";
 
 // Backend base URL for `/api/*` and `/ws/*` rewrites. The container entrypoint
@@ -86,6 +88,15 @@ export function proxy(req: NextRequest): NextResponse {
   const token = req.cookies.get(COOKIE_NAME)?.value;
   if (classifyToken(token, Date.now()) !== "valid") {
     return redirectToLogin(req, { clearCookie: Boolean(token) });
+  }
+
+  // Yaxa: students and faculty live in /learn. DeepTutor's own workspace
+  // (/chat, /settings, ...) is for admins only, so send everyone else home.
+  if (tokenRole(token) !== "admin" && !isLearnOnlyPath(pathname)) {
+    const home = req.nextUrl.clone();
+    home.pathname = "/learn";
+    home.search = "";
+    return NextResponse.redirect(home);
   }
 
   return NextResponse.next();
