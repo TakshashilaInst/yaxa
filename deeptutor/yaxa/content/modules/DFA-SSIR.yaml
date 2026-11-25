@@ -4,27 +4,39 @@ kb: DFA
 description: Defence and Foreign Affairs specialisation. The role of force, foreign policy, internal security, cyberspace
   and nuclear policy in geopolitics.
 units:
-- id: U01
-  aliases: [CS11]  # session codes (no LMS space for DFA yet)
-  title: Basics of Strategic Studies
-  outcomes: Core concepts of strategy, game theory and the logic of war and peace.
-- id: U02
+- id: CS11
   title: Understanding Geopolitics
   outcomes: Geography as an aid to statecraft, classical geopolitical thinkers and India's grand strategy.
-- id: U03
-  aliases: [CS12, CS13, CS14]  # session codes (no LMS space for DFA yet)
-  title: Tools of Statecraft (Force, Diplomacy, Intelligence)
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-11-understanding-geopolitics-dfa-essential
+- id: CS12
+  title: 'Tools of Statecraft: Force'
   outcomes: Use of force, diplomacy and foreign policy, intelligence analysis and technology as tools of statecraft.
-- id: U04
-  aliases: [CS15]  # session codes (no LMS space for DFA yet)
-  title: National Security Challenges
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-12-tools-of-statecraft-force
+- id: CS13
+  title: 'Tools of Statecraft: Foreign Policy and Diplomacy'
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-13-tools-of-statecraft-foreign-policy-and-diplomacy
+- id: CS14
+  title: 'Tools of Statecraft: Intelligence'
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-14-tools-of-statecraft-intelligence
+- id: CS15
+  title: National Security Challenges and Indian Statecraft
   outcomes: India's internal security challenges and national security architecture.
-- id: U05
-  title: Strategic Communication
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-15-national-security-challenges-and-indian-statecraft
+- id: CS16
+  title: 'Tools of Statecraft: Strategic Communication'
   outcomes: Strategic communication, the media in foreign policy, information and cognitive warfare.
-- id: U06
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs16-tools-of-statecraft-strategic-communication-role-of-information-in-statecraft
+- id: CS17
+  title: 'Tools of Statecraft: Technology and Cyberspace'
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs17-tools-of-statecraft-technology-cyberspace
+- id: CS18
   title: High-Tech Geopolitics
   outcomes: Cyber power, cyber conflict and technology competition between states.
-- id: U07
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-18-high-tech-geopolitics
+- id: CS19
   title: India's Nuclear Doctrine
   outcomes: India's nuclear doctrine, its operationalisation, and nuclear stability in the subcontinent.
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs19-indias-nuclear-doctrine

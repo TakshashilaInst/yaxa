@@ -4,18 +4,19 @@ kb: DFA
 description: Defence and Foreign Affairs specialisation. Kautilya's treatise on statecraft and its relevance to
   modern international relations and strategy.
 units:
-- id: U01
-  title: Introduction to Kautilya's Arthashastra
+- id: CS21
+  title: 'Kautilya''s Arthashastra: An Introduction'
   outcomes: The text, its author and vocabulary, and reading it beyond popular stereotypes.
-- id: U02
-  aliases: [CS22]  # session codes (no LMS space for DFA yet)
-  title: Concept Cluster I (Saptanga Theory, Rajadharma)
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs21-kautilyas-arthashastra-an-introduction
+- id: CS22
+  title: 'Concept Cluster I: Anvikshiki, Matsya-nyaya, Rajadharma and Saptanga Theory'
   outcomes: Anvikshiki, matsya-nyaya, rajadharma and the saptanga theory of the state.
-- id: U03
-  aliases: [CS23]  # session codes (no LMS space for DFA yet)
-  title: Concept Cluster II (Rajamandala, Upayas)
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs22-concept-cluster-i-anvikshiki-matsya-nyaya-rajadharma-and-saptanga-theory
+- id: CS23
+  title: 'Concept Cluster II: Rajamandala, Sadgunyas, Upayas and Yogakshema'
   outcomes: The rajamandala (circle of kings), the six measures of foreign policy (sadgunya), the upayas and yogakshema.
-- id: U04
-  aliases: [CS24]  # session codes (no LMS space for DFA yet)
-  title: Treaties and Alliances
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs23-concept-cluster-ii-rajamandala-sadgunyas-upayas-and-yogakshema-107702473
+- id: CS24
+  title: Treaties and Alliances in the Arthashastra
   outcomes: Kautilya on treaties and alliances, and their lessons for India's relations with its neighbours.
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs24-treaties-and-alliances-in-the-arthashastra

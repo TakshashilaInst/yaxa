@@ -3,17 +3,24 @@ title: Strategic Economics
 kb: DFA
 description: Defence and Foreign Affairs specialisation. How economic strength underpins military power and statecraft.
 units:
-- id: U01
-  title: Origins and Military Power Dynamics
+- id: CS31
+  title: Technology and National Power
   outcomes: Foundations of national power, economic development and military effectiveness, measuring military capability.
-- id: U02
-  aliases: [CS32]  # session codes (no LMS space for DFA yet)
-  title: Instruments of Economic Power I & II
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs31-technology-and-national-power
+- id: CS32
+  title: Instruments of Economic Power I
   outcomes: Geoeconomics, sanctions, weaponised interdependence, foreign aid and lending as instruments of power;
     economic coercion.
-- id: U03
-  title: Economic-Military Power Dynamics
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs32-instruments-of-economic-power-i
+- id: CS33
+  title: Instruments of Economic Power II
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs33-instruments-of-economic-power-ii
+- id: CS34
+  title: Economic-Military Power Dynamics (optional)
   outcomes: How economic and military power reinforce or constrain each other.
-- id: U04
-  title: Currency and Balance of Payments
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs34-economic-military-power-dynamics-optional
+- id: CS35
+  title: Currency and Balance of Payments (optional)
   outcomes: Currency, the balance of payments and their strategic implications, including sovereign wealth funds.
+  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs35-currency-and-balance-of-payments-optional

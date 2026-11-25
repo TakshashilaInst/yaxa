@@ -76,6 +76,8 @@ def upsert(kb: str, name: str, info: dict[str, Any], *, keep_curated: bool = Fal
     for key, value in info.items():
         if keep_curated and key in CURATED and old.get(key):
             continue
+        if key == "unit" and value and str(old.get("unit", "")).startswith(value) and old["unit"] != value:
+            continue  # a session tag set by hand (CS22) is more specific than the folder's course code (CS2)
         new[key] = value
     new.pop("retired", None)
     data["files"][name] = new
