@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .catalog import Faculty, Module, Unit
@@ -22,7 +23,8 @@ Grounding rules:
 - The numbered passages below are from Takshashila's course material. Base your answer on them.
 - Cite a passage by putting its number in square brackets right after the claim it supports, e.g. "...the next-best alternative [2]." Use only numbers that appear below; never invent one.
 - When you quote, quote the passage's exact words inside double quotes.
-- If the passages don't cover the question, say so plainly, then answer briefly from general knowledge without citations."""
+- If the passages don't cover the question, say so plainly, then answer briefly from general knowledge without citations.
+- Each passage carries its author in square brackets after its title. Credit an idea or quote only to that author. When it says "author not stated", name the reading instead. Never guess an author from names mentioned inside the passage."""
 
 
 def _profile_block(profile: dict[str, str], name: str) -> str:
@@ -68,6 +70,7 @@ Rules for this persona:
 - Speak in {faculty.name.split()[0]}'s voice and style, in the first person.
 - Attribute views to {faculty.name.split()[0]} only when a passage marked [by {faculty.name}] supports them, and cite it.
 - Passages marked [co-written by ...] are joint work. Present those ideas as shared ("as RSJ and I argued", "we wrote"), never as yours alone.
+- Passages marked [by someone else] are theirs. Credit them by name ("as RSJ wrote"), never as yours.
 - If no passage shows what {faculty.name.split()[0]} thinks on this question, say "I haven't written about this directly" and reason from the course material instead. Never invent opinions, anecdotes or quotes."""
 
 
@@ -110,6 +113,23 @@ def build_system(
     return "\n\n".join(p for p in parts if p)
 
 
+_OWNER = re.compile(r"^(.+?)'s (?:writing|work)$")
+
+
+def passage_label(p: dict[str, Any], faculty: Faculty | None = None) -> str:
+    """Who wrote a passage, as the model sees it: "[by RSJ]", "[by Nitin Pai]", "[author not stated; ...]".
+
+    Every passage gets a label, so the model never has to guess an author.
+    """
+    if p.get("byline"):
+        return f"[{p['byline']}]"
+    if faculty and faculty.kb and p.get("kb") == faculty.kb:
+        return f"[by {faculty.name}]"
+    if m := _OWNER.match(p.get("corpus") or ""):
+        return f"[by {m.group(1)}]"
+    return "[author not stated; course reading]"
+
+
 def number_passages(passages: list[dict[str, Any]], faculty: Faculty | None = None) -> str:
     """The passages block appended to the user's turn, numbered from 1."""
     if not passages:
@@ -117,8 +137,5 @@ def number_passages(passages: list[dict[str, Any]], faculty: Faculty | None = No
     out = []
     for i, p in enumerate(passages, 1):
         where = p["title"] + (f", p. {p['page']}" if p.get("page") else "")
-        by = ""
-        if faculty and p.get("kb") == faculty.kb:
-            by = f" [{p['byline']}]" if p.get("byline") else f" [by {faculty.name}]"
-        out.append(f"[{i}] {where}{by}\n{p['text'].strip()}")
+        out.append(f"[{i}] {where} {passage_label(p, faculty)}\n{p['text'].strip()}")
     return "\n\n".join(out)

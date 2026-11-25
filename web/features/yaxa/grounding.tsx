@@ -189,6 +189,7 @@ function SourceRow({
       </div>
       <div className="yx-src-meta">
         {src.corpus}
+        {src.byline && !src.corpus?.includes(src.byline) ? ` · ${src.byline}` : ""}
         {src.unit ? ` · ${src.unit}` : ""}
         {src.page ? ` · page ${src.page}` : ""}
         {src.timestamp ? ` · at ${src.timestamp}` : ""}

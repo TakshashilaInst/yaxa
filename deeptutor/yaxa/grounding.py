@@ -20,6 +20,7 @@ from typing import Any
 from deeptutor.multi_user.knowledge_access import admin_kb_base_dir
 from deeptutor.services.rag.service import RAGService
 
+from . import authors
 from .catalog import source_info
 from .store import yaxa_root
 
@@ -151,13 +152,16 @@ async def retrieve(kb: str, query: str, top_k: int, *, corpus: str = "") -> list
         if per_file[file_name] > MAX_PER_FILE:
             continue
         title, unit = _title_from_file(file_name)
+        # Multi-author files (newsletter editions): credit the article the passage sits in.
+        raw = kb_raw_path(kb, file_name) if file_name.lower().endswith((".md", ".txt")) else None
+        section_author = authors.author_in_file(raw, text) if raw else None
         passage = {
             "kb": kb,
             "file": file_name,
             "title": info.title or title,
             "unit": unit,
             "corpus": info.corpus or corpus or kb,
-            "byline": info.byline,
+            "byline": authors.byline(section_author) if section_author else info.byline,
             "kind": info.kind,
             "url": info.url,
             "page": None,

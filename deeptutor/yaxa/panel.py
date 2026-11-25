@@ -68,8 +68,7 @@ def _passage_block(numbered: list[dict[str, Any]], numbers: list[int], fac: Facu
     out = []
     for n in numbers:
         p = numbered[n - 1]
-        by = f" [{p['byline'] or f'by {fac.name}'}]" if p.get("kb") == fac.kb else ""
-        out.append(f"[{n}] {p['title']}{by}\n{p['text'].strip()}")
+        out.append(f"[{n}] {p['title']} {prompting.passage_label(p, fac)}\n{p['text'].strip()}")
     return "\n\n".join(out) or "(No passages matched.)"
 
 

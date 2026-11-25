@@ -68,6 +68,7 @@ export interface Passage {
   title: string;
   unit?: string;
   corpus: string;
+  byline?: string; // who wrote this passage, e.g. "by RSJ" for one article of a joint newsletter
   kind: string; // pdf | video | anecdote | note
   url: string;
   page: number | null;
