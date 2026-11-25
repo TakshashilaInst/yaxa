@@ -1,18 +1,26 @@
 code: APP-PAF
 title: Policy Analysis and Frameworks
 kb: APP
-description: Advanced Public Policy specialisation. Why markets, governments and societies fail, how change
-  happens, and how policies get implemented.
+description: Advanced Public Policy specialisation. Why markets, governments and societies fail, how change happens,
+  and how policies get implemented.
 units:
-- id: U01
-  title: Market, Government and Societal Failures
+- id: CP41
+  title: Policy Analysis
   outcomes: ''
-- id: U02
+  lms_url: https://opentakshashila.net/posts/app-45-cp41-policy-analysis
+- id: CP42
+  title: Market, Government, and Societal Failures in Public Policy
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp-42-market-government-and-societal-failures-in-public-policy
+- id: CP43
   title: Effecting Change
   outcomes: ''
-- id: U03
-  title: Implementation Frameworks
+  lms_url: https://opentakshashila.net/posts/app-45-cp43-effecting-change-107476426
+- id: CP45
+  title: Implementation Frameworks and Banishing Bureaucracy
   outcomes: ''
-- id: U04
+  lms_url: https://opentakshashila.net/posts/app-45-cp45-implementation-frameworks
+- id: CP46
   title: Reflections on Policy Practice
   outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp46-reflections-on-policy-practice

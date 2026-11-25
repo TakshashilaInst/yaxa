@@ -1,24 +1,46 @@
 code: APP-ER2
 title: Economic Reasoning II
 kb: APP
-description: Advanced Public Policy specialisation. Government failures and price controls, market failures,
-  currency and the balance of payments, fiscal and monetary policy.
+description: Advanced Public Policy specialisation. Government failures and price controls, market failures, currency
+  and the balance of payments, fiscal and monetary policy.
 units:
-- id: U01
-  title: Government Failures and Price Controls
+- id: CP50
+  title: Price and Price Controls
   outcomes: ''
-- id: U02
-  title: 'Market Failures: Externalities'
+  lms_url: https://opentakshashila.net/posts/app-45-cp-50-price-and-price-controls-107476446
+- id: CP51
+  title: Taxes and Subsidies
   outcomes: ''
-- id: U03
-  title: 'Market Failures: Public Goods'
+  lms_url: https://opentakshashila.net/posts/app-45-cp-51-taxes-and-subsidies-107476449
+- id: CP52
+  title: Externalities
   outcomes: ''
-- id: U04
-  title: 'Market Failures: Information Asymmetry'
+  lms_url: https://opentakshashila.net/posts/app-45-cp-52-externalities
+- id: CP53
+  title: Public Goods
   outcomes: ''
-- id: U05
-  title: Currency and Balance of Payments
+  lms_url: https://opentakshashila.net/posts/app-45-cp-53-public-goods
+- id: CP54
+  title: Information Asymmetry
   outcomes: ''
-- id: U06
+  lms_url: https://opentakshashila.net/posts/app-45-cp-54-information-asymmetry
+- id: CP55
+  title: Market Structure
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp-55-market-structure-107476459
+- id: CP56
   title: Fiscal and Monetary Policy
   outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp-56-fiscal-and-monetary-policy
+- id: CP57
+  title: Currency and Balance of Payments
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp-57-currency-and-balance-of-payments-107476469
+- id: CP58
+  title: Introduction to Public Finance
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-cp-58-introduction-to-public-finance-107476473
+- id: CT36
+  title: Market Power and Regulation
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/app-45-ct36-market-power-and-regulation

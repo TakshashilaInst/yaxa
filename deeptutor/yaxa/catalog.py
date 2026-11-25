@@ -45,9 +45,11 @@ def _list_yaml(subdir: str) -> list[str]:
 
 # ------------------------------------------------------------------ models
 class Unit(BaseModel):
-    id: str
+    id: str  # the session code from the LMS (CP10, CT31, ...); U01... for modules without one
     title: str
     outcomes: str = ""
+    lms_url: str = ""  # the session's page on OpenTakshashila (current cohort)
+    aliases: list[str] = Field(default_factory=list)  # older codes the library still uses for this session
 
 
 class Module(BaseModel):

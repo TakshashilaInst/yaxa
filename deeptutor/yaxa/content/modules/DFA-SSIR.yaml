@@ -5,15 +5,18 @@ description: Defence and Foreign Affairs specialisation. The role of force, fore
   and nuclear policy in geopolitics.
 units:
 - id: U01
+  aliases: [CS11]  # session codes (no LMS space for DFA yet)
   title: Basics of Strategic Studies
   outcomes: Core concepts of strategy, game theory and the logic of war and peace.
 - id: U02
   title: Understanding Geopolitics
   outcomes: Geography as an aid to statecraft, classical geopolitical thinkers and India's grand strategy.
 - id: U03
+  aliases: [CS12, CS13, CS14]  # session codes (no LMS space for DFA yet)
   title: Tools of Statecraft (Force, Diplomacy, Intelligence)
   outcomes: Use of force, diplomacy and foreign policy, intelligence analysis and technology as tools of statecraft.
 - id: U04
+  aliases: [CS15]  # session codes (no LMS space for DFA yet)
   title: National Security Challenges
   outcomes: India's internal security challenges and national security architecture.
 - id: U05

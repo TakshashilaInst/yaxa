@@ -4,14 +4,27 @@ kb: TP
 description: Technology and Policy specialisation. How AI and networked technologies change politics, the economy
   and national power.
 units:
-- id: U01
-  title: Introduction to Politics and Policy in the AI Age
+- id: CT41
+  title: Politics and Policy in the Information Age
   outcomes: Radically networked societies, information cascades, moral panics and how technology reshapes political
     power and protest.
-- id: U02
-  title: AI Diffusion and its Impact on the Economy
+  lms_url: https://opentakshashila.net/posts/tp-45-ct41-politics-and-policy-in-the-information-age
+- id: CT45
+  title: The Socio-Economic Impact of AI Diffusion
   outcomes: The macroeconomics of AI, task-based adoption, effects on jobs and retraining, and why transformative
     AI is hard to achieve.
-- id: U03
-  title: AI and National Power
+  lms_url: https://opentakshashila.net/posts/tp-45-ct45-the-socio-economic-impact-of-ai-diffusion
+  aliases:
+  - CT4x
+- id: CT46
+  title: Geopolitics of AI
   outcomes: How AI changes the sources of national power and the geopolitics of AI.
+  lms_url: https://opentakshashila.net/posts/tp-45-ct46-geopolitics-of-ai
+- id: CT48
+  title: Economics of AI
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct48-economics-of-ai
+- id: CT49
+  title: Disinformation and Dysfunction in the Information Ecosystem
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct49-disinformation-and-dysfunction-in-the-information-ecosystem

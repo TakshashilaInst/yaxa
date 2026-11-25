@@ -40,7 +40,7 @@ def test_gcpp_has_tracks_and_pgp_does_not() -> None:
 
 def test_indexed_modules_have_units() -> None:
     cat = catalog.get_catalog()
-    assert cat.module("GCPP-ER1").available and len(cat.module("GCPP-ER1").units) == 6
+    assert cat.module("GCPP-ER1").available and [u.id for u in cat.module("GCPP-ER1").units] == ["CP21", "CP22", "CP23", "CP24", "CP25"]
     assert cat.module("APP-ER2").kb == "APP"  # APP modules share one library
     for code, kb in {"TP-AI": "TP", "TP-HTG": "TP", "DFA-SSIR": "DFA", "DFA-SE": "DFA"}.items():
         mod = cat.module(code)

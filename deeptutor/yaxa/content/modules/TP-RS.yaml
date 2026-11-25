@@ -4,14 +4,20 @@ kb: TP
 description: Technology and Policy specialisation. Anticipating how society reacts to technology and building it
   responsibly.
 units:
-- id: U01
+- id: CT21
   title: Social Impact Analysis and Responsible Strategy
   outcomes: 'Anticipating second-order and social effects of a technology before deploying it, and complex-systems
     thinking: feedback loops, stocks and flows.'
-- id: U02
-  title: Ethics in Technology and Policy
+  lms_url: https://opentakshashila.net/posts/tp-45-ct21-social-impact-analysis-and-responsible-strategy-28th-june
+- id: CT23
+  title: Policy Analysis Framework
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct23-policy-analysis-framework-107370459
+- id: CT24
+  title: Technology and Ethics
   outcomes: Ethical frameworks for technology choices, and how increasingly capable and integrated systems change
     political theory.
-- id: U03
-  title: Policy Simulation Exercise
-  outcomes: Applying responsible-strategy tools in a simulated policy decision.
+  lms_url: https://opentakshashila.net/posts/tp-45-ct24-technology-and-ethics
+  aliases:
+  - CT42
+  - CT12

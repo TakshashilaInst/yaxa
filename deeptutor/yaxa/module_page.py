@@ -2,8 +2,9 @@
 
 Readings come from the module's library (the files Yaxa answers from), so the
 reading list and the tutor always agree. Files open through /api/yaxa/files,
-which only serves a student's own modules. Webinar recordings link to their
-transcript, never to the staff-only Drive library.
+which only serves a student's own modules. Webinars open as transcripts; the
+Drive recording link goes to staff only (Drive shares recordings with staff),
+and every session links to its OpenTakshashila page, where students watch.
 """
 
 from __future__ import annotations
@@ -15,12 +16,11 @@ from fastapi import APIRouter
 
 from . import practice
 from .access import _me, _require_module
-from .catalog import Module, SourceInfo, _sources_for, get_catalog
+from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
 from .grounding import _title_from_file, admin_kb_base_dir
 
 router = APIRouter(prefix="/module")
 
-_CODE = re.compile(r"^[A-Z]{2}\d+[a-z]?$", re.I)  # session codes such as CT31, CP44, CT4x
 # Course files named "GCPP173LU02 - RR01 Fiscal deficits.pdf": learning unit 2, reading RR01.
 _LU_FILE = re.compile(r"^[A-Z]+\d*LU\s*(\d+)\s*-\s*(?:[A-Z]{1,3}\d+\s+)?(.+)$", re.I)
 
@@ -38,51 +38,83 @@ def _files(kb: str) -> dict[str, SourceInfo]:
     return {p.name: labels.get(p.name, SourceInfo()) for p in sorted(raw.iterdir()) if p.is_file()}
 
 
+# A session code at the start of a title, tag or file name: "CP10 reading", "Webinar: CP22 and CP23 ...", "CT3x - x.pdf".
+_SESSION = re.compile(r"^(?:Webinar:\s*)?(C[A-Z])\s?-?(\d{1,2}[a-z]?)\b", re.I)
+
+
+def session_code(*texts: str) -> str | None:
+    """The first session code found, normalised (CP10, CT3x), or None."""
+    for text in texts:
+        if text and (m := _SESSION.match(text.strip())):
+            return m.group(1).upper() + m.group(2).lower()
+    return None
+
+
 def _reading(kb: str, file_name: str, info: SourceInfo) -> dict[str, Any]:
     m = _LU_FILE.match(file_name.rsplit(".", 1)[0])
     title = info.title or (m.group(2).strip() if m else re.sub(r"^[A-Z]+\d+\s*-\s*", "", _title_from_file(file_name)[0]))
     own = f"/api/yaxa/files/{kb}/{file_name}"
+    row: dict[str, Any] = {"title": title, "kind": info.kind or "pdf", "corpus": info.corpus, "byline": info.byline}
     if info.kind == "video":
-        link = own  # the transcript; the recording itself sits in the staff-only Drive library
+        row["open"] = own  # the transcript
+        if info.url:
+            row["watch"] = info.url  # the recording, on Drive
     elif file_name.lower().endswith(".pdf") or not info.url:
-        link = own
+        row["open"] = own
     else:
-        link = info.url  # articles and op-eds: the published page
-    return {"title": title, "kind": info.kind or "pdf", "open": link, "corpus": info.corpus, "byline": info.byline}
+        row["open"] = info.url  # articles and op-eds: the published page
+    return row
 
 
-def group_readings(module: Module, files: dict[str, SourceInfo], *, shared_kb: bool) -> dict[str, list[dict[str, Any]]]:
-    """Readings by unit id, plus "other" for those not tied to a unit.
+def _codes(unit: Unit) -> set[str]:
+    return {c for c in [unit.id, *unit.aliases] if session_code(c)}
 
-    A file belongs to a unit when its unit tag is the unit id, or its title
-    names the unit, or (for libraries tagged by session code, e.g. CT31) its
-    code's rank among the module's codes matches the unit's position.
+
+def group_readings(
+    module: Module,
+    files: dict[str, SourceInfo],
+    *,
+    shared_kb: bool,
+    owners: dict[str, set[str]] | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Readings and recordings by unit, plus "other" for the module's files not tied to one unit.
+
+    A file goes to the unit whose session code (or an older alias) it carries,
+    from its tag, title or file name. A file tagged to another module still
+    comes here when that module has no session with the code (`owners` maps
+    module -> its codes). Files without a usable code that belong to this
+    module match a unit by title, or by an LU number in the file name, and
+    otherwise are readings for the whole module.
     """
+    owners = owners or {}
     groups: dict[str, list[dict[str, Any]]] = {u.id: [] for u in module.units}
     groups["other"] = []
+    by_code = {c: u.id for u in module.units for c in _codes(u)}
+    ids = {u.id for u in module.units}
+    titles = [(u.id, _norm(u.title)) for u in module.units if u.title]
     kb = module.kb or ""
-    mine: list[tuple[str, SourceInfo]] = []
+
     for name, info in files.items():
         if info.retired:
             continue
-        if info.module and info.module != module.code:
+        code = session_code(info.unit, info.title, name)
+        mine = info.module == module.code or (not info.module and not shared_kb)
+        unit = by_code.get(code or "")
+        if unit and not mine and info.module and code in owners.get(info.module, set()):
+            unit = None  # its own module has this session
+        if not unit and not mine:
             continue
-        if shared_kb and not info.module:
-            continue  # a library shared by several modules: untagged files can't be placed
-        mine.append((name, info))
-
-    ids = {u.id for u in module.units}
-    codes = sorted({i.unit for _, i in mine if i.unit and i.unit not in ids and _CODE.match(i.unit)})
-    by_rank = dict(zip(codes, [u.id for u in module.units])) if len(codes) == len(module.units) else {}
-    titles = [(u.id, _norm(u.title)) for u in module.units if u.title]
-
-    for name, info in mine:
-        unit = info.unit if info.unit in ids else None
+        if not unit and code and any(code in c for m, c in owners.items() if m != module.code):
+            continue  # its session belongs to a sibling module, which lists it
+        if not unit and info.unit in ids:
+            unit = info.unit
         if not unit:
             t = _norm(info.title or name)
             unit = next((uid for uid, ut in titles if ut and ut in t), None)
-        if not unit and info.unit in by_rank:
-            unit = by_rank[info.unit]
+        if not unit:  # a short webinar title inside the session's longer one: "Implementation Frameworks"
+            core = _norm(re.sub(r"^Webinar:\s*", "", info.title or "").split(",")[0])
+            if len(core) >= 12:
+                unit = next((uid for uid, ut in titles if core in ut), None)
         if not unit and (m := _LU_FILE.match(name.rsplit(".", 1)[0])):
             lu = f"U{int(m.group(1)):02d}"
             unit = lu if lu in ids else None
@@ -98,8 +130,14 @@ async def module_view(code: str) -> dict[str, Any]:
     cat = get_catalog()
     module = _require_module(cat, cu, user, code)
     assert module is not None
-    shared = sum(1 for m in cat.modules.values() if m.kb and m.kb == module.kb) > 1
-    groups = group_readings(module, _files(module.kb) if module.kb else {}, shared_kb=shared)
+    siblings = [m for m in cat.modules.values() if m.kb and m.kb == module.kb]
+    owners = {m.code: {c for u in m.units for c in _codes(u)} for m in siblings}  # modules sharing this library
+    groups = group_readings(module, _files(module.kb) if module.kb else {}, shared_kb=len(siblings) > 1, owners=owners)
+    if not (cu.is_admin or getattr(user, "role", "") == "faculty"):
+        # Recordings on Drive are shared with staff only; students watch them on the LMS session page.
+        for rows in groups.values():
+            for r in rows:
+                r.pop("watch", None)
     progress = {row["id"]: row for row in practice._progress(cu.id, module)}
     return {
         "code": module.code,
@@ -110,6 +148,7 @@ async def module_view(code: str) -> dict[str, Any]:
                 "id": u.id,
                 "title": u.title,
                 "outcomes": u.outcomes,
+                "lms_url": u.lms_url,
                 "readings": groups.get(u.id, []),
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
             }

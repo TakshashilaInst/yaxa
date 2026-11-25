@@ -4,19 +4,38 @@ kb: TP
 description: Technology and Policy specialisation. How information goods differ from conventional goods, and what
   that means for markets and regulation.
 units:
-- id: U01
+- id: CT3x
+  title: Market Failures
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct3x-market-failures
+  aliases:
+  - CT37
+- id: CT31
   title: Nature and Pricing of Information Goods
   outcomes: High fixed and near-zero marginal costs, versioning and pricing of information goods, intangible capital.
-- id: U02
+  lms_url: https://opentakshashila.net/posts/tp-45-ct31-nature-and-pricing-of-information-goods
+- id: CT32
+  title: Rights Management
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct32-rights-management-107370487
+- id: CT33
   title: Switching Costs and Lock-In
   outcomes: How switching costs create lock-in and shape competition.
-- id: U03
+  lms_url: https://opentakshashila.net/posts/tp-45-ct33-switching-costs-and-lock-in-107370490
+- id: CT34
   title: Network Effects
   outcomes: Direct, indirect and data network effects, tipping and market concentration.
-- id: U04
+  lms_url: https://opentakshashila.net/posts/tp-45-ct34-network-effects-107370492
+- id: CT35
   title: Setting Standards
   outcomes: Standards competition, coordination and who sets technology standards.
-- id: U05
+  lms_url: https://opentakshashila.net/posts/tp-45-ct35-setting-standards-107370494
+- id: CT36
   title: Market Power and Regulation
   outcomes: Platform power, aggregation theory, antitrust and regulating digital platforms; market failures as grounds
     for intervention.
+  lms_url: https://opentakshashila.net/posts/tp-45-ct36-market-power-and-regulation
+- id: CP44
+  title: Complexity
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-cp44-complexity

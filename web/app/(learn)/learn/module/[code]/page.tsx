@@ -14,7 +14,7 @@ import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
 import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail } from "@/lib/yaxa-api";
 
-const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar transcript", note: "Article", anecdote: "Anecdote" };
+const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar", note: "Article", anecdote: "Anecdote" };
 const SHOW_FIRST = 4; // readings shown before "Show all"
 
 function chat(module: string, unit: string | null, socratic = false) {
@@ -39,8 +39,16 @@ function Readings({ items }: { items: ModuleReading[] }) {
       <ul className="yx-readings">
         {shown.map((r) => (
           <li key={r.open}>
-            <span className="yx-reading-kind">{KIND_LABEL[r.kind] ?? "Reading"}</span>
-            <a href={r.open} target="_blank" rel="noreferrer">{r.title}</a>
+            <span className="yx-reading-kind">{r.kind === "video" ? "Webinar" : KIND_LABEL[r.kind] ?? "Reading"}</span>
+            {r.kind === "video" ? (
+              <>
+                {r.watch ? <a href={r.watch} target="_blank" rel="noreferrer">{r.title.replace(/^Webinar:\s*/, "")}</a> : r.title.replace(/^Webinar:\s*/, "")}
+                {r.corpus && <span className="yx-muted"> · {r.corpus.replace(/^Webinar recording,\s*/, "")}</span>}
+                {" · "}<a href={r.open} target="_blank" rel="noreferrer">transcript</a>
+              </>
+            ) : (
+              <a href={r.open} target="_blank" rel="noreferrer">{r.title}</a>
+            )}
             {r.byline && <span className="yx-muted"> · {r.byline}</span>}
           </li>
         ))}
@@ -59,7 +67,7 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
     <section className="yx-card yx-unit-card" id={u.id}>
       <div className="yx-unit-card-head">
         <div>
-          <div className="yx-eyebrow">Unit {n}</div>
+          <div className="yx-eyebrow">{/^C[A-Z]\d/.test(u.id) ? `Session ${u.id}` : `Unit ${n}`}</div>
           <h2 style={{ fontSize: 21, margin: "2px 0 0" }}>{u.title}</h2>
         </div>
         {u.progress && (
@@ -85,6 +93,11 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
 
       <h3 className="yx-unit-sub">Readings and webinars</h3>
       <Readings items={u.readings} />
+      {u.lms_url && (
+        <p style={{ margin: "10px 0 0", fontSize: 14 }}>
+          <a href={u.lms_url} target="_blank" rel="noreferrer">Full session page on OpenTakshashila (all readings, live webinar) →</a>
+        </p>
+      )}
     </section>
   );
 }

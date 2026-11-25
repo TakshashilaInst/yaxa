@@ -1,24 +1,26 @@
 code: GCPP-PAC
 title: Policy Analysis and Concepts
 kb: GCPP-PAC
-description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the
-  Constitution, what governments try to do and the paradoxes they face.'
+description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the Constitution,
+  what governments try to do and the paradoxes they face.'
 units:
-- id: U01
-  title: Introduction to Public Policy
+- id: CP10
+  title: Introduction to the Policy System
   outcomes: ''
-- id: U02
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-10-introduction-to-the-policy-system
+- id: CP11
   title: Nations, States, and Governments
   outcomes: ''
-- id: U03
-  title: Democracy, Republic and the Constitution
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-11-nations-states-and-governments
+- id: CP12
+  title: Democracy, Republic, Constitution, Norms
   outcomes: ''
-- id: U04
-  title: Goals of the Government
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-12-democracy-republic-constitution-norms
+- id: CP13
+  title: 'Government: Structure, Goals, and Actions'
   outcomes: ''
-- id: U05
-  title: Introduction to Kautilya's Arthashastra
-  outcomes: ''
-- id: U06
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-13-government-structure-goals-and-actions
+- id: CS11
   title: Basics of Strategic Studies
   outcomes: ''
+  lms_url: https://opentakshashila.net/posts/gcpp45-cs-11-basics-of-strategic-studies

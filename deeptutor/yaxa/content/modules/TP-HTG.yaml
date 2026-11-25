@@ -4,14 +4,36 @@ kb: TP
 description: Technology and Policy specialisation. The relationship between technology and national power, and developments
   in key sectors.
 units:
-- id: U01
+- id: CT81
   title: Technology and National Power
   outcomes: How technological change shifts national power and international relations; innovation and creative
     insecurity.
-- id: U02
+  lms_url: https://opentakshashila.net/posts/tp-45-ct81-technology-and-national-power-107370548
+- id: CT82
+  title: Internet Governance Geopolitics
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct82-internet-governance-geopolitics-8th-nov
+- id: CT83
+  title: Siliconpolitik
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct83-siliconpolitik-107370559
+- id: CT84
+  title: Supply Chain Security
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct84-supply-chain-security
+- id: CT85
+  title: Understanding Strategic Technologies
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct85-understanding-strategic-technologies
+- id: CT86
+  title: Information Warfare
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct86-information-warfare
+- id: CT87
+  title: Geopolitics and Business
+  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/tp-45-ct87-geopolitics-and-business
+- id: CT47
   title: State of India's Tech Ecosystem
   outcomes: India's innovation system, its strengths and gaps, and why it has not produced global tech champions.
-- id: U03
-  title: Case Studies in High-Tech Geopolitics
-  outcomes: Internet governance, cybersecurity, space and satellite internet, supply-chain security and strategic
-    technologies.
+  lms_url: https://opentakshashila.net/posts/tp-45-ct47-state-of-indias-tech-ecosystem

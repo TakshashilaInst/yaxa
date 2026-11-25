@@ -8,11 +8,14 @@ units:
   title: Introduction to Kautilya's Arthashastra
   outcomes: The text, its author and vocabulary, and reading it beyond popular stereotypes.
 - id: U02
+  aliases: [CS22]  # session codes (no LMS space for DFA yet)
   title: Concept Cluster I (Saptanga Theory, Rajadharma)
   outcomes: Anvikshiki, matsya-nyaya, rajadharma and the saptanga theory of the state.
 - id: U03
+  aliases: [CS23]  # session codes (no LMS space for DFA yet)
   title: Concept Cluster II (Rajamandala, Upayas)
   outcomes: The rajamandala (circle of kings), the six measures of foreign policy (sadgunya), the upayas and yogakshema.
 - id: U04
+  aliases: [CS24]  # session codes (no LMS space for DFA yet)
   title: Treaties and Alliances
   outcomes: Kautilya on treaties and alliances, and their lessons for India's relations with its neighbours.

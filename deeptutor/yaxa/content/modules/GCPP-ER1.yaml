@@ -1,24 +1,26 @@
 code: GCPP-ER1
 title: Economic Reasoning I
 kb: GCPP-ER1
-description: 'Core module, weeks 1-5. Thinking like an economist about public policy: incentives, prices,
-  markets, macroeconomic indicators and trade.'
+description: 'Core module, weeks 1-5. Thinking like an economist about public policy: incentives, prices, markets,
+  macroeconomic indicators and trade.'
 units:
-- id: U01
+- id: CP21
   title: Introduction to Economic Reasoning
   outcomes: ''
-- id: U02
-  title: The Price System
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-21-introduction-to-economic-reasoning
+- id: CP22
+  title: The Market Dynamics and the Price System
   outcomes: ''
-- id: U03
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-22-the-market-dynamics-and-the-price-system
+- id: CP23
   title: Market Dynamics
   outcomes: ''
-- id: U04
-  title: Introduction to Macroeconomics
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-23-market-dynamics
+- id: CP24
+  title: Macroeconomic Indicators
   outcomes: ''
-- id: U05
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-24-macroeconomic-indicators
+- id: CP25
   title: Trade
   outcomes: ''
-- id: U06
-  title: Government Intervention in Markets
-  outcomes: ''
+  lms_url: https://opentakshashila.net/posts/gcpp45-cp-25-trade

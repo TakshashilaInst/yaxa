@@ -127,6 +127,7 @@ export interface ModuleReading {
   title: string;
   kind: string; // pdf | video (webinar transcript) | note | anecdote
   open: string; // opens inside Yaxa (PDF / transcript) or the published article
+  watch?: string; // webinar recordings: the video on Google Drive
   corpus: string;
   byline: string;
 }
@@ -135,6 +136,7 @@ export interface ModuleUnitDetail {
   id: string;
   title: string;
   outcomes: string;
+  lms_url: string; // the session's page on OpenTakshashila
   readings: ModuleReading[];
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
 }

@@ -74,7 +74,7 @@ def test_collect_counts_students_only_and_flags_unsupported_answers(monkeypatch:
     monkeypatch.setattr(cohort, "_staff_ids", lambda: {"u_admin"})
     monkeypatch.setattr(cohort, "_name_scrubber", lambda: None)
     for uid, cited in (("u_1", True), ("u_2", False), ("u_admin", False)):
-        conv = store.Conversation(user_id=uid, module="GCPP-ER1", unit="U01", title="t")
+        conv = store.Conversation(user_id=uid, module="GCPP-ER1", unit="CP21", title="t")
         conv.turns.append(store.Turn(role="user", content=f"question from {uid}"))
         conv.turns.append(store.Turn(role="assistant", content="answer", citations=[{"n": 1, "dangling": False}] if cited else []))
         store.save_conversation(conv)
@@ -82,7 +82,7 @@ def test_collect_counts_students_only_and_flags_unsupported_answers(monkeypatch:
     assert data["stats"]["students"] == 2 and data["stats"]["questions"] == 2
     assert data["stats"]["unsupported"] == 1
     assert data["gaps"] == ["question from u_2"]
-    assert next(u for u in data["units"] if u["id"] == "U01")["questions"] == 2
+    assert next(u for u in data["units"] if u["id"] == "CP21")["questions"] == 2
 
 
 # -------------------------------------------------------------------- panel
