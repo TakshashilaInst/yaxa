@@ -2,12 +2,12 @@
    leaks into DeepTutor's own pages. */
 
 .yx {
-  --yx-bg: #fbf5e6;
+  --yx-bg: #faf7f1;  /* calmer paper tone; less yellow */
   --yx-surface: #ffffff;
   --yx-surface-2: #fdf9ef;
-  --yx-ink: #2a1a20;
-  --yx-muted: #7a6a62;
-  --yx-line: #eadfca;
+  --yx-ink: #1f1619;
+  --yx-muted: #625650;  /* darker for contrast on cream */
+  --yx-line: #e4dccd;
   --yx-maroon: #6b1238;
   --yx-maroon-2: #8a1d4a;
   --yx-saffron: #f2a91f;
@@ -21,10 +21,17 @@
   overflow-y: auto;
   background: var(--yx-bg);
   color: var(--yx-ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
+  /* Reading text is serif and larger; controls (buttons, labels, tables) stay sans, below. */
+  font-family: var(--font-reading), Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.7;
 }
+.yx button, .yx input, .yx select, .yx textarea, .yx table, .yx label,
+.yx .yx-btn, .yx .yx-pill, .yx .yx-eyebrow, .yx .yx-badge, .yx .yx-tag, .yx .yx-notice, .yx .yx-src-meta {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+/* :where keeps this low-specificity so classes like .yx-btn-sm can still set their own size. */
+.yx :where(button, input, select, textarea) { font-size: 15px; line-height: 1.5; color: inherit; }
 .yx.yx-socratic {
   --yx-bg: #3d0a20;
   --yx-surface-2: #4a0f28;
@@ -33,7 +40,7 @@
 .yx h1, .yx h2, .yx h3, .yx .yx-serif { font-family: var(--font-serif), Georgia, serif; color: var(--yx-maroon); line-height: 1.25; }
 .yx.yx-socratic .yx-main h1, .yx.yx-socratic .yx-main > p { color: #fbe9d0; }
 .yx a { color: var(--yx-maroon-2); }
-.yx button { font: inherit; cursor: pointer; }
+.yx button { cursor: pointer; }
 .yx button:disabled { cursor: not-allowed; opacity: .55; }
 
 /* ------------------------------------------------------------ header */
@@ -112,8 +119,8 @@
 .yx-form textarea { min-height: 70px; resize: vertical; }
 /* free-standing inputs (simulations) styled like form fields */
 .yx-input { width: 100%; padding: 9px 11px; border: 1px solid var(--yx-line); border-radius: 8px; background: var(--yx-surface); color: var(--yx-ink); font: inherit; resize: vertical; box-sizing: border-box; }
-.yx-input:focus { outline: 2px solid var(--yx-saffron); border-color: transparent; }
-.yx-form input:focus, .yx-form textarea:focus, .yx-form select:focus { outline: 2px solid var(--yx-saffron); border-color: transparent; }
+.yx-input:focus { outline: 2px solid var(--yx-maroon-2); border-color: transparent; }
+.yx-form input:focus, .yx-form textarea:focus, .yx-form select:focus { outline: 2px solid var(--yx-maroon-2); border-color: transparent; }
 
 /* -------------------------------------------------------------- chat */
 .yx-chat { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: calc(100vh - 52px); }
@@ -135,7 +142,7 @@
 .yx-socratic .yx-msg-who { color: #fbe9d0; }
 .yx-msg-who .yx-brand-mark { width: 22px; height: 22px; font-size: 13px; border-radius: 6px; }
 .yx-bubble { border-radius: 12px; padding: 12px 16px; background: var(--yx-surface); border: 1px solid var(--yx-line); }
-.yx-bubble-user { background: var(--yx-saffron-soft); border-color: #f4d79a; }
+.yx-bubble-user { background: #f3ede3; border-color: var(--yx-line); }
 .yx-persona-label { display: inline-block; margin-bottom: 6px; font-size: 11.5px; color: #8a5a00; background: #fff4d6; border-radius: 6px; padding: 1px 8px; }
 .yx-bubble p { margin: 0 0 10px; }
 .yx-bubble p:last-child { margin-bottom: 0; }
@@ -158,7 +165,7 @@
 
 .yx-composer { position: sticky; bottom: 0; padding: 10px 20px 14px; background: linear-gradient(transparent, var(--yx-bg) 30%); }
 .yx-composer-inner { max-width: 760px; margin: 0 auto; }
-.yx-composer form { display: flex; gap: 8px; align-items: flex-end; background: var(--yx-surface); border: 1.5px solid var(--yx-saffron); border-radius: 14px; padding: 8px 8px 8px 14px; }
+.yx-composer form { display: flex; gap: 8px; align-items: flex-end; background: var(--yx-surface); border: 1.5px solid var(--yx-line); border-radius: 14px; padding: 8px 8px 8px 14px; }
 .yx-composer textarea { flex: 1; border: 0; outline: 0; resize: none; font: inherit; background: transparent; color: var(--yx-ink); max-height: 180px; min-height: 24px; padding: 4px 0; }
 .yx-send { width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--yx-maroon); color: #fff; display: grid; place-items: center; flex: none; }
 .yx-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
@@ -216,7 +223,7 @@
 .yx-practice-card { display: grid; gap: 12px; }
 .yx-practice-q { font-family: var(--font-serif), Georgia, serif; font-size: 19px; color: var(--yx-maroon); margin: 0; line-height: 1.4; }
 .yx-practice-answer { width: 100%; border: 1px solid var(--yx-line); border-radius: 10px; padding: 10px 12px; font: inherit; background: var(--yx-surface-2); color: var(--yx-ink); resize: vertical; }
-.yx-practice-answer:focus { outline: 2px solid var(--yx-saffron); outline-offset: 1px; }
+.yx-practice-answer:focus { outline: 2px solid var(--yx-maroon-2); outline-offset: 1px; }
 .yx-your-answer { background: var(--yx-surface-2); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
 .yx-your-answer p { margin: 4px 0 0; white-space: pre-wrap; }
 .yx-verdict { font-family: var(--font-serif), Georgia, serif; font-size: 20px; font-weight: 600; }
@@ -231,7 +238,7 @@
 /* ------------------------------------------------------------- panel */
 .yx-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--yx-line); border-radius: 999px; padding: 3px 12px; font-size: 13px; color: var(--yx-maroon); background: var(--yx-surface); cursor: pointer; }
 .yx-chip input { accent-color: var(--yx-maroon); margin: 0; }
-.yx-chip-on { border-color: var(--yx-saffron); background: var(--yx-saffron-soft); }
+.yx-chip-on { border-color: var(--yx-maroon-2); background: #f6eef0; }
 .yx-panel-turn .yx-msg-who .yx-tag { margin-left: 6px; }
 .yx-panel-response .yx-bubble { border-left: 3px solid var(--yx-saffron); }
 .yx-panel-summary .yx-bubble { background: var(--yx-saffron-soft); }
@@ -253,3 +260,6 @@
 @media (max-width: 640px) {
   .yx-table th:nth-child(3), .yx-table td:nth-child(3) { display: none; }
 }
+
+/* Composer: neutral border, maroon when typing. */
+.yx-composer form:focus-within { border-color: var(--yx-maroon-2); }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Lora } from "next/font/google";
+import { Geist, Lora, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import ThemeScript from "@/components/ThemeScript";
 import ToastViewport from "@/components/common/ToastViewport";
@@ -21,6 +21,13 @@ const fontSerif = Lora({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-serif",
+});
+
+// Body text on Yaxa Learn pages: a serif designed for long reading on screens.
+const fontReading = Source_Serif_4({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-reading",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +52,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${fontSans.variable} ${fontSerif.variable}`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontReading.variable}`}
     >
       <head>
         <ThemeScript />
