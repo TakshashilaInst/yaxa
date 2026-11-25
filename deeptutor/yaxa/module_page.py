@@ -14,9 +14,8 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from . import practice
+from . import practice, store
 from .access import _me, _require_module
-from . import store
 from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
 from .grounding import _title_from_file, admin_kb_base_dir
 
