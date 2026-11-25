@@ -119,6 +119,17 @@ export interface UnitProgress {
   answered: number;
   last_scores: number[];
   status: UnitStatus;
+  /** Spaced review (DeepTutor scheduler); null until the unit is practised. */
+  review: { due: boolean; next_review: string; recall: number } | null;
+}
+
+export interface ReviewDue {
+  module: string;
+  module_title: string;
+  unit: string;
+  unit_title: string;
+  recall: number; // 0-1: how likely the student still remembers it
+  days_overdue: number;
 }
 
 export interface PracticeProgress {
@@ -272,6 +283,7 @@ export const yaxa = {
     if (conversationId) q.set("conversation_id", conversationId);
     return json<string[]>(`/socratic/topics?${q}`);
   },
+  practiceReview: () => json<{ due: ReviewDue[] }>("/practice/review"),
   practiceProgress: (module: string) => json<PracticeProgress>(`/practice/progress?module=${encodeURIComponent(module)}`),
   practiceQuestion: (module: string, unit?: string | null) =>
     json<PracticeQuestion>("/practice/question", send("POST", { module, unit: unit || null })),

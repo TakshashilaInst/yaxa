@@ -98,11 +98,12 @@
 .yx-module h3 { font-size: 17px; margin: 0; }
 .yx-module-soon { opacity: .6; }
 .yx-units { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 4px; }
-.yx-units button {
+.yx-units button, .yx-units a {
   width: 100%; text-align: left; background: var(--yx-surface-2); border: 1px solid transparent;
   border-radius: 8px; padding: 6px 10px; color: var(--yx-ink); font-size: 13.5px;
 }
-.yx-units button:hover { border-color: var(--yx-saffron); }
+.yx-units a { display: block; text-decoration: none; }
+.yx-units button:hover, .yx-units a:hover { border-color: var(--yx-saffron); }
 .yx-units .yx-unit-id { color: #c07a10; font-weight: 700; margin-right: 6px; font-size: 12px; }
 
 /* --------------------------------------------------------- profiles */
@@ -263,3 +264,4 @@
 
 /* Composer: neutral border, maroon when typing. */
 .yx-composer form:focus-within { border-color: var(--yx-maroon-2); }
+.yx-status-due { color: #fff; background: var(--yx-maroon-2); }

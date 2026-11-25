@@ -14,8 +14,16 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from . import grounding, prompting, store
-from .access import _cited_numbers, _me, _public_passage, _require_module, _short, parse_json_reply
+from . import grounding, prompting, review, store
+from .access import (
+    _allowed_modules,
+    _cited_numbers,
+    _me,
+    _public_passage,
+    _require_module,
+    _short,
+    parse_json_reply,
+)
 from .catalog import Module, Unit, get_catalog
 from .llm import ModelUnavailable, complete_text, resolve_for
 
@@ -69,7 +77,8 @@ def _progress(user_id: str, module: Module) -> list[dict[str, Any]]:
     answered = [i for i in store.list_practice(user_id, module.code) if i.score is not None]
     out = []
     for u in module.units:
-        scores = [i.score for i in answered if i.unit == u.id and i.score is not None]
+        mine = [i for i in answered if i.unit == u.id]
+        scores = [i.score for i in mine if i.score is not None]
         out.append(
             {
                 "id": u.id,
@@ -77,18 +86,22 @@ def _progress(user_id: str, module: Module) -> list[dict[str, Any]]:
                 "answered": len(scores),
                 "last_scores": scores[-5:],
                 "status": unit_status(scores),
+                "review": review.unit_review(mine),  # None until practised; then {due, next_review, recall}
             }
         )
     return out
 
 
 def _pick_unit(module: Module, progress: list[dict[str, Any]], wanted: str | None) -> Unit | None:
-    """The unit asked for, else the first one not yet mastered."""
+    """The unit asked for, else the most overdue review, else the first one not yet mastered."""
     if wanted:
         unit = module.unit(wanted)
         if not unit:
             raise HTTPException(404, "Unknown learning unit")
         return unit
+    due = [r for r in progress if (r.get("review") or {}).get("due")]
+    if due:
+        return module.unit(min(due, key=lambda r: r["review"]["recall"])["id"])
     for row in progress:
         if row["status"] != "mastered":
             return module.unit(row["id"])
@@ -112,6 +125,15 @@ async def progress(module: str) -> dict[str, Any]:
 class QuestionBody(BaseModel):
     module: str
     unit: str | None = None
+
+
+@router.get("/review")
+async def review_due() -> dict[str, Any]:
+    """Units due for spaced review across every module the student can practise."""
+    cu, user = _me()
+    cat = get_catalog()
+    modules = [m for code in _allowed_modules(cat, cu, user) if (m := cat.module(code)) and m.units]
+    return {"due": review.due_units(cu.id, modules)}
 
 
 @router.post("/question")

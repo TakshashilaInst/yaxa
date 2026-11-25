@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { EnrolPicker } from "@/features/yaxa/enrol";
-import { yaxa, type ConversationSummary, type ModuleView, type ProgrammeView } from "@/lib/yaxa-api";
+import { yaxa, type ConversationSummary, type ModuleView, type ProgrammeView, type ReviewDue } from "@/lib/yaxa-api";
 
 function chatHref(module: string, unit?: string) {
   const q = new URLSearchParams({ module });
@@ -94,6 +94,7 @@ export default function LearnHome() {
   const { me, error, reload } = useMe();
   const [recent, setRecent] = useState<ConversationSummary[]>([]);
   const [allProgrammes, setAllProgrammes] = useState<ProgrammeView[]>([]);
+  const [due, setDue] = useState<ReviewDue[]>([]);
 
   useEffect(() => {
     if (me && !me.onboarded && !me.is_admin) router.replace("/learn/onboarding");
@@ -101,6 +102,7 @@ export default function LearnHome() {
   useEffect(() => {
     if (!me) return;
     yaxa.conversations().then(setRecent).catch(() => {});
+    yaxa.practiceReview().then((r) => setDue(r.due)).catch(() => {});
     if (me.is_admin && !me.enrolments.length) yaxa.catalog().then((c) => setAllProgrammes(c.programmes)).catch(() => {});
   }, [me]);
 
@@ -119,6 +121,25 @@ export default function LearnHome() {
           <Link href="/learn/onboarding">Edit your profile</Link>
         </p>
 
+        {!!due.length && (
+          <section className="yx-card" style={{ marginTop: 20 }}>
+            <div className="yx-eyebrow">Due for review</div>
+            <p className="yx-muted" style={{ margin: "4px 0 10px" }}>
+              Ideas fade unless you use them. Answer one question on each of these units to keep them fresh;
+              Yaxa spaces the next review further out each time you get it right.
+            </p>
+            <ul className="yx-units">
+              {due.slice(0, 5).map((d) => (
+                <li key={`${d.module}/${d.unit}`}>
+                  <Link href={`/learn/practice?module=${encodeURIComponent(d.module)}&unit=${encodeURIComponent(d.unit)}`}>
+                    <span className="yx-unit-id">{d.module}</span> {d.unit_title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            {due.length > 5 && <p className="yx-muted" style={{ margin: "8px 0 0", fontSize: 13 }}>and {due.length - 5} more</p>}
+          </section>
+        )}
         {(!!me.enrolments.length || me.is_admin) && (
           <Link href="/learn/chat/new?scope=programme" className="yx-card" style={{ display: "block", marginTop: 20, textDecoration: "none" }}>
             <div className="yx-eyebrow">New</div>

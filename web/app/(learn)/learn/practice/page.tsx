@@ -15,6 +15,16 @@ import { yaxa, type PracticeProgress, type PracticeQuestion, type PracticeResult
 
 const STATUS_LABEL = { new: "Not started", practising: "Practising", mastered: "Mastered" } as const;
 
+/** "Review due", or when the next review falls, e.g. "Review 3 Dec". */
+function ReviewLabel({ review }: { review: UnitProgress["review"] }) {
+  if (!review) return null;
+  if (review.due) {
+    return <span className="yx-status yx-status-due" title={`About ${Math.round(review.recall * 100)}% likely you still remember this`}>Review due</span>;
+  }
+  const when = new Date(`${review.next_review}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  return <span className="yx-muted" style={{ fontSize: 12.5 }} title="Yaxa will ask you about this unit again then, so it sticks">Review {when}</span>;
+}
+
 /** One dot per recent answer, filled by score (0–3). */
 function ScoreDots({ scores }: { scores: number[] }) {
   if (!scores.length) return null;
@@ -36,6 +46,7 @@ function UnitList({ units, current, onPick }: { units: UnitProgress[]; current: 
             <span className="yx-unit-id">{u.id.replace("U", "U.")}</span>
             <span style={{ flex: 1 }}>{u.title}</span>
             <span className={`yx-status yx-status-${u.status}`}>{STATUS_LABEL[u.status]}</span>
+            <ReviewLabel review={u.review} />
             <ScoreDots scores={u.last_scores} />
           </button>
         </li>
