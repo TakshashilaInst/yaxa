@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 import yaml
 
 from . import store
-from .access import _me
+from .access import _me, _privileged
 from .catalog import get_catalog
 
 router = APIRouter()
@@ -181,3 +181,141 @@ async def join(code: str, body: JoinBody) -> dict:
     user.enrolments.append(store.Enrolment(programme=prog.code, track=track, cohort=c.code))
     store.save_user(user)
     return {"ok": True, "programme": prog.code, "cohort": c.code, "track": track}
+
+
+# ------------------------------------------------------------------ staff
+def _staff() -> None:
+    cu, user = _me()
+    if not _privileged(cu, user):
+        raise HTTPException(403, "Faculty and staff only")
+
+
+def _members(code: str) -> list[store.YaxaUser]:
+    return [u for u in store.list_users() if any(e.cohort == code for e in u.enrolments)]
+
+
+def _need(code: str) -> Cohort:
+    try:
+        c = load_cohort(code)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if not c:
+        raise HTTPException(404, "No such cohort")
+    return c
+
+
+def _session_codes(programme: str) -> dict[str, list[dict]]:
+    """Module code -> its sessions [{code, title}], for every module of the programme (all tracks)."""
+    cat = get_catalog()
+    prog = cat.programme(programme)
+    out: dict[str, list[dict]] = {}
+    for mcode in prog.module_codes() if prog else []:
+        m = cat.modules.get(mcode)
+        if m:
+            out[mcode] = [{"code": u.id, "title": u.title} for u in m.units]
+    return out
+
+
+@router.get("/schedule/cohorts")
+async def staff_cohorts() -> list[dict]:
+    _staff()
+    return [
+        {"code": c.code, "programme": c.programme, "start": c.start, "sessions": len(c.sessions),
+         "members": len(_members(c.code)), "join_code": c.join_code, "join_open": c.join_open}
+        for c in list_cohorts()
+    ]
+
+
+@router.get("/schedule/cohorts/{code}")
+async def staff_cohort(code: str) -> dict:
+    _staff()
+    c = _need(code)
+    cat = get_catalog()
+    modules = [{"code": m, "title": cat.modules[m].title, "sessions": units}
+               for m, units in _session_codes(c.programme).items()]
+    return {**c.model_dump(), "modules": modules}
+
+
+@router.put("/schedule/cohorts/{code}")
+async def staff_save(code: str, body: Cohort) -> dict:
+    _staff()
+    if body.code != code:
+        raise HTTPException(400, "Cohort code does not match the address")
+    if not get_catalog().programme(body.programme):
+        raise HTTPException(400, f"Unknown programme {body.programme}")
+    known = {u["code"] for units in _session_codes(body.programme).values() for u in units}
+    for s in body.sessions:
+        if s.code not in known:
+            raise HTTPException(400, f"Unknown session {s.code}")
+        try:
+            starts_at(s)
+        except ValueError as exc:
+            raise HTTPException(400, f"Bad date or time for {s.code}") from exc
+    for d in body.dates:
+        try:
+            date.fromisoformat(d.date)
+        except ValueError as exc:
+            raise HTTPException(400, f"Bad date for {d.label}") from exc
+    if not body.join_code:
+        body.join_code = new_join_code()
+    try:
+        save_cohort(body)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    return body.model_dump()
+
+
+class CopyBody(BaseModel):
+    to: str
+    weeks: int
+
+
+@router.post("/schedule/cohorts/{code}/copy")
+async def staff_copy(code: str, body: CopyBody) -> dict:
+    _staff()
+    src = _need(code)
+    try:
+        exists = load_cohort(body.to)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if exists:
+        raise HTTPException(409, f"{body.to} already exists")
+    new = copy_schedule(src, body.to, body.weeks)
+    save_cohort(new)
+    return new.model_dump()
+
+
+@router.get("/schedule/cohorts/{code}/members")
+async def staff_members(code: str) -> list[dict]:
+    _staff()
+    _need(code)
+    out = []
+    for u in _members(code):
+        e = next(e for e in u.enrolments if e.cohort == code)
+        out.append({"user_id": u.user_id, "display_name": u.display_name, "track": e.track})
+    return sorted(out, key=lambda r: r["display_name"].lower())
+
+
+class MemberBody(BaseModel):
+    cohort: str
+    track: str | None = None
+
+
+@router.put("/schedule/cohorts/{code}/members/{user_id}")
+async def staff_set_member(code: str, user_id: str, body: MemberBody) -> dict:
+    _staff()
+    _need(code)
+    target = _need(body.cohort)
+    prog = get_catalog().programme(target.programme)
+    if body.track and not (prog and prog.track(body.track)):
+        raise HTTPException(400, f"No track {body.track}")
+    try:
+        user = store.load_user(user_id)
+    except ValueError as exc:
+        raise HTTPException(400, "Bad user") from exc
+    e = next((e for e in user.enrolments if e.cohort == code), None)
+    if not e:
+        raise HTTPException(404, "Not in this cohort")
+    e.cohort, e.track, e.programme = target.code, body.track, target.programme
+    store.save_user(user)
+    return {"ok": True}

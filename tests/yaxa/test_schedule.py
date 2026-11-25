@@ -122,3 +122,60 @@ def test_bad_track_is_400_and_join_ignores_self_enrol_switch(monkeypatch):
         asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody(track="XX")))
     assert e.value.status_code == 400
     assert asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody(track="TP")))["ok"]
+
+
+# ------------------------------------------------------------------ task 3
+def test_staff_only(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    _as(monkeypatch, "asha")
+    calls = [
+        lambda: schedule.staff_cohorts(),
+        lambda: schedule.staff_cohort("GCPP45"),
+        lambda: schedule.staff_save("GCPP45", _gcpp45()),
+        lambda: schedule.staff_copy("GCPP45", schedule.CopyBody(to="GCPP46", weeks=12)),
+        lambda: schedule.staff_members("GCPP45"),
+        lambda: schedule.staff_set_member("GCPP45", "asha", schedule.MemberBody(cohort="GCPP45")),
+    ]
+    for call in calls:
+        with pytest.raises(HTTPException) as e:
+            asyncio.run(call())
+        assert e.value.status_code == 403
+
+
+def test_put_generates_join_code_and_lists(monkeypatch):
+    _as(monkeypatch, "staff", admin=True)
+    saved = asyncio.run(schedule.staff_save("GCPP45", _gcpp45(join_code="")))
+    assert len(saved["join_code"]) == 10
+    rows = asyncio.run(schedule.staff_cohorts())
+    assert rows[0]["code"] == "GCPP45" and rows[0]["sessions"] == 2 and rows[0]["members"] == 0
+    view = asyncio.run(schedule.staff_cohort("GCPP45"))
+    dfa = next(m for m in view["modules"] if m["code"] == "DFA-AS")
+    assert {"code": "CS22", "title": dfa["sessions"][1]["title"]} in dfa["sessions"]
+
+
+def test_session_code_must_belong_to_programme(monkeypatch):
+    _as(monkeypatch, "staff", admin=True)
+    bad = _gcpp45(sessions=[Session(code="CS99", date="2026-11-29")])
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(schedule.staff_save("GCPP45", bad))
+    assert e.value.status_code == 400 and e.value.detail == "Unknown session CS99"
+    with pytest.raises(HTTPException):
+        asyncio.run(schedule.staff_save("GCPP46", _gcpp45()))  # body code must match the path
+
+
+def test_copy_creates_next_cohort(monkeypatch):
+    _as(monkeypatch, "staff", admin=True)
+    asyncio.run(schedule.staff_save("GCPP45", _gcpp45()))
+    asyncio.run(schedule.staff_copy("GCPP45", schedule.CopyBody(to="GCPP46", weeks=12)))
+    assert schedule.load_cohort("GCPP46").sessions[0].date == "2027-02-21"
+
+
+def test_members_lists_enrolled_users_and_sets_track(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    schedule.save_cohort(_gcpp45(code="GCPP46", join_code="zzzzzzzzzz"))
+    _as(monkeypatch, "asha", enrolments=[store.Enrolment(programme="GCPP", cohort="GCPP45")])
+    _as(monkeypatch, "staff", admin=True)
+    members = asyncio.run(schedule.staff_members("GCPP45"))
+    assert members == [{"user_id": "asha", "display_name": "Asha", "track": None}]
+    asyncio.run(schedule.staff_set_member("GCPP45", "asha", schedule.MemberBody(track="DFA", cohort="GCPP46")))
+    assert store.load_user("asha").enrolments == [store.Enrolment(programme="GCPP", track="DFA", cohort="GCPP46")]
