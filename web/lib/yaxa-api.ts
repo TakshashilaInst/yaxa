@@ -132,13 +132,22 @@ export interface ModuleReading {
   byline: string;
 }
 
+export interface SessionResource {
+  kind: "mandatory" | "recommended" | "self_assessment";
+  title: string;
+  note: string;
+  open: string; // our library copy, or the original link; "" when neither is available yet
+  in_library: boolean;
+  opened: boolean;
+}
+
 export interface ModuleUnitDetail {
   id: string;
   title: string;
   outcomes: string;
-  lms_url: string; // the session's page on OpenTakshashila
   session: { starts_at: string; host: string } | null; // this cohort's date for the session
-  readings: ModuleReading[];
+  resources: SessionResource[]; // the session's reading list
+  readings: ModuleReading[]; // more from the library (webinar transcripts, extra material)
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
 }
 
@@ -359,6 +368,7 @@ const send = (method: string, body?: unknown): RequestInit => ({
 export const yaxa = {
   me: () => json<Me>("/me"),
   week: () => json<WeekView>("/schedule/week"),
+  markOpened: (url: string) => json<{ ok: boolean }>("/me/opened", send("POST", { url })),
   // announcements
   announcements: (cohort?: string) => json<AnnouncementList>(`/announcements${q(cohort)}`),
   seenAnnouncements: () => json<{ ok: boolean }>("/announcements/seen", send("POST")),

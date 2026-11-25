@@ -14,7 +14,7 @@ import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
 import { SessionDiscussion } from "@/features/yaxa/discussion";
 import { sessionWhen } from "@/features/yaxa/week";
-import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail } from "@/lib/yaxa-api";
+import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail, type SessionResource } from "@/lib/yaxa-api";
 
 const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar", note: "Article", anecdote: "Anecdote" };
 const SHOW_FIRST = 4; // readings shown before "Show all"
@@ -64,6 +64,42 @@ function Readings({ items }: { items: ModuleReading[] }) {
   );
 }
 
+/** One part of a session's reading list. Ticks show what this learner has opened. */
+function ResourceList({ title, items, collapsed = false }: { title: string; items: SessionResource[]; collapsed?: boolean }) {
+  const [open, setOpen] = useState(!collapsed);
+  if (!items.length) return null;
+  return (
+    <>
+      <h3 className="yx-unit-sub">
+        {title} <span className="yx-muted" style={{ fontWeight: 400 }}>({items.length})</span>
+        {collapsed && (
+          <button type="button" className="yx-linklike" style={{ marginLeft: 10, fontSize: 14, fontWeight: 400 }} onClick={() => setOpen(!open)}>
+            {open ? "Hide" : "Show"}
+          </button>
+        )}
+      </h3>
+      {open && (
+        <ul className="yx-resources">
+          {items.map((r, i) => (
+            <li key={`${r.title}-${i}`} className={r.opened ? "is-done" : ""}>
+              <span aria-hidden className="yx-res-tick">{r.opened ? "✓" : "○"}</span>
+              <div>
+                {r.open ? (
+                  <a href={r.open} target="_blank" rel="noreferrer" onClick={() => { if (!r.in_library) yaxa.markOpened(r.open).catch(() => {}); }}>{r.title}</a>
+                ) : (
+                  <span>{r.title}</span>
+                )}
+                {r.in_library && <span className="yx-res-tag" title="Yaxa can answer questions about this reading">in Yaxa</span>}
+                {r.note && r.note !== r.title && <div className="yx-muted yx-res-note">{r.note.replace(r.title, "").replace(/^[\s:\-–—]+/, "")}</div>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
 function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number }) {
   return (
     <section className="yx-card yx-unit-card" id={u.id}>
@@ -96,12 +132,23 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
         </Link>
       </div>
 
-      <h3 className="yx-unit-sub">Readings and webinars</h3>
-      <Readings items={u.readings} />
-      {u.lms_url && (
-        <p style={{ margin: "10px 0 0", fontSize: 14 }}>
-          <a href={u.lms_url} target="_blank" rel="noreferrer">Full session page on OpenTakshashila (all readings, live webinar) →</a>
-        </p>
+      {u.resources.length ? (
+        <>
+          <ResourceList title="Mandatory readings" items={u.resources.filter((r) => r.kind === "mandatory")} />
+          <ResourceList title="Recommended readings" items={u.resources.filter((r) => r.kind === "recommended")} collapsed />
+          <ResourceList title="Check your understanding" items={u.resources.filter((r) => r.kind === "self_assessment")} />
+          {!!u.readings.length && (
+            <>
+              <h3 className="yx-unit-sub">Webinars and more from the library</h3>
+              <Readings items={u.readings} />
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <h3 className="yx-unit-sub">Readings and webinars</h3>
+          <Readings items={u.readings} />
+        </>
       )}
       {/^C[A-Z]\d/.test(u.id) && <SessionDiscussion module={code} session={u.id} />}
     </section>

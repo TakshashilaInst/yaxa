@@ -49,7 +49,8 @@ function SessionCard({ s }: { s: WeekSession }) {
             {s.readings.map((r) => (
               <li key={r.open} className={r.opened ? "is-done" : ""}>
                 <span aria-hidden>{r.opened ? "✓" : "○"}</span>{" "}
-                <a href={r.open} target="_blank" rel="noreferrer">{r.title}</a>
+                <a href={r.open} target="_blank" rel="noreferrer"
+                  onClick={() => { if (/^https?:/.test(r.open)) yaxa.markOpened(r.open).catch(() => {}); }}>{r.title}</a>
               </li>
             ))}
           </ul>

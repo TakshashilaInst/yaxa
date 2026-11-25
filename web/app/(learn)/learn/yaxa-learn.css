@@ -357,3 +357,11 @@ a.yx-carry:hover, a.yx-module-link:hover { border-color: var(--yx-maroon-2); }
 .yx-chat-meta { font-size: 14px; }
 .yx-chat-compose { display: flex; gap: 8px; align-items: flex-end; margin-top: 10px; }
 .yx-chat-compose textarea { flex: 1; }
+
+/* ---------- a session's own reading list ---------- */
+.yx-resources { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 8px; }
+.yx-resources li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; align-items: start; }
+.yx-resources li.is-done a { color: var(--yx-muted); }
+.yx-res-tick { color: var(--yx-maroon); }
+.yx-res-note { font-size: 14px; margin-top: 2px; }
+.yx-res-tag { margin-left: 8px; font-size: 12px; padding: 1px 7px; border-radius: 10px; background: var(--yx-saffron-soft); color: var(--yx-ink); white-space: nowrap; }
