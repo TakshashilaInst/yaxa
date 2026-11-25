@@ -1,26 +1,256 @@
 code: GCPP-ER1
 title: Economic Reasoning I
 kb: GCPP-ER1
-description: 'Core module, weeks 1-5. Thinking like an economist about public policy: incentives, prices, markets,
-  macroeconomic indicators and trade.'
+description: 'Core module, weeks 1-5. Thinking like an economist about public policy: incentives, prices, markets, macroeconomic
+  indicators and trade.'
 units:
 - id: CP21
   title: Introduction to Economic Reasoning
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-21-introduction-to-economic-reasoning
+  resources:
+  - kind: mandatory
+    title: On Economic Freedom
+    url: https://www.econlib.org/library/Enc/EconomicFreedom.html
+    note: Essay by Robert A. Lawson.
+  - kind: mandatory
+    title: The Addictive Nature of Bad Policies
+    url: https://media2-production.mightynetworks.com/asset/e75f6ba5-6d21-4de5-a0d8-729cd8ec2798/Opinion___The_addictive_nature_of_bad_policies.pdf
+    note: Essay by Anupam Manur.
+    file: CP21 - The Addictive Nature of Bad Policies.pdf
+  - kind: mandatory
+    title: Incentives Matter
+    url: https://media2-production.mightynetworks.com/asset/be3866a8-4938-49e6-9084-60df13cf77ba/Incentives_Matter.pdf
+    note: Examples of how people respond to incentives.
+    file: CP21 - Incentives Matter.pdf
+  - kind: mandatory
+    title: Free Trade
+    url: https://www.econlib.org/library/Enc/FreeTrade.html
+    note: Essay by Alan Blinder.
+  - kind: mandatory
+    title: Think on the Margin
+    url: https://media2-production.mightynetworks.com/asset/d3c574cd-5069-40ac-acd3-f21fcf597afc/Think_on_the_Margin.pdf
+    file: CP21 - Think on the Margin.pdf
+  - kind: mandatory
+    title: 'Getting the Most Out of Life: The Concept of Opportunity Cost'
+    url: https://www.econlib.org/library/Columns/y2007/Robertsopportunitycost.html
+    note: Essay by Russell Roberts.
+  - kind: mandatory
+    title: Benefit Cost Analysis
+    url: https://media2-production.mightynetworks.com/asset/f0d6c768-4c13-4311-a2f6-36f44ac7b756/Benefit_Cost_Analysis.pdf
+    file: CP21 - Benefit Cost Analysis.pdf
+  - kind: mandatory
+    title: A Short History of India's Economy
+    url: https://media2-production.mightynetworks.com/asset/77958ef9-17d6-4c01-b599-9209b6e6d5e7/A_short_history_of_India_s_economy.pdf
+    file: CP21 - A Short History of India's Economy.pdf
+  - kind: mandatory
+    title: Indian Society as a Changemaker (Manthan, with Pranay Kotasthane)
+    url: https://youtu.be/OfwJxkZk6_I
+  - kind: recommended
+    title: Economic Growth
+    url: https://media2-production.mightynetworks.com/asset/6aa0a590-3f4d-4de1-ad12-a010c1526685/Economic_Growth.pdf
+    file: CP21 - Economic Growth.pdf
+  - kind: recommended
+    title: Incentives, Incentives, Incentives
+    url: https://media2-production.mightynetworks.com/asset/2f52faac-9d7f-48e5-bbbb-8d2f3b5fcc3e/Incentives__Incentives__Incentives_-_Econlib.pdf
+    file: CP21 - Incentives, Incentives, Incentives.pdf
+  - kind: recommended
+    title: 'Slavery, Snakes and Switching: The Role of Incentives in Creating Unintended Consequences'
+    url: https://media2-production.mightynetworks.com/asset/993c1d55-4dc5-4917-9359-8f9673d237f2/Slavery__Snakes__and_Switching_The_Role_of_Incentives_in_Creating_Unintended_Consequences.pdf
+    file: CP21 - Slavery, Snakes and Switching The Role of Incentives in Creating Unintended Consequences.pdf
+  - kind: recommended
+    title: Margins and Thinking at the Margin
+    url: https://media2-production.mightynetworks.com/asset/f18c20d9-f0ed-463c-85d5-df52d354d0b4/Margins_and_Thinking_at_the_Margin.pdf
+    file: CP21 - Margins and Thinking at the Margin.pdf
+  - kind: recommended
+    title: 'Essential Austrian Economics: Marginal Thinking'
+    url: https://youtu.be/IZm2v9Nl2hY
+    note: The diamond-water paradox through marginal thinking.
+  - kind: recommended
+    title: Market Failures and Government Failure (EconTalk)
+    url: https://www.econtalk.org/winston-on-market-failure-and-government-failure/
+  - kind: recommended
+    title: The Cartoon Introduction to Economics
+    url: https://media2-production.mightynetworks.com/asset/45d8cee2-889f-4a05-b566-9513959a258f/The_Cartoon_Introduction_to_Economics_.pdf
+    file: CP21 - The Cartoon Introduction to Economics.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/78a28459-8c19-4adf-987d-6229cf9fdaec/Self_Assessment_-_CP21_-_Introduction_to_Economic_Reasoning.pdf
+    file: CP21 - Self-assessment quiz.pdf
 - id: CP22
   title: The Market Dynamics and the Price System
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-22-the-market-dynamics-and-the-price-system
+  resources:
+  - kind: mandatory
+    title: I, Rose (MRU video)
+    url: https://youtu.be/t3QMC_TeP-Q
+    note: How dispersed knowledge and self-interested actors create a global market for roses.
+  - kind: mandatory
+    title: Information, Prices, and Socialism's Flaws
+    url: https://media2-production.mightynetworks.com/asset/976834a3-3dab-49ea-9e94-8b28a09fb12a/Information__Prices__and_Socialism_s_Flaws.pdf
+    note: Essay by Morgan Rose.
+    file: CP22 - Information, Prices, and Socialism's Flaws.pdf
+  - kind: mandatory
+    title: What Do Prices Know That You Don't?
+    url: https://youtu.be/WPy-QKXofQs
+  - kind: mandatory
+    title: What is Opportunity Cost? (MRU video)
+    url: https://youtu.be/x-hYzRncxTc
+  - kind: mandatory
+    title: 'Sunk costs: business failures from the Titanic to Evergrande'
+    url: https://media2-production.mightynetworks.com/asset/15376b55-de40-4136-ac73-9acb4daeed0a/Sunk_costs__From_Titanic_to_Evergrande.pdf
+    file: CP22 - Sunk costs business failures from the Titanic to Evergrande.pdf
+  - kind: recommended
+    title: Where Do Prices Come From?
+    url: https://www.econlib.org/library/Columns/y2007/Robertsprices.html
+    note: Essay by Russell Roberts.
+  - kind: recommended
+    title: A Price is a Signal Wrapped Up in an Incentive (MRU video)
+    url: https://youtu.be/aBYzvPbIFNw
+  - kind: recommended
+    title: 'Getting the Most Out of Life: The Concept of Opportunity Cost'
+    url: https://www.econlib.org/library/Columns/y2007/Robertsopportunitycost.html
+    note: Essay by Russell Roberts.
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/ebc21674-b2f9-4025-8e3a-7c17edf749f1/Self_Assessment_-_CP22___CP23_Market_Dynamics___The_Price_System.pdf
+    file: CP22 - Self-assessment quiz.pdf
 - id: CP23
   title: Market Dynamics
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-23-market-dynamics
+  resources:
+  - kind: mandatory
+    title: Demand
+    url: https://www.econlib.org/library/Enc/Demand.html
+    note: Essay by David R. Henderson.
+  - kind: mandatory
+    title: The Demand Curve (MRU video)
+    url: https://youtu.be/kUPm2tMCbGE
+  - kind: mandatory
+    title: What Shifts the Demand Curve? (MRU video)
+    url: https://youtu.be/XYr8natwhuY
+  - kind: mandatory
+    title: Supply
+    url: https://www.econlib.org/library/Enc/Supply.html
+    note: Essay by Al Ehrbar.
+  - kind: mandatory
+    title: The Supply Curve (MRU video)
+    url: https://youtu.be/nKvrbOq1OfI
+  - kind: mandatory
+    title: What Shifts the Supply Curve? (MRU video)
+    url: https://youtu.be/5iyCwbvJc_U
+  - kind: mandatory
+    title: The Equilibrium Price and Quantity (MRU video)
+    url: https://youtu.be/7eZcPs9z9OA
+  - kind: recommended
+    title: 'No Yolk: Shortages and Spikes in the Time of COVID'
+    url: https://www.econlib.org/library/Columns/y2021/MaloneLuskfoodprices.html
+  - kind: recommended
+    title: The Great Toilet Paper Panic
+    url: https://youtu.be/rX_FTiRB5QI
+  - kind: recommended
+    title: 'A Cure for Our Health Care Ills: The Supply Side'
+    url: https://www.econlib.org/library/Columns/y2018/HooperHendersoncuresupplyside.html
+  - kind: recommended
+    title: India's hand sanitiser production capacity grew 1,000 times during Covid-19
+    url: https://media2-production.mightynetworks.com/asset/5cace17f-7a0a-4f38-99c8-4f693034288a/India-hand_sanitizer.pdf.pdf
+    file: CP23 - India's hand sanitiser production capacity grew 1,000 times during Covid-19.pdf
+  - kind: recommended
+    title: Where Do Prices Come From?
+    url: https://www.econlib.org/library/Columns/y2007/Robertsprices.html
+    note: Essay by Russell Roberts.
+  - kind: recommended
+    title: What rescue puppies teach us about supply and demand
+    url: https://www.marketplace.org/2017/12/07/life/24-hrs-and-over-one-thousand-life-rescue-dog/
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/71c24461-321f-4589-8bde-020683f8d045/GCPP34_Self_Assessment_-_CP22___CP23_Market_Dynamics___The_Price_System.pdf
+    file: CP23 - Self-assessment quiz.pdf
 - id: CP24
   title: Macroeconomic Indicators
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-24-macroeconomic-indicators
+  resources:
+  - kind: mandatory
+    title: What is Gross Domestic Product?
+    url: https://youtu.be/mjJmo5mN5yA
+  - kind: mandatory
+    title: 'GDP: Does It Measure Up?'
+    url: https://media2-production.mightynetworks.com/asset/09c9c752-608d-41b7-905d-730393696f63/Does_It_Measure_Up_.pdf
+    file: CP24 - GDP Does It Measure Up.pdf
+  - kind: mandatory
+    title: Measuring Inflation (MRU video)
+    url: https://youtu.be/0jJKjgE3qfE
+  - kind: mandatory
+    title: Boom and Bust Cycle (Forbes)
+    url: https://www.forbes.com/sites/rcarson/2022/09/20/what-does-a-boom-and-bust-cycle-mean-for-your-personal-and-business-planning/
+  - kind: recommended
+    title: Cider Added, Sweat Pants Come Off New Zealand Inflation Index (WSJ)
+    url: https://media2-production.mightynetworks.com/asset/8aa9d909-16ed-49e1-8234-e58d648b31b1/Cider_Added__Sweat_Pants_Come_Off_New_Zealand_Inflation_Index_-_WSJ.pdf
+    note: How inflation baskets are revised to reflect changing preferences.
+    file: CP24 - Cider Added, Sweat Pants Come Off New Zealand Inflation Index (WSJ).pdf
+  - kind: recommended
+    title: Demystifying GDP (The Seen and the Unseen)
+    url: https://seenunseen.in/episodes/2019/7/22/episode-130-demystifying-gdp/
+  - kind: recommended
+    title: 'Taking the Pulse of the Economy: Measuring GDP'
+    url: https://media2-production.mightynetworks.com/asset/846d8135-e069-495f-9753-ccd313af9d8a/Taking_the_Pulse_of_the_Economy.pdf
+    file: CP24 - Taking the Pulse of the Economy Measuring GDP.pdf
+  - kind: recommended
+    title: Comparison of Consumer and Wholesale Price Indices in India (RBI)
+    url: https://media2-production.mightynetworks.com/asset/183bbb52-c5c4-41d2-bcba-8eeb699215f4/Comparison_of_Consumer_and_Wholesale.pdf
+    file: CP24 - Comparison of Consumer and Wholesale Price Indices in India (RBI).pdf
+  - kind: recommended
+    title: The Rise and Fall of the Environmental Kuznets Curve
+    url: https://media2-production.mightynetworks.com/asset/3ac24fce-0186-4dec-b026-4a45ec12228c/The_Rise_and_Fall_of_the_Environmental_Kuznets_Curve.pdf
+    file: CP24 - The Rise and Fall of the Environmental Kuznets Curve.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/261be30c-ad25-42cf-b11e-e84cb00c753a/Self_Assessment_-_CP24_Introduction_to_Macroeconomics.pdf
+    file: CP24 - Self-assessment quiz.pdf
 - id: CP25
   title: Trade
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-25-trade
+  resources:
+  - kind: mandatory
+    title: Free Trade
+    url: https://www.econlib.org/library/Enc/FreeTrade.html
+    note: Essay by Alan Blinder.
+  - kind: mandatory
+    title: 'Treasure Island: The Power of Trade'
+    url: https://www.econlib.org/library/Columns/y2006/Robertscomparativeadvantage.html
+    note: The seemingly simple story of comparative advantage (Parts 1 and 2).
+  - kind: mandatory
+    title: Division of Labor
+    url: https://www.econlib.org/library/Enc/DivisionofLabor.html
+    note: Essay by Michael Munger.
+  - kind: mandatory
+    title: 'Division of Labor: Burgers and Ships'
+    url: https://youtu.be/Meo0s54s1sw
+  - kind: mandatory
+    title: A Liberal Trade Regime in an Uncertain World (India's Marathon)
+    url: https://media2-production.mightynetworks.com/asset/1baf877a-28eb-41d1-9bf7-589b1724e37d/INDIA_S_MARATHON.pdf
+    file: CP25 - A Liberal Trade Regime in an Uncertain World (India's Marathon).pdf
+  - kind: recommended
+    title: Comparative Advantage
+    url: https://media2-production.mightynetworks.com/asset/9f0242e4-a7a5-4bf5-80e7-432282c595b1/Comparative_Advantage.pdf
+    file: CP25 - Comparative Advantage.pdf
+  - kind: recommended
+    title: A Brief History of International Trade Policy
+    url: https://media2-production.mightynetworks.com/asset/c9700549-49a3-4ec3-aa77-e7d5d240c290/A_Brief_History_of_International_Trade_Policy.pdf
+    file: CP25 - A Brief History of International Trade Policy.pdf
+  - kind: recommended
+    title: 'Trade Liberalisation: Why So Much Controversy?'
+    url: https://media2-production.mightynetworks.com/asset/ec7f1b06-2831-41ee-ad7d-e0be4f80e032/Trade_Liberalization-_Why_So_Much_Controversy_.pdf
+    file: CP25 - Trade Liberalisation Why So Much Controversy.pdf
+  - kind: recommended
+    title: Protectionism
+    url: https://media2-production.mightynetworks.com/asset/f2618b50-d49d-4100-bbb3-1d42edfcacf1/Protectionism_-_Econlib.pdf
+    note: Essay by Jagdish Bhagwati.
+    file: CP25 - Protectionism.pdf
+  - kind: recommended
+    title: Notes on Protectionism
+    url: https://media2-production.mightynetworks.com/asset/6a53b0d9-5d6c-49f0-820b-703a37340558/Note_on_Protectionism.pdf
+    file: CP25 - Notes on Protectionism.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/83f246e5-e041-4f1a-aeaa-9a343dcf0e35/GCPP34_Self_Assessment_-_CP25_Trade.pdf
+    file: CP25 - Self-assessment quiz.pdf

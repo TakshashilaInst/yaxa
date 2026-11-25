@@ -1,26 +1,180 @@
 code: GCPP-PAC
 title: Policy Analysis and Concepts
 kb: GCPP-PAC
-description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the Constitution,
-  what governments try to do and the paradoxes they face.'
+description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the Constitution, what
+  governments try to do and the paradoxes they face.'
 units:
 - id: CP10
   title: Introduction to the Policy System
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-10-introduction-to-the-policy-system
+  resources:
+  - kind: mandatory
+    title: In Service of the Republic, Chapters 1-3
+    url: https://media2-production.mightynetworks.com/asset/ec06e338-67be-48f2-9715-ac52be04dc22/In_Service_of_the_Republic_Ch_1__Ch_2_and_Ch_3.pdf
+    note: The closest thing to a course textbook. Part one (pp. 3-26).
+    file: CP10 - In Service of the Republic, Chapters 1-3.pdf
+  - kind: mandatory
+    title: A Leader's Framework for Decision Making
+    url: https://media2-production.mightynetworks.com/asset/97fbb308-cf8e-4225-bf57-be484581cc39/Snowdon-and-Boone-A-Leader_s-Framework-for-Decision-Making_0.pdf
+    note: David J. Snowden and Mary E. Boone.
+    file: CP10 - A Leader's Framework for Decision Making.pdf
+  - kind: mandatory
+    title: 'Thinking in Systems: The Basics'
+    url: https://media2-production.mightynetworks.com/asset/13bfb7a9-7ef9-46d7-a00a-b9ba19aa485b/Meadows-2008.-Thinking-in-Systems-28-51.pdf
+    note: Donella Meadows, pp. 11-34.
+    file: CP10 - Thinking in Systems The Basics.pdf
+  - kind: mandatory
+    title: The Mental Models of Systems Thinking
+    url: https://media2-production.mightynetworks.com/asset/b377161e-46da-4a09-93d9-5d75595f94ef/The_Mental_Models_of_Systems_Thinking.pdf
+    file: CP10 - The Mental Models of Systems Thinking.pdf
+  - kind: recommended
+    title: 'Foresight Tackling Obesities: Obesity System Atlas'
+    url: https://assets.publishing.service.gov.uk/media/5a7b8811ed915d4147620fb2/07-1177-obesity-system-atlas.pdf
+  - kind: recommended
+    title: In Service of the Republic, Part II (Chapters 4-5)
+    url: https://media2-production.mightynetworks.com/asset/3cabde7b-d2f8-4456-b764-df9a776f2bf0/In_service_of_the_republic__the_art_and_science_of_economic_policy_by_Kelkar__Vijay_L._Shah__Ajay__z-lib.org_.epub.pdf
+    note: 'pp. 27-54: why some of our policies failed.'
+    file: CP10 - In Service of the Republic, Part II (Chapters 4-5).pdf
+  - kind: recommended
+    title: 'Thinking in Systems: A Brief Visit to the Systems Zoo'
+    url: https://media2-production.mightynetworks.com/asset/63381d65-b921-49d4-bca3-2af296249c08/Thinking-in-Systems35-72.pdf
+    note: Chapter 2, pp. 35-74.
+    file: CP10 - Thinking in Systems A Brief Visit to the Systems Zoo.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/a0c31340-0a16-4682-84b0-3811c43a121f/Self_Assessment_-_CP10_-_Introduction_to_Public_Policy_Analysis.pdf
+    file: CP10 - Self-assessment quiz.pdf
 - id: CP11
   title: Nations, States, and Governments
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-11-nations-states-and-governments
+  resources:
+  - kind: mandatory
+    title: 'Country: a geographic concept (Open Course in Public Policy)'
+  - kind: mandatory
+    title: 'Nation: a mental construct (Open Course in Public Policy)'
+  - kind: mandatory
+    title: 'State: a political institution (Open Course in Public Policy)'
+  - kind: mandatory
+    title: Democracies, Republics and Governments (Open Course in Public Policy)
+  - kind: recommended
+    title: Imagined Communities (Benedict Anderson)
+    url: https://media2-production.mightynetworks.com/asset/b515090d-97fe-4733-8e3d-d322c6dc4a3e/Anderson-Imagined_Communities.pdf
+    file: CP11 - Imagined Communities (Benedict Anderson).pdf
+  - kind: recommended
+    title: On Liberal Nationalism (Nitin Pai)
+    url: https://media2-production.mightynetworks.com/asset/5d44f6af-063d-411f-9810-ba9c7900590e/On_Liberal_Nationalism.pdf
+    file: CP11 - On Liberal Nationalism (Nitin Pai).pdf
+  - kind: recommended
+    title: The Hole in the Whole (Stephen D Krasner)
+    url: https://media2-production.mightynetworks.com/asset/d4a25364-0a97-4b00-8bb8-95a36d8a2e37/Krasner__2004__-_The_Hole_in_the_Whole.pdf
+    note: On sovereignty and shared sovereignty.
+    file: CP11 - The Hole in the Whole (Stephen D Krasner).pdf
+  - kind: recommended
+    title: The State (Partha Chatterjee)
+    url: https://media2-production.mightynetworks.com/asset/876086cb-fda8-4626-a73d-0815513f735a/The_State_-__OCPI__-_Partha_Chatterjee.pdf
+    file: CP11 - The State (Partha Chatterjee).pdf
+  - kind: recommended
+    title: The Flash Mobs of Class Warfare (Nitin Pai)
+    url: https://media2-production.mightynetworks.com/asset/0e1db0a6-5d15-463f-9e31-3d4335facb4f/Nitin_Pai-The_flash_mobs_of_class_warfare.pdf
+    file: CP11 - The Flash Mobs of Class Warfare (Nitin Pai).pdf
+  - kind: recommended
+    title: What It Takes to Truly Be One of Us (Pew)
+    url: https://media2-production.mightynetworks.com/asset/bd826ae7-93c9-4019-ad85-cb078ef5f7c2/What_It_Takes_to_Truly_Be__One_of_Us_.pdf
+    file: CP11 - What It Takes to Truly Be One of Us (Pew).pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/9e5d52ca-7a8b-4d7b-825c-7a4a0f140499/Self_Assessment_-_CP11_Nation__States_and_Governments.pdf
+    file: CP11 - Self-assessment quiz.pdf
 - id: CP12
   title: Democracy, Republic, Constitution, Norms
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-12-democracy-republic-constitution-norms
+  resources:
+  - kind: mandatory
+    title: Democracies, Republics and Governments (Open Course in Public Policy)
+  - kind: mandatory
+    title: Why does the Indian State both fail and succeed? (Devesh Kapur)
+    url: https://media2-production.mightynetworks.com/asset/1d1c4ad6-bdec-4b13-817c-e61b55b02eeb/Kapur__2020__-_Why_does_the_Indian_State_both_Fail_and_Succeed.pdf
+    file: CP12 - Why does the Indian State both fail and succeed (Devesh Kapur).pdf
+  - kind: mandatory
+    title: Is India a Flailing State? (Lant Pritchett)
+    url: https://media2-production.mightynetworks.com/asset/f7b36648-9502-433c-b799-e21be5e0d211/Pritchett__2009__-_Is_India_a_Flailing_State.pdf
+    file: CP12 - Is India a Flailing State (Lant Pritchett).pdf
+  - kind: mandatory
+    title: The Grammar of Anarchy (Pragati)
+    url: https://media2-production.mightynetworks.com/asset/1ee403f5-f058-48d6-8904-480094ab494e/The_Grammar_of_Anarchy.pdf
+    file: CP12 - The Grammar of Anarchy (Pragati).pdf
+  - kind: recommended
+    title: Principal-Agent Problem Meets the Public Sector
+    url: https://media2-production.mightynetworks.com/asset/f0d71b8d-d59f-43c0-a213-06d128e4a51a/Principal-Agent_Problem_Meets_the_Public_Sector.pdf
+    file: CP12 - Principal-Agent Problem Meets the Public Sector.pdf
+  - kind: recommended
+    title: The Policymaker as a Tightrope Walker
+    url: https://media2-production.mightynetworks.com/asset/69aded52-c19b-498b-bc78-45ba347293a4/The_policymaker_as_a_tightrope_walker.pdf
+    file: CP12 - The Policymaker as a Tightrope Walker.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/009c5433-948b-4aa0-aa09-24e229912a3b/Self_Assessment_-_CP12_Paradoxes_of_the_Indian_Government_.pdf
+    file: CP12 - Self-assessment quiz.pdf
 - id: CP13
   title: 'Government: Structure, Goals, and Actions'
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-13-government-structure-goals-and-actions
+  resources:
+  - kind: mandatory
+    title: Goals of a Government (Open Course in Public Policy)
+  - kind: mandatory
+    title: Things Governments Do (Open Course in Public Policy)
+  - kind: recommended
+    title: India's Failed Demonetization Program and Its Retreating Economic Defenders
+    url: https://media2-production.mightynetworks.com/asset/76bf2572-055e-4265-a41c-df044e06e0db/India_s_Failed_Demonetization_Program_and_Its_Retreating_Economic_Defenders.pdf
+    note: How demonetisation fared against its stated objectives.
+    file: CP13 - India's Failed Demonetization Program and Its Retreating Economic Defenders.pdf
+  - kind: recommended
+    title: In Service of the Republic, Chapters 2, 11, 28
+    url: https://media2-production.mightynetworks.com/asset/3c560cb9-3533-46ec-8c90-813d8a4d9d5b/In_Service_of_the_Republic_-_Ch._2__11__28.pdf
+    note: Why policies fail, and how to choose among interventions.
+    file: CP13 - In Service of the Republic, Chapters 2, 11, 28.pdf
+  - kind: recommended
+    title: Goals of Public Policy (Deborah Stone)
+    url: https://media2-production.mightynetworks.com/asset/6f83be07-4fc4-4b00-96d7-e64ee1bf9b94/Goals_of_Public_Policy.pdf
+    file: CP13 - Goals of Public Policy (Deborah Stone).pdf
+  - kind: recommended
+    title: Concerns with Delhi Metro (The Leap Blog)
+    url: https://media2-production.mightynetworks.com/asset/2a144054-3bc4-48bf-989e-09ddc913fdba/The_Leap_Blog__Concerns_with_Delhi_Metro.pdf
+    note: Shubho Roy and Ajay Shah.
+    file: CP13 - Concerns with Delhi Metro (The Leap Blog).pdf
+  - kind: recommended
+    title: PAISA for Municipalities
+    url: https://media2-production.mightynetworks.com/asset/f4724908-b923-455b-9833-50fcfabae604/PAISA_for_Municipalities.pdf
+    file: CP13 - PAISA for Municipalities.pdf
+  - kind: recommended
+    title: Tocsin for an Ancien Regime
+    url: https://media2-production.mightynetworks.com/asset/7a283115-e051-4617-a9d9-37b65573a8df/Tocsin_For_An_Ancien_Regime.pdf
+    note: The six principles the architecture of the Indian state is built on.
+    file: CP13 - Tocsin for an Ancien Regime.pdf
+  - kind: self_assessment
+    title: Self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/c94b1c52-d73b-4cb0-8d40-108e7b8d7e8d/Self_Assessment_-_CP13_Goals_of_the_Indian_Government_and_8_Things_Governments_Do_Self_Assesment_Questions.pdf
+    file: CP13 - Self-assessment quiz.pdf
 - id: CS11
   title: Basics of Strategic Studies
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cs-11-basics-of-strategic-studies
+  resources:
+  - kind: mandatory
+    title: Strategic Studies and the Problem of Power
+    url: https://media2-production.mightynetworks.com/asset/08ccfb9b-935b-44d4-ad26-96ee9a7fc580/Strategic_Studies_and_the_Problem_of_Power.pdf
+    note: Lawrence Freedman
+    file: CS11 - Strategic Studies and the Problem of Power.pdf
+  - kind: mandatory
+    title: The Lost Meaning of Strategy
+    url: https://media2-production.mightynetworks.com/asset/056884ea-a04a-4115-a56e-8b0bafac0a40/The_Lost_Meaning_of_Strategy.pdf
+    note: Hew Strachan
+    file: CS11 - The Lost Meaning of Strategy.pdf
+  - kind: mandatory
+    title: Strategy and the Limitation of War
+    url: https://media2-production.mightynetworks.com/asset/6b339d43-7084-4306-a87b-e24df61dd840/Strategy_and_Limitation_of_War.pdf
+    note: Hew Strachan
+    file: CS11 - Strategy and the Limitation of War.pdf
+  - kind: recommended
+    title: Statecraft
+    url: https://youtu.be/GdN4Sh1RjkU
+    note: John Lenczowski

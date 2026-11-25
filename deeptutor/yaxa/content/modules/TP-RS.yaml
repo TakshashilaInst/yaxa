@@ -1,23 +1,47 @@
 code: TP-RS
 title: Responsible Strategy
 kb: TP
-description: Technology and Policy specialisation. Anticipating how society reacts to technology and building it
-  responsibly.
+description: Technology and Policy specialisation. Anticipating how society reacts to technology and building it responsibly.
 units:
 - id: CT21
   title: Social Impact Analysis and Responsible Strategy
-  outcomes: 'Anticipating second-order and social effects of a technology before deploying it, and complex-systems
-    thinking: feedback loops, stocks and flows.'
-  lms_url: https://opentakshashila.net/posts/tp-45-ct21-social-impact-analysis-and-responsible-strategy-28th-june
+  outcomes: 'Anticipating second-order and social effects of a technology before deploying it, and complex-systems thinking:
+    feedback loops, stocks and flows.'
 - id: CT23
   title: Policy Analysis Framework
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct23-policy-analysis-framework-107370459
+  resources:
+  - kind: mandatory
+    title: A Framework for Governing Emerging Technologies (Bharath Reddy, Shambhavi Naik)
+    url: https://media2-production.mightynetworks.com/asset/a86a196c-091a-431c-a976-57d1cc893f6a/A_Framework_For_Governing_Emerging_Technologies_-_TDD_-_20250104_-_1.0.pdf
+    file: CT23 - A Framework for Governing Emerging Technologies (Bharath Reddy, Shambhavi Naik).pdf
 - id: CT24
   title: Technology and Ethics
-  outcomes: Ethical frameworks for technology choices, and how increasingly capable and integrated systems change
-    political theory.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct24-technology-and-ethics
+  outcomes: Ethical frameworks for technology choices, and how increasingly capable and integrated systems change political
+    theory.
   aliases:
   - CT42
   - CT12
+  resources:
+  - kind: mandatory
+    title: Future Politics, Chapter 1 (Jamie Susskind)
+    url: https://media2-production.mightynetworks.com/asset/968183ee-5daa-4af4-9ce5-ee9b6cc19bd3/Future_Politics__Ch_1_Increasingly_Capable_Systems__-_Jamie_Susskind.pdf
+    note: Also read Chapters 2 and 4.
+    file: CT42 - Future_Politics__Ch_1_Increasingly_Capable_Systems__-_Jamie_Susskind.pdf
+  - kind: mandatory
+    title: The Ethics of Invention, Chapter 2 (Sheila Jasanoff)
+    url: https://media2-production.mightynetworks.com/asset/93b45161-9225-4695-a5b2-09965143423b/Ethics_of_Inventions__Ch_2_Risks_and_Responsibilities__-_Sheila_Jasonoff.pdf
+    note: Also read Chapter 9.
+    file: CT24 - The Ethics of Invention, Chapter 2 (Sheila Jasanoff).pdf
+  - kind: mandatory
+    title: Bhopal's Trials of Knowledge and Ignorance (Sheila Jasanoff)
+    url: https://media2-production.mightynetworks.com/asset/3ab56b28-e890-4aa8-adef-cfac78eb725f/Bhopal_s_Trials_of_Knowledge__and_Ignorance_-_Sheila_Jasonoff.pdf
+    file: CT24 - Bhopal's Trials of Knowledge and Ignorance (Sheila Jasanoff).pdf
+  - kind: recommended
+    title: Xi Says China Must Win the Global Tech Race
+    url: https://media2-production.mightynetworks.com/asset/50e63349-a5be-4ad1-914c-bf2e21313e97/Xi_Says_China_Must_Win_the_Global_Tech_Race..pdf
+    file: CT42 - Xi_Says_China_Must_Win_the_Global_Tech_Race..pdf
+  - kind: recommended
+    title: We Were Badly Misled About Covid
+    url: https://media2-production.mightynetworks.com/asset/1ac87012-b3f1-492c-b70e-9819254b4793/We_Were_Badly_Misled_About_Covid.pdf
+    file: CT42 - We_Were_Badly_Misled_About_Covid.pdf

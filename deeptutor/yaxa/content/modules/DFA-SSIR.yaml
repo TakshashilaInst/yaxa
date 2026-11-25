@@ -7,36 +7,316 @@ units:
 - id: CS11
   title: Understanding Geopolitics
   outcomes: Geography as an aid to statecraft, classical geopolitical thinkers and India's grand strategy.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-11-understanding-geopolitics-dfa-essential
+  resources:
+  - kind: mandatory
+    title: 'Understanding Geopolitics: lecture video by Prof Varun Sahni'
+    url: https://video.mn.co/assets/149856130/compulsory_understanding_geopolitics_prof_varun_sahni.mp4
+  - kind: mandatory
+    title: The World Explained in Maps
+    url: https://media2-production.mightynetworks.com/asset/25a45c04-95c2-40bc-b61c-eca1561445c7/The_World_Explained_in_Maps.pdf
+    note: Maps as geopolitical cheat sheets for understanding global regions.
+    file: CS1 - The_World_Explained_in_Maps.pdf
+  - kind: mandatory
+    title: Why Geopolitics?
+    url: https://media2-production.mightynetworks.com/uploads/5e31a9db-211f-43a4-aa5d-e17656ff38f5/Why_Geopolitics_GEOFFREY_SLOAN_and_COLIN_S_GRAY.pdf
+    note: Geoffrey Sloan and Colin S. Gray make the case for the continued relevance of geopolitics.
+    file: CS11 - Why Geopolitics.pdf
+  - kind: recommended
+    title: 'Looking Back to Look Forward: Chinese Geopolitical Narratives and China''s Past'
+    url: https://media2-production.mightynetworks.com/asset/f5a0407a-2a2b-4a10-8f74-115c3670a0ec/Looking_Back_to_Look_Forward_.pdf
+    file: CS1 - Looking_Back_to_Look_Forward_.pdf
+  - kind: recommended
+    title: 'Rethinking Geopolitics: Geography as an Aid to Statecraft'
+    url: https://media2-production.mightynetworks.com/asset/76a6c7b6-f419-40fb-9980-209f8eb4ed2f/Rethinking_Geopolitics_Geography_as_an_Aid_to_Statecraft.pdf
+    file: CS1 - Rethinking_Geopolitics_Geography_as_an_Aid_to_Statecraft.pdf
+  - kind: recommended
+    title: 'Mackinder, Eurasia, and China''s One-Belt-One-Road: Mackinder for the Twenty-First Century'
+    url: https://media2-production.mightynetworks.com/asset/f77b42c3-e116-4fe6-86fa-fbe81ea8c7f4/Mackinder_for_21st_Century_compressed.pdf
+    file: CS1 - Mackinder_for_21st_Century_compressed.pdf
+  - kind: recommended
+    title: The Clash of Emotions of Geopolitics
+    url: https://media2-production.mightynetworks.com/asset/05213fd0-bd6a-43c0-b9b0-27fa4c620560/The_clash_of_Emotions_of_Geopolitics__Introduction_.pdf
+    file: CS1 - The_clash_of_Emotions_of_Geopolitics__Introduction_.pdf
+  - kind: recommended
+    title: Best Writings of George Friedman
+    url: https://media2-production.mightynetworks.com/asset/787dfc22-8a5d-42e1-9a62-8686b2287ef3/Best_of_George_Friedman.pdf
+    file: CS1 - Best_of_George_Friedman.pdf
+  - kind: recommended
+    title: The Geopolitics of Russia
+    url: https://media2-production.mightynetworks.com/asset/4764c582-891c-451f-9e08-2e4e535f06e1/The_Geopolitics_of_Russia.pdf
+    file: CS1 - The_Geopolitics_of_Russia.pdf
+  - kind: recommended
+    title: 'India''s Grand Strategy for the Indian Ocean: Mahanian Visions'
+    url: https://media2-production.mightynetworks.com/asset/e3aa727c-cf6c-4bd9-a08c-b01f660ae27f/India_s_Grand_Strategy_Mahanian_Visions.pdf
+    file: CS1 - India_s_Grand_Strategy_Mahanian_Visions.pdf
+  - kind: recommended
+    title: The Rise of China Vs. The Logic of Strategy
+    url: https://media2-production.mightynetworks.com/asset/c6e021ac-15db-4f9e-93e2-e2b541883be8/The_Rise_of_China_vs_the_Logic_of_Strategy___Edward_N_Luttwak.pdf
+    file: CS1 - The_Rise_of_China_vs_the_Logic_of_Strategy___Edward_N_Luttwak.pdf
 - id: CS12
   title: 'Tools of Statecraft: Force'
   outcomes: Use of force, diplomacy and foreign policy, intelligence analysis and technology as tools of statecraft.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-12-tools-of-statecraft-force
+  resources:
+  - kind: mandatory
+    title: Windows of War
+    url: https://media2-production.mightynetworks.com/asset/227b515a-d87a-4c43-9be1-5b5db0904931/Windows_of_War.pdf
+    file: CS12 - Windows of War.pdf
+  - kind: mandatory
+    title: Another Bloody Century
+    url: https://media2-production.mightynetworks.com/asset/7240b3ea-e6a1-40a3-8e4f-5321d373b9d0/Another_Bloody_Century.pdf
+    file: CS1 - Another_Bloody_Century.pdf
+  - kind: mandatory
+    title: Understanding Force
+    url: https://media2-production.mightynetworks.com/asset/0f5704be-3244-4465-af03-ef17f1ac30e8/Rupert_Smith_Introduction__Chapter_5.pdf
+    file: CS1 - Rupert_Smith_Introduction__Chapter_5.pdf
+  - kind: recommended
+    title: 'The Revolution in Military Affairs: Prospects and Cautions'
+    url: https://media2-production.mightynetworks.com/asset/82d17db2-33b8-4242-8e10-8c3f779d4fba/The_Revolution_in_Military_Affairs.pdf
+    file: CS12 - The Revolution in Military Affairs Prospects and Cautions.pdf
+  - kind: recommended
+    title: The Thucydides Trap and the Rise and Fall of Great Powers
+    url: https://media2-production.mightynetworks.com/asset/d2e4a3fc-a194-4908-bf3a-1fecb4dee5e6/The_Thucydides_Trap_and_the_Rise_and_Fall_of_Great_Powers.pdf
+    file: CS12 - The Thucydides Trap and the Rise and Fall of Great Powers.pdf
+  - kind: recommended
+    title: When Did Humans Start Waging Wars?
+    url: https://media2-production.mightynetworks.com/asset/23971906-7c0f-4695-83a0-487ca28778a6/When_Did_Humans_Start_Waging_Wars_Jesse_Greenspan.pdf
+    file: CS12 - When Did Humans Start Waging Wars.pdf
+  - kind: recommended
+    title: Arms and Influence
+    url: https://media2-production.mightynetworks.com/asset/e4557861-58e7-4be5-9c5a-37012da6405d/Arms_and_Influence.pdf
+    file: CS12 - Arms and Influence.pdf
+  - kind: recommended
+    title: Armed Confrontation in the 21st Century
+    url: https://media2-production.mightynetworks.com/asset/21157093-2043-483d-a679-6fa59b1cef51/Armed_Confrontation_in_21st_Century.pdf
+    file: CS12 - Armed Confrontation in the 21st Century.pdf
+  - kind: recommended
+    title: 'Hard Power and Soft Power: The Utility of Military Force as an Instrument of Policy in the 21st Century'
+    url: https://media2-production.mightynetworks.com/asset/4bd009b6-14c8-4474-a0b6-72e2ad8d83c3/Hard_Power_and_Soft_Power-_The_Utility_of_Military_Force_as_an_Instrument_of_Policy_in_the_21st_Century.pdf
+    file: CS12 - Hard Power and Soft Power The Utility of Military Force as an Instrument of Policy in the.pdf
+  - kind: recommended
+    title: Military Power and the Use of Force
+    url: https://media2-production.mightynetworks.com/asset/e598766b-989f-4a75-989e-c4cf8500c937/Military_Power_and_use_of_Force.pdf
+    file: CS12 - Military Power and the Use of Force.pdf
+  - kind: recommended
+    title: Timeless Theories of War in the 21st Century
+    url: https://media2-production.mightynetworks.com/asset/f5577c83-58c6-4fb7-bb3e-bda7f2fe1718/Timeless_Theories_of_War.pdf
+    file: CS12 - Timeless Theories of War in the 21st Century.pdf
 - id: CS13
   title: 'Tools of Statecraft: Foreign Policy and Diplomacy'
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-13-tools-of-statecraft-foreign-policy-and-diplomacy
+  resources:
+  - kind: mandatory
+    title: Diplomacy as a Work of Art
+    url: https://media2-production.mightynetworks.com/asset/7af318d3-0665-4e80-8d8d-e3ee86640799/Diplomacy_as_a_Work_of_Art.pdf
+    file: CS1 - Diplomacy_as_a_Work_of_Art.pdf
+  - kind: mandatory
+    title: Five Approaches to the Study of Indian Foreign Policy
+    url: https://media2-production.mightynetworks.com/asset/28c0e265-ca9c-46cc-977b-a642c7ac752a/Five_Approaches_to_the_Study_of_Foreign_Policy.pdf
+    file: CS1 - Five_Approaches_to_the_Study_of_Foreign_Policy.pdf
+  - kind: mandatory
+    title: Principles and Interests
+    url: https://media2-production.mightynetworks.com/asset/96d4762d-3462-47be-8dad-12b7ef8bffed/Principles_and_Interests.pdf
+    note: Overview of India's foreign policy principles and the evolution of its strategic culture and institutions.
+    file: CS1 - Principles_and_Interests.pdf
+  - kind: recommended
+    title: Deliberations of a Working Group on Military and Diplomacy (IDSA)
+    url: https://media2-production.mightynetworks.com/asset/5bce33b1-6011-4278-bd44-202a7225a6fb/Deliberations_Of_A_Working_Group_IDSA.pdf
+    file: CS13 - Deliberations of a Working Group on Military and Diplomacy (IDSA).pdf
+  - kind: recommended
+    title: 'Public Diplomacy at the Crossroads: Definitions and Challenges in an Open Source Era'
+    url: https://media2-production.mightynetworks.com/asset/935dbaf2-999f-4748-9ace-e04aa03fc2da/Definitions_and_Challenges_in_an__Open_Source_.pdf
+    file: CS13 - Public Diplomacy at the Crossroads Definitions and Challenges in an Open Source Era.pdf
+  - kind: recommended
+    title: 'The India Way: Strategies for an Uncertain World (S. Jaishankar)'
+    url: https://media2-production.mightynetworks.com/asset/458ca499-4561-4f70-8662-2596de7c88c7/India_Way_Strategies_for_an_Uncertain_World__S._Jaishankar_.pdf
+    file: CS13 - The India Way Strategies for an Uncertain World (S. Jaishankar).pdf
+  - kind: recommended
+    title: 'The Indian Foreign Service: The Glass Gets Fuller'
+    url: https://media2-production.mightynetworks.com/asset/8469b198-547a-41ac-9535-57a84108ccb2/The_Indian_Foreign_Service___The_Glass_Gets_Fuller.pdf
+    file: CS13 - The Indian Foreign Service The Glass Gets Fuller.pdf
 - id: CS14
   title: 'Tools of Statecraft: Intelligence'
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-14-tools-of-statecraft-intelligence
+  resources:
+  - kind: mandatory
+    title: Assessing Uncertainty in Intelligence
+    url: https://media2-production.mightynetworks.com/asset/f8d54ea4-460a-4a10-8f6e-055e37db2fa2/Assessing_Uncertainty_in_Intelligence.pdf
+    file: CS1 - Assessing_Uncertainty_in_Intelligence.pdf
+  - kind: mandatory
+    title: Towards Strategic Intelligence
+    url: https://media2-production.mightynetworks.com/asset/b193fac3-a6c4-4c75-be37-9cbecb002ee2/Towards_Strategic_Intelligence.pdf
+    file: CS1 - Towards_Strategic_Intelligence.pdf
+  - kind: recommended
+    title: 'My Years with Nehru: Kashmir, and My Years with Nehru: The Chinese Betrayal (B N Mullik, 1971)'
+  - kind: recommended
+    title: Secret Services of Ancient India (S D Trivedi, 1987)
+  - kind: recommended
+    title: The Kaoboys of R&AW (B Raman, 2007)
+  - kind: recommended
+    title: Gentleman Spymaster (Nitin Gokhale, 2019)
+  - kind: recommended
+    title: 'Intelligence: An Insider''s View (Ashok Karnik, 2015)'
 - id: CS15
   title: National Security Challenges and Indian Statecraft
   outcomes: India's internal security challenges and national security architecture.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-15-national-security-challenges-and-indian-statecraft
+  resources:
+  - kind: mandatory
+    title: Foreign Policy and National Security (Shivshankar Menon)
+    url: https://media2-production.mightynetworks.com/asset/ece146af-df99-49bc-9970-f1a67fa4b5f0/Foreign_Policy_and_National_Security_-ShivshankarMenonSpeech1.pdf
+    file: CS1 - Foreign_Policy_and_National_Security_-ShivshankarMenonSpeech1.pdf
+  - kind: mandatory
+    title: 'India''s Path to Power: Strategy in a World Adrift'
+    url: https://media2-production.mightynetworks.com/asset/c864a2e1-98ba-4ae8-8d29-dead584ad147/Indias_path_to_Power.pdf
+    file: CS1 - Indias_path_to_Power.pdf
+  - kind: mandatory
+    title: A New World Order? Careful What You Wish For
+    url: https://tnsr.org/2025/12/a-new-world-order-careful-what-you-wish-for/
+  - kind: mandatory
+    title: The Evolution of India's National Security Architecture (P S Raghavan)
+    url: https://media2-production.mightynetworks.com/asset/ce737682-a4ca-4d8e-8077-a8c880df3dbe/The-evolution-of-india_s-national-security-architecture-P_S_Raghavan.pdf
+    file: CS1 - The-evolution-of-india_s-national-security-architecture-P_S_Raghavan.pdf
+  - kind: recommended
+    title: 'Asia Pacific Security: Concepts and Ideas (Shivshankar Menon)'
+    url: https://media2-production.mightynetworks.com/asset/b3bfe626-dd32-46ea-b076-1c2c7fbf2449/Asia_Pacific_Security_Concepts_and_Ideas_-_ShivshankarMenonSpeech3.pdf
+    file: CS15 - Asia Pacific Security Concepts and Ideas (Shivshankar Menon).pdf
+  - kind: recommended
+    title: 'Introduction: Samudra Manthan'
+    url: https://media2-production.mightynetworks.com/asset/ffa4fe98-9296-4e2b-b28f-634e582f1fef/Introduction-SamudraManthan.pdf
+    file: CS15 - Introduction Samudra Manthan.pdf
+  - kind: recommended
+    title: Policy Challenges 2019-2024
+    url: https://media2-production.mightynetworks.com/asset/b5be9818-40f2-4842-98fc-3bc1ff54b35c/Policy-Challenges-2019-2024.pdf
+    file: CS15 - Policy Challenges 2019-2024.pdf
+  - kind: recommended
+    title: How India Manages Its National Security (Arvind Gupta), book
 - id: CS16
   title: 'Tools of Statecraft: Strategic Communication'
   outcomes: Strategic communication, the media in foreign policy, information and cognitive warfare.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs16-tools-of-statecraft-strategic-communication-role-of-information-in-statecraft
+  resources:
+  - kind: mandatory
+    title: 'Reforming MoD-Media Relationship: Salient Features in the BG Verghese Report'
+    url: https://media2-production.mightynetworks.com/asset/07925e32-aed6-4aba-9e5b-21a036359540/BG_Verghese_Report.pdf
+    file: CS1 - BG_Verghese_Report.pdf
+  - kind: mandatory
+    title: Cognitive Warfare
+    url: https://media2-production.mightynetworks.com/asset/1a9f6e52-f407-4356-86e3-cf7ea59ff08f/Cognitive_Warfare.pdf
+    file: CS1 - Cognitive_Warfare.pdf
+  - kind: mandatory
+    title: 'Strategic Communications: Draft Report'
+    url: https://media2-production.mightynetworks.com/asset/4fd56240-9936-4b32-bcec-703f10b52322/Draft_Report.pdf
+    file: CS16 - Strategic Communications Draft Report.pdf
+  - kind: mandatory
+    title: The Media in the Making of Indian Foreign Policy
+    url: https://media2-production.mightynetworks.com/asset/8c88a85f-ac98-4c47-b5b1-c5b28e6e866c/Media_in_the_Making_of_Indian_Foreign_Policy.pdf
+    file: CS1 - Media_in_the_Making_of_Indian_Foreign_Policy.pdf
+  - kind: mandatory
+    title: 'Strategic Communication for Security and National Defense: Proposal for an Interdisciplinary Approach'
+    url: https://media2-production.mightynetworks.com/asset/f74e7aef-ffbc-4a9c-99a2-d65a8558ea7e/Strategic_Communication_for_Security_and_National_Defense-Proposal_for_an_Interdisciplinary_Approach.pdf
+    file: CS1 - Strategic_Communication_for_Security_and_National_Defense-Proposal_for_an_Interdisciplinary_Approach.pdf
+  - kind: recommended
+    title: 'Cyber War: Information Age'
+    url: https://media2-production.mightynetworks.com/asset/2bff33d5-a4cc-4c54-b592-02f7d11641e2/CyberWar-InformationAge.pdf
+    file: CS16 - Cyber War Information Age.pdf
+  - kind: recommended
+    title: 'Information Warfare: Principles and Operations'
+    url: https://media2-production.mightynetworks.com/asset/ff09618e-aee3-40cf-abd0-4bae6632e807/Information_Warefare_-_Principles_and_Operations.pdf
+    file: CS16 - Information Warfare Principles and Operations.pdf
+  - kind: recommended
+    title: Strategic Communication and National Strategy
+    url: https://media2-production.mightynetworks.com/asset/8337da26-c3be-4f8f-a110-b821e4e0ef7d/Strategic_Communication_and_National_Strategy.pdf
+    file: CS16 - Strategic Communication and National Strategy.pdf
+  - kind: recommended
+    title: 'The Hacker and the State: Cyber Attacks and the New Normal of Geopolitics'
+    url: https://media2-production.mightynetworks.com/asset/85979d8a-00f7-4567-a8a2-0b8586065b53/The_Hacker_and_the_State.pdf
+    file: CS16 - The Hacker and the State Cyber Attacks and the New Normal of Geopolitics.pdf
+  - kind: recommended
+    title: 'The Social Media Challenge to National Security: Impact and Opportunities'
+    url: https://media2-production.mightynetworks.com/asset/289a30cc-e7f1-4bcd-8f9f-e4a9eda6096f/The_Social_Media_Challenge_to_National_Security.pdf
+    file: CS16 - The Social Media Challenge to National Security Impact and Opportunities.pdf
+  - kind: recommended
+    title: 'The Subversive Trilemma: Why Cyber Operations Fall Short of Expectations'
+    url: https://media2-production.mightynetworks.com/asset/ea71d969-ef13-4256-bec3-3de2f07ccefd/The_Subversive_Trilemma.pdf
+    file: CS16 - The Subversive Trilemma Why Cyber Operations Fall Short of Expectations.pdf
+  - kind: recommended
+    title: Conceptualising Information Warfare
+    url: https://media2-production.mightynetworks.com/asset/498af13d-fa11-47bc-b6d9-5d06c3f3341f/Theory_of_Information_Warfare_v0.5.pdf
+    file: CS16 - Conceptualising Information Warfare.pdf
 - id: CS17
   title: 'Tools of Statecraft: Technology and Cyberspace'
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs17-tools-of-statecraft-technology-cyberspace
+  resources:
+  - kind: mandatory
+    title: Cyber Power
+    url: https://media2-production.mightynetworks.com/asset/eeb6b0fc-8f00-410c-8f8a-7974727fca4f/Cyber_Power.pdf
+    file: CS17 - Cyber Power.pdf
+  - kind: mandatory
+    title: Cyber Security
+    url: https://media2-production.mightynetworks.com/asset/9f08c21a-86f6-4105-abde-172b83aaee28/Cyber_Security.pdf
+    file: CS17 - Cyber Security.pdf
+  - kind: mandatory
+    title: Dynamics of Cyber Conflict and Competition
+    url: https://media2-production.mightynetworks.com/asset/4840d068-f1ab-4f1e-a4c6-75530b0e1fa9/Dynamics_of_cyber_conflict_and_competition_pdf.pdf
+    file: CS1 - Dynamics_of_cyber_conflict_and_competition_pdf.pdf
+  - kind: mandatory
+    title: National Cyber Security Policy (2013)
+    url: https://media2-production.mightynetworks.com/asset/bd671f45-5012-4945-91da-3e7a61d57ee5/National_Cyber_Security_Policy-2013.pdf
+    file: CS1 - National_Cyber_Security_Policy-2013.pdf
+  - kind: mandatory
+    title: The Escalation Inversion and Other Oddities of Situational Cyber Stability
+    url: https://media2-production.mightynetworks.com/asset/49d80dd2-5dc5-4298-afc5-46162a20a1aa/The_Escalation_Inversion_and_Other_Oddities_of_Situational_Cyber_Stability.pdf
+    file: CS1 - The_Escalation_Inversion_and_Other_Oddities_of_Situational_Cyber_Stability.pdf
+  - kind: mandatory
+    title: The World Explained in Maps
+    url: https://media2-production.mightynetworks.com/asset/c44954e7-19cd-4c12-8c67-5eb9b9a0553c/The_World_Explained_in_Maps.pdf
+    file: CS1 - The_World_Explained_in_Maps.pdf
+  - kind: mandatory
+    title: Why Artificial Intelligence Explains the World
+    url: https://media2-production.mightynetworks.com/asset/72cbe691-6c78-45f2-a691-d7d4438e0075/Why_Artificial_Intelligence_Explains_the_World.pdf
+    file: CS1 - Why_Artificial_Intelligence_Explains_the_World.pdf
+  - kind: recommended
+    title: US and Them (The Economist, Nov 2020)
+    url: https://media2-production.mightynetworks.com/asset/eb394ed4-585b-4906-bd58-c62ac0619a7e/US_and_them_-_The_Economist_Article_-_Nov2020.pdf
+    file: CS17 - US and Them (The Economist, Nov 2020).pdf
 - id: CS18
   title: High-Tech Geopolitics
   outcomes: Cyber power, cyber conflict and technology competition between states.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs-18-high-tech-geopolitics
+  resources:
+  - kind: mandatory
+    title: High-Technology Geopolitics in the Post-Pandemic World
+    url: https://takshashila.org.in/content/publications/20230210-High-Technology-Geopolitics-in-the-Post-Pandemic-World.html
 - id: CS19
   title: India's Nuclear Doctrine
   outcomes: India's nuclear doctrine, its operationalisation, and nuclear stability in the subcontinent.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs19-indias-nuclear-doctrine
+  resources:
+  - kind: mandatory
+    title: India's Nuclear Doctrine
+    url: https://media2-production.mightynetworks.com/asset/c3a4ff6b-c5ed-4970-9586-b216acd8873e/1._India_s_Nuclear_Doctrine.pdf
+    file: CS1 - 1._India_s_Nuclear_Doctrine.pdf
+  - kind: mandatory
+    title: Draft Report of National Security Advisory Board on Indian Nuclear Doctrine
+    url: https://media2-production.mightynetworks.com/asset/6fb456c7-f25c-498b-abaf-959bdff4f4e5/Draft_Report_of_National_Security_Advisory_Board_on_Indian_Nuclear_Doctrine_pdf.pdf
+    file: CS1 - Draft_Report_of_National_Security_Advisory_Board_on_Indian_Nuclear_Doctrine_pdf.pdf
+  - kind: mandatory
+    title: Force and Diplomacy in the Nuclear Age (Foreign Affairs)
+    url: https://media2-production.mightynetworks.com/asset/d45564db-7d48-4a29-a598-9d6bbc5a14ff/Foreign_Affairs_Force_and_Diplomacy_in_the_Nuclear_Age.pdf
+    file: CS1 - Foreign_Affairs_Force_and_Diplomacy_in_the_Nuclear_Age.pdf
+  - kind: mandatory
+    title: Progress in Operationalising India's Nuclear Doctrine
+    url: https://media2-production.mightynetworks.com/asset/f79b7de3-d5c5-4c5f-822a-65998e220005/Progress_in_Operationalising_India_s_Nuclear_Doctrine_pdf.pdf
+    file: CS1 - Progress_in_Operationalising_India_s_Nuclear_Doctrine_pdf.pdf
+  - kind: mandatory
+    title: The China India Pakistan Nuclear Trilemma and Accidental War
+    url: https://media2-production.mightynetworks.com/asset/1e2569be-f8c8-41b7-98f5-3399c4219a0f/The_China_India_Pakistan_Nuclear_Trilemma_and_Accidental_War.pdf
+    file: CS1 - The_China_India_Pakistan_Nuclear_Trilemma_and_Accidental_War.pdf
+  - kind: mandatory
+    title: The Cabinet Committee on Security Reviews Operationalisation of India's Nuclear Doctrine
+    url: https://media2-production.mightynetworks.com/asset/1d2398bc-b5a4-4751-bc4a-2658fee76219/The_Cabinet_Committee_on_Security_Reviews_Operationalization_of_Indias_Nuclear_Doctrine.pdf
+    file: CS1 - The_Cabinet_Committee_on_Security_Reviews_Operationalization_of_Indias_Nuclear_Doctrine.pdf
+  - kind: recommended
+    title: Hiroshima
+    url: https://media2-production.mightynetworks.com/asset/435f886f-a20a-4b9f-9938-c647ef9f2789/Hiroshima.pdf
+    file: CS19 - Hiroshima.pdf
+  - kind: recommended
+    title: 'The Spread of Nuclear Weapons: More May Be Better'
+    url: https://media2-production.mightynetworks.com/asset/7a32a785-5119-4688-8343-e4385f7b8408/The_Spread_of_Nuclear_weapons__More_may_be_better.pdf
+    file: CS19 - The Spread of Nuclear Weapons More May Be Better.pdf

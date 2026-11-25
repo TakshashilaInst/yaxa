@@ -109,8 +109,67 @@ units:
 - id: CS23
   title: 'Concept Cluster II: Rajamandala, Sadgunyas, Upayas and Yogakshema'
   outcomes: The rajamandala (circle of kings), the six measures of foreign policy (sadgunya), the upayas and yogakshema.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs23-concept-cluster-ii-rajamandala-sadgunyas-upayas-and-yogakshema-107702473
+  resources:
+  - kind: mandatory
+    title: Defence and External Affairs pp.244-265
+    url: https://media2-production.mightynetworks.com/asset/03a1ca09-0b8e-4148-beeb-e2579eb61fd6/Copy_of_Defence_and_External_Affairs_pp.244-265.pdf
+    file: CS23 - Defence and External Affairs pp.244-265.pdf
+  - kind: mandatory
+    title: Kautilya, India and its Neighbours (ORF Issue Brief)
+    url: https://media2-production.mightynetworks.com/asset/db91dc5c-6f08-47ed-bd0c-176b8bc7dc6f/Copy_of_ORF_IssueBrief_Kautilya-India-Neighbours.pdf
+    file: CS2 - Copy_of_ORF_IssueBrief_Kautilya-India-Neighbours.pdf
+  - kind: mandatory
+    title: Statecraft and Intelligence Analysis in the Kautilya-Arthashastra
+    url: https://media2-production.mightynetworks.com/asset/f6b43d15-ef06-44cb-b352-7e968adc91b2/Copy_of_Statecraft_and_Intelligence_Analysis_in_the_Kautilya-Arthashastra.pdf
+    file: CS2 - Copy_of_Statecraft_and_Intelligence_Analysis_in_the_Kautilya-Arthashastra.pdf
+  - kind: mandatory
+    title: The Arthashastra by LN Rangarajan - Part X (Foreign Policy)
+    url: https://media2-production.mightynetworks.com/asset/cda660a1-039f-4edc-9a34-51327aa7ccbc/Copy_of_The_Arthashastra_by_LN_Rangarajan_-_Part_X__Foreign_Policy_.pdf
+    file: CS2 - Copy_of_The_Arthashastra_by_LN_Rangarajan_-_Part_X__Foreign_Policy_.pdf
+  - kind: mandatory
+    title: The Circle of Kings as the Basis pp.314-320
+    url: https://media2-production.mightynetworks.com/asset/7de2ddaa-f019-433d-9a6d-26b2deb308cf/Copy_of_The_Circle_of_Kings_as_the_Basis_pp.314-320.pdf
+    file: CS2 - Copy_of_The_Circle_of_Kings_as_the_Basis_pp.314-320.pdf
+  - kind: mandatory
+    title: The Six Measures of Foreign Policy pp.321-384
+    url: https://media2-production.mightynetworks.com/asset/794ccfde-4686-4d35-823a-b56ea3f16d1e/Copy_of_The_Six_Measures_of_Foreign_Policy_pp.321-384.pdf
+    file: CS23 - The Six Measures of Foreign Policy pp.321-384.pdf
+  - kind: recommended
+    title: Book XV – The Method of Science pp. 512-516
+    url: https://media2-production.mightynetworks.com/asset/946cb338-d9ec-4690-9104-aab112a26fa9/Copy_of_Book_XV___The_Method_of_Science_pp._512-516.pdf
+    file: CS23 - Book XV – The Method of Science pp. 512-516.pdf
+  - kind: recommended
+    title: 'India in the Indo-Pacific: A Kautilyan Strategy for the Maritime Mandala (ORF)'
+    url: https://media2-production.mightynetworks.com/asset/9fbff5e7-b97a-4a99-a261-e671315d4929/Copy_of_India_in_the_Indo-Pacific-_A_Kautilyan_Strategy_for_the_Maritime_Mandala___ORF__orfonline.org_.pdf
+    file: CS23 - India in the Indo-Pacific A Kautilyan Strategy for the Maritime Mandala (ORF).pdf
+  - kind: recommended
+    title: Kautilya on State Fragility in Contemporary Security Environment pp.11-23
+    url: https://media2-production.mightynetworks.com/asset/fa3c5e8f-46be-40a8-8da6-b67fd61e7629/Copy_of_Kautilya_on_State_Fragility_in_Contemporary_Security_Environment_pp.11-23.pdf
+    file: CS23 - Kautilya on State Fragility in Contemporary Security Environment pp.11-23.pdf
+  - kind: recommended
+    title: The intelligence dimension of Kautilyan statecraft and its implications for the present pp. 119-138
+    url: https://media2-production.mightynetworks.com/asset/a50184eb-102e-4068-8e30-5e4b976b0a61/Copy_of_The_intelligence_dimension_of_Kautilyan_statecraft_and_its_implications_for_the_present_pp._119-138.pdf
+    file: CS23 - The intelligence dimension of Kautilyan statecraft and its implications for the present pp.pdf
+  - kind: recommended
+    title: The Relevance of Ancient Indian Strategy in Contemporary Geopolitics
+    url: https://www.orfonline.org/research/the-relevance-of-ancient-indian-strategy-in-contemporary-geopolitics
 - id: CS24
   title: Treaties and Alliances in the Arthashastra
   outcomes: Kautilya on treaties and alliances, and their lessons for India's relations with its neighbours.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs24-treaties-and-alliances-in-the-arthashastra
+  resources:
+  - kind: mandatory
+    title: Book VII – The Six Measures of Foreign Policy pp.321-384
+    url: https://media2-production.mightynetworks.com/asset/bcb9c5c6-76d6-4abd-ac93-417d97cd503f/Copy_of_Book_VII___The_Six_Measures_of_Foreign_Policy_pp.321-384.pdf
+    file: CS2 - Copy_of_Book_VII___The_Six_Measures_of_Foreign_Policy_pp.321-384.pdf
+  - kind: mandatory
+    title: 'Indigenous Historical Knowledge, Volume III: Kautilya and His Vocabulary pp 16-32, 103-122'
+    url: https://media2-production.mightynetworks.com/asset/483c72e0-9554-452e-acf7-da6a56054446/Copy_of_Indigenous_Historical_Knowledge__Volume_III_Kautilya_and_His_Vocabulary_pp_16-32__103-122.pdf
+    file: CS2 - Copy_of_Indigenous_Historical_Knowledge__Volume_III_Kautilya_and_His_Vocabulary_pp_16-32__103-122.pdf
+  - kind: mandatory
+    title: 'Raisina Files - Adrift at Sea: Lighthouse in the Tempest?'
+    url: https://media2-production.mightynetworks.com/asset/f9037ee3-e6d4-4941-b707-b5fd6241b7e9/Raisina_Files_Kajari_Kamal.pdf
+    file: CS2 - Raisina_Files_Kajari_Kamal.pdf
+  - kind: recommended
+    title: The Chanakyan Prime Minister - Chanakya Forum
+    url: https://media2-production.mightynetworks.com/asset/2dc22b0a-dea0-4fa0-9f7f-f2e0fb3ab8f6/Copy_of_The_Chanakyan_Prime_Minister_-_Chanakya_Forum.pdf
+    file: CS24 - The Chanakyan Prime Minister - Chanakya Forum.pdf

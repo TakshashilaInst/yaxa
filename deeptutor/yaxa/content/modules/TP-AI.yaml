@@ -1,30 +1,167 @@
 code: TP-AI
 title: Politics and Policy in the AI Age
 kb: TP
-description: Technology and Policy specialisation. How AI and networked technologies change politics, the economy
-  and national power.
+description: Technology and Policy specialisation. How AI and networked technologies change politics, the economy and national
+  power.
 units:
 - id: CT41
   title: Politics and Policy in the Information Age
-  outcomes: Radically networked societies, information cascades, moral panics and how technology reshapes political
-    power and protest.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct41-politics-and-policy-in-the-information-age
+  outcomes: Radically networked societies, information cascades, moral panics and how technology reshapes political power
+    and protest.
+  resources:
+  - kind: mandatory
+    title: Information cascades, or the increasing prevalence of black swans
+    url: https://media2-production.mightynetworks.com/asset/f6631d61-507c-49ec-9b37-a90b59f07612/Information_cascades_-_MS.pdf
+    file: CT41 - Information_cascades_-_MS.pdf
+  - kind: mandatory
+    title: 'Moral Panic: Who Benefits From Public Fear (Scott A. Bonn)'
+    url: https://media2-production.mightynetworks.com/asset/be1ba086-6790-4c27-a674-e43f3a262c5b/Moral_Panic_Who_Benefits_From_Public_Fear_-_Scott_Bonn.pdf
+    file: CT41 - Moral_Panic_Who_Benefits_From_Public_Fear_-_Scott_Bonn.pdf
+  - kind: mandatory
+    title: Liberty and Security in Radically Networked Societies (Nitin Pai, Pranay Kotasthane)
+    url: https://media2-production.mightynetworks.com/asset/42afd937-76d5-414f-bb10-1806717660e7/Liberty___Security_in_Radically_Networked_Societies_-_Nitin_Pai_and_Pranay_Kotasthane.pdf
+    file: CT41 - Liberty___Security_in_Radically_Networked_Societies_-_Nitin_Pai_and_Pranay_Kotasthane.pdf
+  - kind: mandatory
+    title: Moral Tribes (Joshua Greene)
+    url: https://media2-production.mightynetworks.com/asset/7855a560-00cb-4ed2-956b-3da1b24ef420/Moral_Tribe_-_Joshua_Greene.pdf
+    file: CT41 - Moral_Tribe_-_Joshua_Greene (1).pdf
+  - kind: mandatory
+    title: Narrative Dominance, Information Warfare and the Freedom to Think (Nitin Pai)
+    url: https://media2-production.mightynetworks.com/asset/f2bac8b6-7156-4247-becd-25309a8b3413/Narrative_Dominance__Information_Warfare_and_the_Freedom_to_Think.pdf
+    file: CT41 - Narrative_Dominance__Information_Warfare_and_the_Freedom_to_Think.pdf
+  - kind: recommended
+    title: Networks, Crowds, and Markets (David Easley, Jon Kleinberg)
+    url: https://media2-production.mightynetworks.com/asset/649be1fd-5894-4a85-9f96-f2cad62835d1/Networks__Crowds__and_Markets_-_David_Easley_and_Jon_Kleinberg.pdf
+    file: CT41 - Networks, Crowds, and Markets (David Easley, Jon Kleinberg).pdf
+  - kind: recommended
+    title: From Pandemic Facts to Pandemic Policies (Jonathan Fuller)
+    url: https://media2-production.mightynetworks.com/asset/a44a3510-f668-4ef1-a2af-43fb51a32365/From_Pandemic_Facts_to_Pandemic_Policies_-_Boston_Review.pdf
+    file: CT41 - From_Pandemic_Facts_to_Pandemic_Policies_-_Boston_Review.pdf
+  - kind: recommended
+    title: 'Networked Protests and State Responses: Hong Kong 2019-20 (Manoj Kewalramani, Rohan Seth)'
+    url: https://media2-production.mightynetworks.com/asset/e6d8bd27-4e45-4d3f-92c5-8291b3b839c7/Networked_Protests___State_Responses__The_Case_of_Hong_Kong_2019-20_-_Manoj_Kewalramani_and_Rohan_Seth.pdf
+    file: CT41 - Networked_Protests___State_Responses__The_Case_of_Hong_Kong_2019-20_-_Manoj_Kewalramani_and_Rohan_Seth.pdf
+  - kind: recommended
+    title: Networked Societies and Hierarchical States (Nitin Pai, Sneha Shankar)
+    url: https://media2-production.mightynetworks.com/asset/01da9a1a-a12c-44ad-9f1a-a896ee1a8050/Networked_Societies_and_Hierarchical_States__The_Emerging_Challenge_to_Political_Order_-_Nitin_Pai_and_Sneha_Shankar.pdf
+    file: CT41 - Networked Societies and Hierarchical States (Nitin Pai, Sneha Shankar).pdf
+  - kind: recommended
+    title: Politics of Radically Networked Societies
+    url: https://media2-production.mightynetworks.com/asset/a3978a10-75f1-4e2b-955d-5ac56d4aaa60/Politics_of_RNS.pdf
+    file: CT41 - Politics of Radically Networked Societies.pdf
+  - kind: recommended
+    title: The Emotional Dog and Its Rational Tail (Jonathan Haidt)
+    url: https://media2-production.mightynetworks.com/asset/8193e386-a47d-45ae-ac38-a7f2ecdddf01/The_Emotional_Dog_and_Its_Rational_Tail__A_Social_Intuitionist_Approach_to_Moral_Judgment_-_Jonathan_Haidt.pdf
+    file: CT41 - The_Emotional_Dog_and_Its_Rational_Tail__A_Social_Intuitionist_Approach_to_Moral_Judgment_-_Jonathan_Haidt.pdf
 - id: CT45
   title: The Socio-Economic Impact of AI Diffusion
-  outcomes: The macroeconomics of AI, task-based adoption, effects on jobs and retraining, and why transformative
-    AI is hard to achieve.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct45-the-socio-economic-impact-of-ai-diffusion
+  outcomes: The macroeconomics of AI, task-based adoption, effects on jobs and retraining, and why transformative AI is hard
+    to achieve.
   aliases:
   - CT4x
+  resources:
+  - kind: mandatory
+    title: The Macroeconomics of Artificial Intelligence (Brynjolfsson, Unger, IMF 2023)
+    url: https://media2-production.mightynetworks.com/asset/a8394974-240a-4707-a1c0-6cb622efcc03/The_Macroeconomics_of_AI.pdf
+    file: CT4x - The_Macroeconomics_of_AI.pdf
+  - kind: mandatory
+    title: AI as Normal Technology (Narayanan, Kapoor, 2024)
+    url: https://knightcolumbia.org/content/ai-as-normal-technology
+  - kind: mandatory
+    title: Large AI models are cultural and social technologies (Farrell et al., Science 2025)
+    url: https://media2-production.mightynetworks.com/asset/ab900f51-bc17-46da-8c7d-961dca5fc1ae/Large_AI_models_are_cultural_and_social_technologies.pdf
+    file: CT4x - Large_AI_models_are_cultural_and_social_technologies.pdf
+  - kind: recommended
+    title: Expertise (Autor, Thompson, NBER 2025)
+    url: https://media2-production.mightynetworks.com/asset/0e0eb33c-7fc8-45af-82c2-990e1966f96c/Expertise.pdf
+    file: CT45 - Expertise (Autor, Thompson, NBER 2025).pdf
+  - kind: recommended
+    title: 'AI Adoption: Think Tasks, Not Jobs (Takshashila, 2024)'
+    url: https://media2-production.mightynetworks.com/asset/457df693-3399-4461-aad1-8bcf2b088140/AI_Adoption_-_Think_Tasks_Not_Jobs.pdf
+    file: CT4x - AI_Adoption_-_Think_Tasks_Not_Jobs.pdf
+  - kind: recommended
+    title: Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of AI
+    url: https://media2-production.mightynetworks.com/asset/666b388b-6365-4e70-bbbf-3d228632ce2d/Canaries_in_the_Coal_Mine__Six_Facts_about_the_Recent_Employment_Effects_of_Artificial_Intelligence.pdf
+    file: CT4x - Canaries_in_the_Coal_Mine__Six_Facts_about_the_Recent_Employment_Effects_of_Artificial_Intelligence.pdf
+  - kind: recommended
+    title: How Retrainable are AI-Exposed Workers?
+    url: https://media2-production.mightynetworks.com/asset/ac242b8a-4b65-469c-bfb0-f70f6945caf9/How_Retrainable_are_AI-Exposed_Workers.pdf
+    file: CT4x - How_Retrainable_are_AI-Exposed_Workers.pdf
+  - kind: recommended
+    title: Why Transformative AI is Really, Really Hard to Achieve (The Gradient)
+    url: https://thegradient.pub/why-transformative-artificial-intelligence-is-really-really-hard-to-achieve/
+  - kind: recommended
+    title: How Large Language Models Can Reshape Collective Intelligence (Nature 2024)
+    url: https://media2-production.mightynetworks.com/asset/a90b1226-1fbb-42ff-ae06-fca4a15ae9d0/How_Large_Language_Models_Can_Reshape_Collective_Intelligence.pdf
+    file: CT4x - How_Large_Language_Models_Can_Reshape_Collective_Intelligence.pdf
+  - kind: recommended
+    title: The Techno-Optimist Manifesto (Marc Andreessen)
+    url: https://media2-production.mightynetworks.com/asset/f09dde43-ddc8-4833-9cfb-061069783785/The_Techno-Optimist_Manifesto.pdf
+    file: CT4x - The_Techno-Optimist_Manifesto.pdf
+  - kind: recommended
+    title: The Bitter Lesson (Rich Sutton)
+    url: http://www.incompleteideas.net/IncIdeas/BitterLesson.html
 - id: CT46
   title: Geopolitics of AI
   outcomes: How AI changes the sources of national power and the geopolitics of AI.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct46-geopolitics-of-ai
+  resources:
+  - kind: mandatory
+    title: AI's False Gods (AI Now, Artificial Power 2025, Chapter 1 only)
+    url: https://media2-production.mightynetworks.com/asset/78039d1f-7ba0-45c5-b61b-2ca78a1bec7a/AI_s_False_Gods.pdf
+    file: CT46 - AI's False Gods (AI Now, Artificial Power 2025, Chapter 1 only).pdf
+  - kind: recommended
+    title: A Primer on AI Chips (Takshashila, 2024)
+    url: https://media2-production.mightynetworks.com/asset/44fdb935-d3e9-42dd-b787-35748831db11/A_Primer_on_AI_Chips.pdf
+    file: CT46 - A Primer on AI Chips (Takshashila, 2024).pdf
+  - kind: recommended
+    title: What the Repeal of the US AI Diffusion Framework Means for India and the World
+    url: https://media2-production.mightynetworks.com/asset/ba8d30d2-5b01-4782-8697-98c99876e868/What_the_Repeal_of_the_US_AI_Diffusion_Framework_Means_for_India_and_the_World.pdf
+    file: CT46 - What the Repeal of the US AI Diffusion Framework Means for India and the World.pdf
+  - kind: recommended
+    title: 'Winning the Race: America''s AI Action Plan'
+    url: https://media2-production.mightynetworks.com/asset/355d9f6e-b6ac-46c3-94e9-0ab758dac728/Americas_AI_Action_Plan.pdf
+    file: CT46 - Winning the Race America's AI Action Plan.pdf
+  - kind: recommended
+    title: Beyond the AI Arms Race (Foreign Affairs, 2018)
+    url: https://media2-production.mightynetworks.com/asset/c6e61822-dcc7-4d6e-87c8-a4eda2036851/Beyond_the_US_Chinese_AI_Arms_Race.pdf
+    file: CT46 - Beyond the AI Arms Race (Foreign Affairs, 2018).pdf
+  - kind: recommended
+    title: The Rise and Fall of Technological Leadership (Jeffrey Ding)
+    url: https://media2-production.mightynetworks.com/asset/94f3291c-bf55-4c5e-b6c8-f111ab405ee6/Rise_and_Fall_of_Technological_Leadership.pdf
+    file: CT46 - The Rise and Fall of Technological Leadership (Jeffrey Ding).pdf
+  - kind: recommended
+    title: How AGI Could Affect the Rise and Fall of Nations (RAND, 2025)
+    url: https://www.rand.org/pubs/research_reports/RRA3034-2.html
+  - kind: recommended
+    title: National Power After AI (CSET)
+    url: https://media2-production.mightynetworks.com/asset/9754baf9-f931-4025-bf74-de178a5f9da0/National_Power_After_AI.pdf
+    file: CT81 - National_Power_After_AI.pdf
+  - kind: recommended
+    title: Sprinters, Marathoners and Skeptics on the Future of AI and Power (War on the Rocks)
+    url: https://warontherocks.com/2025/08/sprinters-marathoners-skeptics-on-the-future-of-ai-power/
 - id: CT48
   title: Economics of AI
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct48-economics-of-ai
+  resources:
+  - kind: mandatory
+    title: How I Approach AI Policy (Dean W. Ball)
+    url: https://media2-production.mightynetworks.com/asset/54c49e1f-d50d-4dac-87bd-65f5ba4b359e/How_I_Approach_AI_Policy_-_by_Dean_W._Ball.pdf
+    file: CT48 - How I Approach AI Policy (Dean W. Ball).pdf
+  - kind: mandatory
+    title: 'IABIED: Why You Should Read This Book (Ashish Kulkarni)'
+    url: https://media2-production.mightynetworks.com/asset/9e10d99b-cb60-49c9-a220-e358dc02610a/IABIED__Why_You_Should_Read_This_Book_-_by_Ashish_Kulkarni.pdf
+    file: CT48 - IABIED Why You Should Read This Book (Ashish Kulkarni).pdf
 - id: CT49
   title: Disinformation and Dysfunction in the Information Ecosystem
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct49-disinformation-and-dysfunction-in-the-information-ecosystem
+  resources:
+  - kind: mandatory
+    title: Don't Believe What This Podcast Says About Misinformation (Ctrl-Alt-Speech)
+    url: https://podcast.ctrlaltspeech.com/2315966/episodes/17446755-don-t-believe-what-this-podcast-says-about-misinformation
+  - kind: mandatory
+    title: Do We Know Anything About Politics? (Michael Hannon)
+    url: https://media2-production.mightynetworks.com/asset/e0570604-fe8c-4353-b2fc-a0e6c765d094/Do_We_Know_Anything_About_Politics__-_by_Michael_Hannon.pdf
+    file: CT49 - Do We Know Anything About Politics (Michael Hannon).pdf
+  - kind: mandatory
+    title: Are We Having the Wrong Nightmares About AI?
+    url: https://slideslive.com/39055698/are-we-having-the-wrong-nightmares-about-ai

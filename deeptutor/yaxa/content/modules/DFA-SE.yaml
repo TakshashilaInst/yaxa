@@ -6,21 +6,191 @@ units:
 - id: CS31
   title: Technology and National Power
   outcomes: Foundations of national power, economic development and military effectiveness, measuring military capability.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs31-technology-and-national-power
+  resources:
+  - kind: mandatory
+    title: Economic Development and Military Effectiveness
+    url: https://media2-production.mightynetworks.com/asset/604b9f3b-2873-41a6-8689-4be9af868502/Copy_of_Economic_Development_and_Military_Effectiveness.pdf
+    file: CS3 - Copy_of_Economic_Development_and_Military_Effectiveness.pdf
+  - kind: mandatory
+    title: Geo-Economics as Concept and Practice in International Relations
+    url: https://media2-production.mightynetworks.com/asset/b55bcf17-61d4-44aa-be5e-d4d35c1c8847/Copy_of_Geo-Economics_as_Concept_and_Practice_in_International_Relations.pdf
+    file: CS3 - Copy_of_Geo-Economics_as_Concept_and_Practice_in_International_Relations.pdf
+  - kind: mandatory
+    title: Measuring Military Capability
+    url: https://media2-production.mightynetworks.com/asset/ccfdad5c-ca7e-44b5-a8b8-de275c66278f/Copy_of_Measuring_Military_Capability.pdf
+    file: CS3 - Copy_of_Measuring_Military_Capability.pdf
+  - kind: mandatory
+    title: Policy Processes
+    url: https://media2-production.mightynetworks.com/asset/88d3715c-b9f5-4ce3-9939-a789b03f8eef/Copy_of_Policy_Processes.pdf
+    file: CS3 - Copy_of_Policy_Processes.pdf
+  - kind: mandatory
+    title: The Great Postwar Boom
+    url: https://media2-production.mightynetworks.com/asset/425492d2-8f75-429f-935f-ca2f921dceb7/Copy_of_The_Great_Postwar_Boom_Chap.pdf
+    file: CS3 - Copy_of_The_Great_Postwar_Boom_Chap.pdf
+  - kind: mandatory
+    title: War by Other Means
+    url: https://media2-production.mightynetworks.com/asset/4b3f3782-7560-4d67-b37c-5c1b2ab0a25f/Copy_of_War_by_Other_Means.pdf
+    file: CS3 - Copy_of_War_by_Other_Means.pdf
+  - kind: recommended
+    title: An Empire of Wealth
+    url: https://media2-production.mightynetworks.com/asset/c645e619-846c-45a3-b2f8-f3d9c870f5c8/Copy_of_An_Empire_of_Wealth.pdf
+    file: CS31 - An Empire of Wealth.pdf
+  - kind: recommended
+    title: 'Close Economic Exchange with a Threatening State: An Awkward Dilemma over China'
+    url: https://media2-production.mightynetworks.com/asset/a3e911db-3612-4b33-99cc-369a7ae2cf0b/Copy_of_Close_Economic_Exchange_with_a_Threatening_State_An_Awkward_Dilemma_over_China.pdf
+    file: CS31 - Close Economic Exchange with a Threatening State An Awkward Dilemma over China.pdf
+  - kind: recommended
+    title: Conclusion
+    url: https://media2-production.mightynetworks.com/asset/5f405bfa-bdb0-44b8-8dda-3e5fb2ebc734/Copy_of_Conclusion.pdf
+    file: CS31 - Conclusion.pdf
+  - kind: recommended
+    title: Measuring Military Capability (recommended copy)
+    url: https://media2-production.mightynetworks.com/asset/929f47c9-4051-4fc1-8e3e-1172c8e03dc5/Copy_of_Measuring_Military_Capability.pdf
+    file: CS3 - Copy_of_Measuring_Military_Capability.pdf
+  - kind: recommended
+    title: Measuring National Performance
+    url: https://media2-production.mightynetworks.com/asset/7bd5a07a-e2a4-4d1f-a41b-62121a9819c1/Copy_of_Measuring_National_Performance.pdf
+    file: CS31 - Measuring National Performance.pdf
+  - kind: recommended
+    title: Measuring National Resources
+    url: https://media2-production.mightynetworks.com/asset/16505cc1-6fc5-4ce5-8b32-fd3f47c626cc/Copy_of_Measuring_National_Resources.pdf
+    file: CS31 - Measuring National Resources.pdf
+  - kind: recommended
+    title: 'Power and National Power: Some Conceptual Considerations'
+    url: https://media2-production.mightynetworks.com/asset/6eece395-e37b-45c5-8edd-c254be811c60/Copy_of_Power__and__National_Power___Some_Conceptual_Considerations_.pdf
+    file: CS31 - Power and National Power Some Conceptual Considerations.pdf
+  - kind: recommended
+    title: Reviewing Traditional Approaches to Measuring National Power
+    url: https://media2-production.mightynetworks.com/asset/0e0cedff-ede7-4c9d-bacb-b343b4209e8e/Copy_of_Reviewing_Traditional_Approaches_to_Measuring_National_Power.pdf
+    file: CS31 - Reviewing Traditional Approaches to Measuring National Power.pdf
+  - kind: recommended
+    title: Toward a Revised View of Measuring National Power
+    url: https://media2-production.mightynetworks.com/asset/105ed44a-726d-4ba0-8624-cd5cf10d7698/Copy_of_Toward_a_Revised_View_of_Measuring_National_Power.pdf
+    file: CS31 - Toward a Revised View of Measuring National Power.pdf
+  - kind: recommended
+    title: Why the Interest in National Power
+    url: https://media2-production.mightynetworks.com/asset/3edd3eb8-f5ce-45f5-ba7c-16201f66c1ec/Copy_of_Why_the_Interest_in_National_Power.pdf
+    file: CS31 - Why the Interest in National Power.pdf
 - id: CS32
   title: Instruments of Economic Power I
-  outcomes: Geoeconomics, sanctions, weaponised interdependence, foreign aid and lending as instruments of power;
-    economic coercion.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs32-instruments-of-economic-power-i
+  outcomes: Geoeconomics, sanctions, weaponised interdependence, foreign aid and lending as instruments of power; economic
+    coercion.
+  resources:
+  - kind: mandatory
+    title: Foreign Aid By Deepak Lal
+    url: https://media2-production.mightynetworks.com/asset/36f60dbf-51f8-4fbe-8035-7676c64fe00d/Copy_of_Foreign_Aid_By_Deepak_Lal.pdf
+    file: CS3 - Copy_of_Foreign_Aid_By_Deepak_Lal.pdf
+  - kind: mandatory
+    title: 'Foreign Policy Tools: Budget, Aid, Defence, Force'
+    url: https://media2-production.mightynetworks.com/asset/5cb076d4-6b3e-43f7-99e5-d7f7433dad92/Copy_of_Foreign_Policy_Tools__Budget__Aid__Defense__Force.pdf
+    file: CS3 - Copy_of_Foreign_Policy_Tools__Budget__Aid__Defense__Force.pdf
+  - kind: mandatory
+    title: From Cold War Sanctions to Weaponised Interdependence
+    url: https://media2-production.mightynetworks.com/asset/e60314cd-2ed2-49ed-98a4-4686863426d8/Copy_of_From_Cold_War_Sanctions_to_Weaponized_Interdependence.pdf
+    file: CS3 - Copy_of_From_Cold_War_Sanctions_to_Weaponized_Interdependence.pdf
+  - kind: mandatory
+    title: How China Lends
+    url: https://media2-production.mightynetworks.com/asset/abd95d52-9900-46b1-8251-342956bfef0c/Copy_of_How_China_Lends.pdf
+    file: CS3 - Copy_of_How_China_Lends.pdf
+  - kind: mandatory
+    title: Introduction to the Geopolitics of Foreign Aid
+    url: https://media2-production.mightynetworks.com/asset/f6a31f5c-f8eb-4044-a541-aea7e8254128/Copy_of_Introduction_to_the_Geopolitics_of_Foreign_Aid.pdf
+    file: CS3 - Copy_of_Introduction_to_the_Geopolitics_of_Foreign_Aid.pdf
+  - kind: mandatory
+    title: Is it time for India’s own sovereign wealth fund?
+    url: https://media2-production.mightynetworks.com/asset/217a3fc0-e988-4a74-9c04-c765b16d7fa6/Copy_of_Is_it_time_for_India_s_own_sovereign_wealth_fund_.pdf
+    file: CS3 - Copy_of_Is_it_time_for_India_s_own_sovereign_wealth_fund_.pdf
+  - kind: mandatory
+    title: The Power to Coerce (Brief Notes)
+    url: https://media2-production.mightynetworks.com/asset/853003c5-6075-4b11-ac12-4303fe5f6aee/Copy_of_The_Power_to_Coerce__Brief_Notes_.pdf
+    file: CS3 - Copy_of_The_Power_to_Coerce__Brief_Notes_.pdf
+  - kind: mandatory
+    title: The Power to Coerce
+    url: https://media2-production.mightynetworks.com/asset/eaa0954c-9203-427c-8603-cc29c127506a/Copy_of_The_Power_to_Coerce.pdf
+    file: CS3 - Copy_of_The_Power_to_Coerce.pdf
+  - kind: mandatory
+    title: Sanctions are not the way to fight Vladimir Putin
+    url: https://media2-production.mightynetworks.com/asset/e38a41f5-793d-40fc-8da5-f9dd1809375f/Sanctions_are_not_the_way_to_fight_Vladimir_Putin.pdf
+    file: CS3 - Sanctions_are_not_the_way_to_fight_Vladimir_Putin.pdf
+  - kind: recommended
+    title: Do Economic Warfare and Sanctions Work? Three Centuries of Evidence
+    url: https://media2-production.mightynetworks.com/asset/b066ccc4-d5a3-4df6-9940-3979abb77e04/Broadberry_and_Harrison_2025_Do_economic_warfare__2_.pdf
+    file: CS32 - Do Economic Warfare and Sanctions Work Three Centuries of Evidence.pdf
 - id: CS33
   title: Instruments of Economic Power II
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs33-instruments-of-economic-power-ii
+  resources:
+  - kind: mandatory
+    title: 'CS33 Instruments of Economic Power II: supporting document with reading links'
+    url: https://media2-production.mightynetworks.com/asset/131ed04e-2010-47e0-b59a-3cce031aea13/Copy_of_CS33_Instruments_of_Economic_Power_II_Supporting_document_for_only_reading_links.pdf
+    file: CS3 - Copy_of_CS33_Instruments_of_Economic_Power_II_Supporting_document_for_only_reading_links.pdf
+  - kind: mandatory
+    title: 'Different paths to power: The rise of Brazil, India and China at the World Trade Organisation'
+    url: https://media2-production.mightynetworks.com/asset/193f48c1-1372-41b5-ac4f-063bc09d60ed/Copy_of_Different_paths_to_power_The_rise_of_Brazil__India_and_China_at_the_World_Trade_Organization.pdf
+    file: CS3 - Copy_of_Different_paths_to_power_The_rise_of_Brazil__India_and_China_at_the_World_Trade_Organization.pdf
+  - kind: mandatory
+    title: 'European Commission: Elements for an EU strategy on India'
+    url: https://media2-production.mightynetworks.com/asset/191ba8b5-b6ef-47f6-91c4-cfbd3e968264/Copy_of_European_Commission_Elements_for_an_EU_strategy_on_India.pdf
+    file: CS3 - Copy_of_European_Commission_Elements_for_an_EU_strategy_on_India.pdf
+  - kind: mandatory
+    title: 'Handbook of India''s International Relations, Chapter 5: Geoeconomics and energy for India (Gulshan Sachdeva)'
+    url: https://media2-production.mightynetworks.com/asset/f14d1e79-6ab6-4016-9bcc-787445451e0f/Copy_of_Handbook_of_Indias_International_Relations__Chapter_5_Geoeconomics_and_energy_for_IndiaGulshan_Sachdeva.pdf
+    file: CS3 - Copy_of_Handbook_of_Indias_International_Relations__Chapter_5_Geoeconomics_and_energy_for_IndiaGulshan_Sachdeva.pdf
+  - kind: mandatory
+    title: India's Geoeconomic Strategy
+    url: https://media2-production.mightynetworks.com/asset/5ccdc653-fdbc-4067-b772-8c25b5431fa5/Copy_of_Indias_Geoeconomic_Strategy.pdf
+    file: CS3 - Copy_of_Indias_Geoeconomic_Strategy.pdf
+  - kind: recommended
+    title: 'FATF grey list: Pakistan gets time, but not out of the woods yet'
+    url: https://media2-production.mightynetworks.com/asset/e03477f2-12c0-4452-8e63-f37d4abea8f7/Copy_of_FATF__grey_list__Pakistan_gets_time__but_not_out_of_the_woods_yet.pdf
+    file: CS33 - FATF grey list Pakistan gets time, but not out of the woods yet.pdf
+  - kind: recommended
+    title: Geo-economics and Strategy (Survival, 2012)
+    url: https://media2-production.mightynetworks.com/asset/242902cc-56fb-4940-8128-dacd99e48f20/Copy_of_Geo-economics_and_Strategy_2012_Survival_Global_Politics_and_Strategy.pdf
+    file: CS33 - Geo-economics and Strategy (Survival, 2012).pdf
+  - kind: recommended
+    title: How Will Being on the FATF Grey-List Actually Impact Pakistan?
+    url: https://media2-production.mightynetworks.com/asset/e5b57312-0a4d-43d0-b6c9-0646c0e79086/Copy_of_How_Will_Being_on_the_FATF_Grey-List_Actually_Impact_Pakistan_.pdf
+    file: CS33 - How Will Being on the FATF Grey-List Actually Impact Pakistan.pdf
+  - kind: recommended
+    title: Is India a Responsible Great Power?
+    url: https://media2-production.mightynetworks.com/asset/4940bae3-58a8-41f7-b785-a8972189499f/Copy_of_Is_India_a_Responsible_Great_Power_.pdf
+    file: CS33 - Is India a Responsible Great Power.pdf
+  - kind: recommended
+    title: Motivation behind China's One Belt One Road Initiatives and Establishment of the Asian Infrastructure Investment
+      Bank
+    url: https://media2-production.mightynetworks.com/asset/2a15db21-c1d3-42c8-a766-4c1c69c3b589/Copy_of_Motivation_behind_China_s_One_Belt_One_Road_Initiatives_and_Establishment_of_the_Asian_Infrastructure_Investment_Bank.pdf
+    file: CS33 - Motivation behind China's One Belt One Road Initiatives and Establishment of the Asian Inf.pdf
+  - kind: recommended
+    title: The Politics of International Economic Relations, Chapter 1
+    url: https://media2-production.mightynetworks.com/asset/279334b6-3f11-4b6a-87ee-bb7987eae792/Copy_of_The_Politics_of_International_Economic_Relations_Chapter_1_From_Management_to_Governance_in_International_Economic_Relations.pdf
+    file: CS33 - The Politics of International Economic Relations, Chapter 1.pdf
+  - kind: recommended
+    title: 'War by Other Means, Chapter 3: Today''s Leading Geoeconomic Instruments'
+    url: https://media2-production.mightynetworks.com/asset/04492db6-5f75-455f-92ea-17c1ada0bcd6/Copy_of_War_by_Other_Means_Geoeconomics_and_Statecraft_2016_Chapter_3_Today_s_Leading_Geoeconomic_Instruments.pdf
+    file: CS33 - War by Other Means, Chapter 3 Today's Leading Geoeconomic Instruments.pdf
 - id: CS34
   title: Economic-Military Power Dynamics (optional)
   outcomes: How economic and military power reinforce or constrain each other.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs34-economic-military-power-dynamics-optional
+  resources:
+  - kind: mandatory
+    title: The Rise of China and its Power Status
+    url: https://media2-production.mightynetworks.com/asset/0262360b-b4b2-4d1d-b9f0-605167c0ca58/Copy_of_The_Rise_of_China_and_its_Power_Status.pdf
+    note: Assesses China's power status as second in the world, still a class below the US superpower.
+    file: CS34 - The Rise of China and its Power Status.pdf
+  - kind: recommended
+    title: 'Different paths to power: The rise of Brazil, India and China at the WTO'
+    url: https://media2-production.mightynetworks.com/asset/c5242509-5bbc-45f4-9d5b-7035eb1a1792/Copy_of_Different_paths_to_power_The_rise_of_Brazil__India_and_China_at_the_World_Trade_Organization.pdf
+    file: CS3 - Copy_of_Different_paths_to_power_The_rise_of_Brazil__India_and_China_at_the_World_Trade_Organization.pdf
+  - kind: recommended
+    title: 'European Commission: Elements for an EU strategy on India'
+    url: https://media2-production.mightynetworks.com/asset/2a46978b-f190-4736-aa05-97739943f46f/Copy_of_European_Commission_Elements_for_an_EU_strategy_on_India.pdf
+    file: CS3 - Copy_of_European_Commission_Elements_for_an_EU_strategy_on_India.pdf
 - id: CS35
   title: Currency and Balance of Payments (optional)
   outcomes: Currency, the balance of payments and their strategic implications, including sovereign wealth funds.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs35-currency-and-balance-of-payments-optional
+  resources:
+  - kind: mandatory
+    title: 'Current Account Deficits: Is There a Problem?'
+    url: https://media2-production.mightynetworks.com/asset/96f024ab-93d1-4a05-b71d-d0e3eb5476bb/Copy_of_Current_Account_Deficits_Is_There_a_Problem.pdf
+    file: CS35 - Current Account Deficits Is There a Problem.pdf

@@ -13,7 +13,11 @@ from deeptutor.yaxa.schedule import Cohort, KeyDate, Session
 @pytest.fixture(autouse=True)
 def _tmp_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DEEPTUTOR_HOME", str(tmp_path))
-    catalog.get_catalog(fresh=True)
+    cat = catalog.get_catalog(fresh=True)
+    # these tests cover the library-file fallback; pin it rather than depend on the real reading lists
+    for mod in cat.modules.values():
+        for u in mod.units:
+            monkeypatch.setattr(u, "resources", [])
     yield
     catalog.get_catalog(fresh=True)
 

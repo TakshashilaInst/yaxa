@@ -1,14 +1,69 @@
 code: GCPP-COMM
 title: Effective Communication and Media Engagement
 kb: GCPP-COMM
-description: Core module, weeks 1-5. Writing clearly about policy, understanding the media, and how political and
-  policy narratives work.
+description: Core module, weeks 1-5. Writing clearly about policy, understanding the media, and how political and policy narratives
+  work.
 units:
 - id: CP31
   title: Basics of Writing
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-31-basics-of-writing
+  resources:
+  - kind: mandatory
+    title: How to Write a Sentence (Stanley Fish)
+    url: https://media2-production.mightynetworks.com/asset/131c2b13-a39f-44b2-bdde-406981dc23ac/How_to_write_a_sentence.pdf
+    note: A book on crafting good sentences, drawing on the author's experience and historical examples.
+    file: CP31 - How to Write a Sentence (Stanley Fish).pdf
+  - kind: recommended
+    title: On Writing Well (William Zinsser)
+    url: https://www.amazon.in/Writing-Well-Classic-Guide-Nonfiction/dp/0063026600
+    note: 'A manual on nonfiction writing: simplicity, brevity and clarity.'
+  - kind: recommended
+    title: Writing Tools (Roy Peter Clark)
+    url: https://www.amazon.in/Writing-Tools-Roy-Peter-Clark/dp/0316014990
+    note: Exercises to hone your own writing.
+  - kind: recommended
+    title: The Elements of Style
+    url: https://media2-production.mightynetworks.com/asset/c4b062eb-fd46-4181-b3d2-16f14e3cbce7/The_Elements_of_Style.pdf
+    file: CP31 - The Elements of Style.pdf
+  - kind: recommended
+    title: A Poetry Handbook (Mary Oliver)
+    url: https://www.amazon.in/Poetry-Handbook-Mary-Oliver/dp/0156724006
+  - kind: recommended
+    title: Story (Robert McKee)
+    url: https://www.amazon.in/Story-Structure-Substance-Principles-Screenwriting/dp/0060391685
+  - kind: recommended
+    title: Reading Like a Writer (Francine Prose)
+    url: https://www.amazon.in/RDG-LIKE-WRITER-Francine-Prose/dp/0060777052
+  - kind: recommended
+    title: Bird by Bird (Anne Lamott)
+    url: https://www.amazon.in/Bird-Some-Instructions-Writing-Life/dp/0385480016
 - id: CP33
   title: Political and Policy Narratives
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/gcpp45-cp-33-political-and-policy-narratives
+  resources:
+  - kind: mandatory
+    title: Policy Paradox (Deborah Stone), Chapters 6, 7, 8
+    url: https://media2-production.mightynetworks.com/asset/a2828b48-c9b8-4cc1-b876-b98df667d249/Narratives_-_Policy_Paradox_Deborah_Stone_Ch_6__7__8.pdf
+    note: How symbols and numbers shape policy narratives.
+    file: CP33 - Policy Paradox (Deborah Stone), Chapters 6, 7, 8.pdf
+  - kind: mandatory
+    title: 'Listen: Barack Obama on Pod Save America (4:45 to 11:15)'
+    url: https://youtu.be/W7lgXXH__v4
+    note: Shaping a narrative around democracy.
+  - kind: mandatory
+    title: How the news changes the way we think and behave
+    url: https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave
+  - kind: mandatory
+    title: Effective Policy Communication in the Age of Information Overload and YouTube
+    url: https://media2-production.mightynetworks.com/asset/4bfa90ef-8cf9-49de-a0ec-792c28f928e5/Effective_Policy_Communication_in_the_Age_of_Information_Overload_and_YouTube.pdf
+    file: CP33 - Effective Policy Communication in the Age of Information Overload and YouTube.pdf
+  - kind: recommended
+    title: The Ingenious Marketing Strategies Behind Trump's Success
+    url: https://media2-production.mightynetworks.com/asset/096dcf1b-a52a-4d57-bcdd-2fd5f536489e/The_Ingenious_Marketing_Strategies_Behind_Trump_s_Success_-_The_Atlantic.pdf
+    note: An essay by Yoni Appelbaum
+    file: CP33 - The Ingenious Marketing Strategies Behind Trump's Success.pdf
+  - kind: recommended
+    title: Why the past 10 years of American life have been uniquely stupid
+    url: https://media2-production.mightynetworks.com/asset/b48d3880-f1fc-490b-b03c-1af28df673d9/Why_the_Past_10_Years_of_American_Life_Have_Been_Uniquely_Stupid_-_The_Atlantic.pdf
+    note: An essay by Jonathan Haidt
+    file: CP33 - Why the past 10 years of American life have been uniquely stupid.pdf

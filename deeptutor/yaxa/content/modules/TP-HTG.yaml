@@ -6,34 +6,122 @@ description: Technology and Policy specialisation. The relationship between tech
 units:
 - id: CT81
   title: Technology and National Power
-  outcomes: How technological change shifts national power and international relations; innovation and creative
-    insecurity.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct81-technology-and-national-power-107370548
+  outcomes: How technological change shifts national power and international relations; innovation and creative insecurity.
+  resources:
+  - kind: mandatory
+    title: Critical Theory of Technology, Preface and Chapter 1 (Andrew Feenberg)
+    url: https://media2-production.mightynetworks.com/asset/f2cd2815-a58c-4451-bd25-61e7a2846683/Critical_Theory_of_Technology__Preface_and_Ch_1__-_Andrew_Feenburg.pdf
+    file: CT81 - Critical_Theory_of_Technology__Preface_and_Ch_1__-_Andrew_Feenburg.pdf
+  - kind: mandatory
+    title: Technological Change and International Relations (Daniel W Drezner)
+    url: https://media2-production.mightynetworks.com/asset/a699feb7-1119-4e87-8ab0-a8f315c478c7/Technological_Change_and_International_Relations_-_Daniel_W_Drezner.pdf
+    file: CT81 - Technological_Change_and_International_Relations_-_Daniel_W_Drezner.pdf
+  - kind: mandatory
+    title: The Politics of Innovation, Chapter 8 (Mark Zachary Taylor)
+    url: https://media2-production.mightynetworks.com/asset/fb721873-eca7-4172-b094-6d117bfe04f4/The_Politics_of_Innovation__Ch_8__Creative_Insecurity__-_Mark_Zachary_Taylor.pdf
+    file: CT81 - The_Politics_of_Innovation__Ch_8__Creative_Insecurity__-_Mark_Zachary_Taylor.pdf
+  - kind: mandatory
+    title: Critical Technology Tracker (ASPI)
+    url: https://techtracker.aspi.org.au/
+  - kind: recommended
+    title: National Power After AI (Matthew Daniels, Ben Chang)
+    url: https://media2-production.mightynetworks.com/asset/74ba6393-9fc7-4b2d-9288-668aa2f5ffe6/National_Power_After_AI_-_Matthew_Daniels___Ben_Chang.pdf
+    file: CT81 - National Power After AI (Matthew Daniels, Ben Chang).pdf
+  - kind: recommended
+    title: The Great Tech Game, Chapter 5 (Anirudh Suri)
+    url: https://media2-production.mightynetworks.com/asset/7868b0b4-7519-4906-9fc9-c5c9cd40e24a/The_Great_Tech_Game__Ch_5__-_Anirudh_Suri.pdf
+    file: CT81 - The_Great_Tech_Game__Ch_5__-_Anirudh_Suri.pdf
+  - kind: recommended
+    title: The Nature of Technology, Chapter 6 (W. Brian Arthur)
+    url: https://media2-production.mightynetworks.com/asset/11eecfec-14da-4f95-8af2-8fbec3ee56f0/The_Nature_of_Technology__Ch_6__-_W._Brian_Arthurpdf.pdf
+    file: CT81 - The_Nature_of_Technology__Ch_6__-_W._Brian_Arthurpdf (1).pdf
+  - kind: recommended
+    title: The Shock of the Old, Introduction (David Edgerton)
+    url: https://media2-production.mightynetworks.com/asset/8f5483c2-0dc9-4a2b-9017-fa1df8ae3c5c/The_Shock_of_the_Old_Introduction__-_David_Edgerton.pdf
+    file: CT81 - The_Shock_of_the_Old_Introduction__-_David_Edgerton.pdf
+  - kind: recommended
+    title: The Tentacles of Progress, Chapter 4 (Daniel R. Headrick)
+    url: https://media2-production.mightynetworks.com/asset/4f9cc337-b0a2-4656-9c5e-bd7bf75a6f08/The_Tentacles_of_Progress__Ch_4__-_Daniel_R._Headrick_-_.pdf
+    file: CT81 - The_Tentacles_of_Progress__Ch_4__-_Daniel_R._Headrick_-_.pdf
 - id: CT82
   title: Internet Governance Geopolitics
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct82-internet-governance-geopolitics-8th-nov
+  resources:
+  - kind: mandatory
+    title: The Global War for Internet Governance, Chapter 1 (Laura DeNardis)
+    url: https://media2-production.mightynetworks.com/asset/939b4255-967c-4a71-92fa-8d56c284b8ef/Ch1_The_Global_War_for_Internet_Governance.pdf
+    file: CT82 - Ch1_The_Global_War_for_Internet_Governance.pdf
+  - kind: mandatory
+    title: 'Core concerns: a framework to protect global Internet infrastructure (Broeders, Sukumar)'
+    url: https://media2-production.mightynetworks.com/asset/8b982ff0-fed6-4e06-a4aa-b67f2f2fedf3/Core_concerns_-_The_need_for_a_governance_framework_to_protect_global_Internet.pdf
+    file: CT82 - Core_concerns_-_The_need_for_a_governance_framework_to_protect_global_Internet.pdf
+  - kind: recommended
+    title: 'Four Internets: The Geopolitics of Digital Governance (O''Hara, Hall)'
+    url: https://media2-production.mightynetworks.com/asset/a65c9c9f-06fb-41fa-83b5-a768d634814b/Four_Internets-_The_Geopolitics_of_Digital_Governance_-_Kieron_O_Hara_and_Wendy_Hall.pdf
+    file: CT82 - Four_Internets-_The_Geopolitics_of_Digital_Governance_-_Kieron_O_Hara_and_Wendy_Hall.pdf
+  - kind: recommended
+    title: The Digital Silk Road and China's Influence on Standard Setting (Alex He)
+    url: https://media2-production.mightynetworks.com/asset/5fd9896f-5f76-4583-89e0-8aa0cd92b4e8/The_Digital_Silk_Road_and_China_s_Influence_on_Standard_Setting_-_Alex_He.pdf
+    file: CT82 - The_Digital_Silk_Road_and_China_s_Influence_on_Standard_Setting_-_Alex_He.pdf
+  - kind: recommended
+    title: The Idealized Internet vs. Internet Realities (Morgus, Sherman)
+    url: https://media2-production.mightynetworks.com/asset/3f1d980d-13d5-44bd-af13-929567c0ed6f/The_Idealized_Internet_vs._Internet_Realities_-_Robert_Morgus___Justin_Sherman_.pdf
+    file: CT82 - The_Idealized_Internet_vs._Internet_Realities_-_Robert_Morgus___Justin_Sherman_.pdf
+  - kind: recommended
+    title: One, Two, or Two Hundred Internets (Kevin Kohler)
+    url: https://media2-production.mightynetworks.com/asset/6d9fde58-64e5-4dd5-9fc4-050e60a36029/One__Two__or_Two_Hundred_Internets_-_Kevin_Kohler.pdf
+    file: CT82 - One__Two__or_Two_Hundred_Internets_-_Kevin_Kohler.pdf
+  - kind: recommended
+    title: A Mission Statement for the IETF
+    url: https://media2-production.mightynetworks.com/asset/651aac08-6682-41df-a54b-ad84d76dedc8/A_Mission_Statement_for_the_IETF.pdf
+    file: CT82 - A_Mission_Statement_for_the_IETF.pdf
 - id: CT83
   title: Siliconpolitik
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct83-siliconpolitik-107370559
+  resources:
+  - kind: mandatory
+    title: The Global Semiconductor Value Chain (Kleinhans, Baisakova)
+    url: https://media2-production.mightynetworks.com/asset/accf0511-f059-4717-a959-c80ff9c23b7c/The_Global_Semiconductor_Value_Chain_-_Jan-Peter_Kleinhans_and_Dr._Nurzat_Baisakova.pdf
+    file: CT83 - The Global Semiconductor Value Chain (Kleinhans, Baisakova).pdf
+  - kind: mandatory
+    title: How are Microchips Made? (Branch Education)
+    url: https://youtu.be/dX9CGRZwD-w
+  - kind: mandatory
+    title: The Geopolitics of Semiconductors (Pranay Kotasthane)
+    url: https://youtu.be/pL5NXJwJ2nc
+  - kind: recommended
+    title: Takshashila's Siliconpolitik Project
+    url: https://takshashila.org.in/siliconpolitik-project
+  - kind: recommended
+    title: When the Chips Are Down (Pranay Kotasthane), book
+  - kind: recommended
+    title: Chip War (Chris Miller), book
 - id: CT84
   title: Supply Chain Security
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct84-supply-chain-security
+  resources:
+  - kind: mandatory
+    title: 'Understanding Cyberwarfare: Lessons from the Russia-Georgia War (Sarah White, March 2018)'
+  - kind: mandatory
+    title: Explainer on Pager Attacks in Lebanon
 - id: CT85
   title: Understanding Strategic Technologies
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct85-understanding-strategic-technologies
+  resources:
+  - kind: mandatory
+    title: The space race is dominated by new contenders (The Economist)
+    url: https://media2-production.mightynetworks.com/asset/5fa68239-0d6a-490b-a85e-d33418fca856/The_Space_Race_is_Dominated_by_New_Contenders.pdf
+    file: CT85 - The_Space_Race_is_Dominated_by_New_Contenders.pdf
+  - kind: recommended
+    title: Satellite Internet Explainer (Ashwin Prasad)
+    url: https://media2-production.mightynetworks.com/asset/7e6e3e25-5ecb-47fe-b6ec-90e2236cadad/Satellite_Internet_Explainer.pdf
+    file: CT85 - Satellite_Internet_Explainer.pdf
 - id: CT86
   title: Information Warfare
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct86-information-warfare
 - id: CT87
   title: Geopolitics and Business
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct87-geopolitics-and-business
 - id: CT47
   title: State of India's Tech Ecosystem
   outcomes: India's innovation system, its strengths and gaps, and why it has not produced global tech champions.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct47-state-of-indias-tech-ecosystem

@@ -1,41 +1,209 @@
 code: TP-IE
 title: Information Economics
 kb: TP
-description: Technology and Policy specialisation. How information goods differ from conventional goods, and what
-  that means for markets and regulation.
+description: Technology and Policy specialisation. How information goods differ from conventional goods, and what that means
+  for markets and regulation.
 units:
 - id: CT3x
   title: Market Failures
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct3x-market-failures
   aliases:
   - CT37
+  resources:
+  - kind: mandatory
+    title: Is Market Failure a Sufficient Condition for Government Intervention?
+    url: https://media2-production.mightynetworks.com/asset/9e434e47-44cb-421a-bdcc-c6cecc01bc39/Is_Market_Failure_a_Sufficient_Condition_for_Government_Intervention__-_Econlib.pdf
+    note: An overview of the different types of market failures.
+    file: CT3x - Is_Market_Failure_a_Sufficient_Condition_for_Government_Intervention__-_Econlib.pdf
+  - kind: mandatory
+    title: Implications of Costly Information
+    url: https://media2-production.mightynetworks.com/asset/be253353-53d9-4ead-aa94-90a2c4b1c221/Implications_of_Costly_Information_-_Econlib.pdf
+    note: An essay by Morgan Rose
+    file: CT3x - Implications_of_Costly_Information_-_Econlib.pdf
+  - kind: mandatory
+    title: Asymmetric Information and used cars (MRU video)
+    url: https://youtu.be/sXPXpJ5vMnU
+  - kind: mandatory
+    title: An Introduction to Externalities (MRU video)
+    url: https://youtu.be/CpVf11f09Pk
+  - kind: mandatory
+    title: Externalities
+    url: https://media2-production.mightynetworks.com/asset/9661d23f-9a72-4301-a43a-873dc75577ab/Externalities_-_Econlib.pdf
+    note: An essay by Bryan Caplan
+    file: CT3x - Externalities_-_Econlib.pdf
+  - kind: mandatory
+    title: Introduction to Public Goods
+    url: https://www.econlib.org/library/Enc/PublicGoods.html
+    note: An essay by Tyler Cowen.
+  - kind: recommended
+    title: 'The Market for Lemons: Quality Uncertainty and the Market Mechanism'
+    url: https://www.sfu.ca/~wainwrig/Econ400/akerlof.pdf
+    note: George A. Akerlof
+  - kind: recommended
+    title: Air Pollution Kills
+    url: https://marginalrevolution.com/marginalrevolution/2019/07/air-pollution-kills.html
+    note: Alex Tabarrok
+  - kind: recommended
+    title: Is Public Schooling a Public Good?
+    url: https://www.cato.org/policy-analysis/public-schooling-public-good-analysis-schooling-externalities
+  - kind: recommended
+    title: Ending the tragedy of the commons (Elinor Ostrom)
+    url: https://youtu.be/Qr5Q3VvpI7w
+  - kind: recommended
+    title: 'Oligopoly: Competition Among the Few'
+    url: https://media2-production.mightynetworks.com/asset/b89cb26c-4a7a-4df0-9d9f-dc318c9a314f/11.2_Oligopoly__Competition_Among_the_Few___Principles_of_Economics.pdf
+    file: CT3x - 11.2_Oligopoly__Competition_Among_the_Few___Principles_of_Economics.pdf
+  - kind: recommended
+    title: Monopoly
+    url: https://media2-production.mightynetworks.com/asset/ef82601f-3ed6-4349-8d2c-78a361e37693/Monopoly_By_George_J._Stigler.pdf
+    file: CT3x - Monopoly_By_George_J._Stigler (1).pdf
 - id: CT31
   title: Nature and Pricing of Information Goods
   outcomes: High fixed and near-zero marginal costs, versioning and pricing of information goods, intangible capital.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct31-nature-and-pricing-of-information-goods
+  resources:
+  - kind: mandatory
+    title: Not Enough People Are Paying Attention to this Economic Trend (Bill Gates)
+    url: https://media2-production.mightynetworks.com/asset/3562c1c9-66f2-4252-bc8d-7b09f1dfd94d/Not_Enough_People_are_Paying_Attention_to_this_Economic_Trend_-_Bill_Gates.pdf
+    file: CT31 - Not_Enough_People_are_Paying_Attention_to_this_Economic_Trend_-_Bill_Gates.pdf
+  - kind: mandatory
+    title: The Contributions of the Economics of Information to Twentieth Century Economics (Joseph E. Stiglitz)
+    url: https://media2-production.mightynetworks.com/asset/b133a0c4-3ef0-4b5e-841c-5d2542f94825/The_Contributions_of_the_Economics_of_Information_to_Twentieth_Century_Economics_-_Joseph_E._Stiglitz.pdf
+    file: CT31 - The_Contributions_of_the_Economics_of_Information_to_Twentieth_Century_Economics_-_Joseph_E._Stiglitz.pdf
+  - kind: recommended
+    title: Capitalism Without Capital, Chapters 9 and 10 (Haskel, Westlake)
+    url: https://media2-production.mightynetworks.com/asset/807679c0-d6ba-4fbb-8e1f-d698f3bcd099/Ch_9_and_10_Capitalism_Without_Capital.pdf
+    file: CT31 - Ch_9_and_10_Capitalism_Without_Capital.pdf
+  - kind: recommended
+    title: Ten-minute drama trial (Anupam Manur, Times of India)
+    url: https://media2-production.mightynetworks.com/asset/97a6a21c-e44d-4815-a450-f3070a597b92/Anupam_ToI_15Jan_10Min_Drama_Trial.pdf
+    file: CT31 - Ten-minute drama trial (Anupam Manur, Times of India).pdf
 - id: CT32
   title: Rights Management
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-ct32-rights-management-107370487
+  resources:
+  - kind: mandatory
+    title: 'Information Rules, Chapter 4: Rights Management (Shapiro, Varian)'
+    url: https://media2-production.mightynetworks.com/asset/82656b2c-0ea1-479f-940d-94457a40b2f2/Information_Rules__Ch_4_Rights_Management__-_Carl_Shapiro_and_Hal_Varian.pdf
+    file: CT32 - Information Rules, Chapter 4 Rights Management (Shapiro, Varian).pdf
+  - kind: recommended
+    title: The Economics of Ownership, Access and Trade in Digital Data (Duch-Brown et al)
+    url: https://media2-production.mightynetworks.com/asset/2df9324a-fcae-4b83-9817-e8c593e27cd6/The_Economics_of_Ownership__Access_and_Trade_in_Digital_Data_-_Nestor_Duch-Brown_et_al.pdf
+    file: CT32 - The Economics of Ownership, Access and Trade in Digital Data (Duch-Brown et al).pdf
+  - kind: recommended
+    title: The Age of Surveillance Capitalism (Shoshana Zuboff)
+    url: https://media2-production.mightynetworks.com/asset/1a86abc2-1307-4fb1-9af0-5b90230d6fc4/The_Age_of_Surveillance_Capitalism_-_Shoshana_Zuboff.pdf
+    file: CT32 - The Age of Surveillance Capitalism (Shoshana Zuboff).pdf
+  - kind: recommended
+    title: 'Lochner in Cyberspace: The New Economic Orthodoxy of Rights Management (Julie E. Cohen)'
+    url: https://media2-production.mightynetworks.com/asset/1434848e-0f44-4c52-88d2-9108748aecf7/Lochner_in_Cyberspace__The_New_Economic_Orthodoxy_of_Rights_Management_-_Julie_E._Cohen.pdf
+    file: CT32 - Lochner in Cyberspace The New Economic Orthodoxy of Rights Management (Julie E. Cohen).pdf
+  - kind: recommended
+    title: Economics of Information Security and Privacy (Tyler Moore et al)
+    url: https://media2-production.mightynetworks.com/asset/579ae1ab-c6b9-4043-95ff-a8399be4bfd4/Economics_of_Information_Security_and_Privacy_-_Tyler_Moore_et_al.pdf
+    file: CT32 - Economics of Information Security and Privacy (Tyler Moore et al).pdf
 - id: CT33
   title: Switching Costs and Lock-In
   outcomes: How switching costs create lock-in and shape competition.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct33-switching-costs-and-lock-in-107370490
+  resources:
+  - kind: mandatory
+    title: Economics of Information Technology - Hal R. Varian
+    url: https://media2-production.mightynetworks.com/asset/cf2f9ef2-a2fc-4b51-b8dd-ecce6933138b/Economics_of_Information_Technology_-_Hal_R._Varian.pdf
+    file: CT33 - Economics_of_Information_Technology_-_Hal_R._Varian.pdf
+  - kind: mandatory
+    title: How to fix competition in a market owned by Google, Facebook, Amazon and other digital platforms
+    url: https://archive.factordaily.com/fix-digital-platforms-google-facebook-amazon-uber-ola-for-competition/
+    note: Anupam Manur
+  - kind: mandatory
+    title: The folly of breaking up Big Tech
+    url: https://archive.factordaily.com/the-folly-of-breaking-up-big-tech/
+    note: Anupam Manur
+  - kind: recommended
+    title: 'Coordination and Lock-in: Competition With Switching Costs and Network Effects - Joseph Farrell'
+    url: https://media2-production.mightynetworks.com/asset/cc7e0b03-59e9-4eab-8a31-e391218d1bd3/Coordination_and_Lock-in__Competition_With_Switching_Costs_and_Network_Effects_-_Joseph_Farrell.pdf
+    file: CT33 - Coordination_and_Lock-in__Competition_With_Switching_Costs_and_Network_Effects_-_Joseph_Farrell.pdf
 - id: CT34
   title: Network Effects
   outcomes: Direct, indirect and data network effects, tipping and market concentration.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct34-network-effects-107370492
+  resources:
+  - kind: mandatory
+    title: New Rules for the New Economy, Chapter 4 (Kevin Kelly)
+    url: https://media2-production.mightynetworks.com/asset/721a3e2d-9901-4739-a370-93955c6e505b/New_Rules_for_the_New_Economy__Ch_4_Follow_The_Free__-_Kevin_Kelly.pdf
+    file: CT34 - New_Rules_for_the_New_Economy__Ch_4_Follow_The_Free__-_Kevin_Kelly.pdf
+  - kind: recommended
+    title: Tipping and Concentration in Markets (Dubé et al)
+    url: https://media2-production.mightynetworks.com/asset/a1382a84-ee67-4a9a-b351-2fe2f7888f49/Tipping_and_Concentration_in_Markets_-_Jean-Pierre_H._Dube___et_al.pdf
+    file: CT34 - Tipping_and_Concentration_in_Markets_-_Jean-Pierre_H._Dube___et_al.pdf
+  - kind: recommended
+    title: The Power of Data Network Effects (Matt Turck)
+    url: https://media2-production.mightynetworks.com/asset/2834bf29-0959-4cf2-9471-035e84998d25/The_Power_of_Data_Network_Effects___Matt_Turck.pdf
+    file: CT34 - The_Power_of_Data_Network_Effects___Matt_Turck.pdf
+  - kind: recommended
+    title: The Network Effects Bible (James Currier)
+    url: https://media2-production.mightynetworks.com/asset/66e41e80-8514-4127-b93f-c6486698fd2c/The_Network_Effects_Bible_-_James_Currier.pdf
+    file: CT34 - The_Network_Effects_Bible_-_James_Currier.pdf
+  - kind: recommended
+    title: Systems Competition and Network Effects (Katz, Shapiro)
+    url: https://media2-production.mightynetworks.com/asset/2316c63e-c962-4b2d-a47b-8da13c1f5245/Systems_Competition_and_Network_Effects_-_Michael_L._Katz_and_Carl_Shapiro.pdf
+    file: CT34 - Systems_Competition_and_Network_Effects_-_Michael_L._Katz_and_Carl_Shapiro.pdf
 - id: CT35
   title: Setting Standards
   outcomes: Standards competition, coordination and who sets technology standards.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct35-setting-standards-107370494
+  resources:
+  - kind: mandatory
+    title: Information Rules, Chapter 4 (Shapiro, Varian)
+    url: https://media2-production.mightynetworks.com/asset/8b44eb19-4914-490a-a4ca-642f474a9a8f/Information_Rules__Ch_4_Rights_Management__-_Carl_Shapiro_and_Hal_Varian.pdf
+    file: CT35 - Information Rules, Chapter 4 (Shapiro, Varian).pdf
+  - kind: recommended
+    title: 'Explanatory Report: Automatic Processing of Personal Data (Amending Protocol)'
+    url: https://media2-production.mightynetworks.com/asset/25cc5667-d0e5-4ec0-b786-293bcf51940a/Explanatory_Report_-_Automatic_Processing_of_Personal_Data__Amending_Protocol_.pdf
+    file: CT35 - Explanatory Report Automatic Processing of Personal Data (Amending Protocol).pdf
 - id: CT36
   title: Market Power and Regulation
-  outcomes: Platform power, aggregation theory, antitrust and regulating digital platforms; market failures as grounds
-    for intervention.
-  lms_url: https://opentakshashila.net/posts/tp-45-ct36-market-power-and-regulation
+  outcomes: Platform power, aggregation theory, antitrust and regulating digital platforms; market failures as grounds for
+    intervention.
+  resources:
+  - kind: mandatory
+    title: Aggregation Theory (Ben Thompson)
+    url: https://stratechery.com/aggregation-theory/
+  - kind: recommended
+    title: Amazon Antitrust Paradox - Lina M Khan
+    url: https://media2-production.mightynetworks.com/asset/95207123-24e7-4463-bcd3-87ac0e60410c/Amazon_Antitrust_Paradox_-_Lina_M_Khan.pdf
+    file: CT36 - Amazon_Antitrust_Paradox_-_Lina_M_Khan.pdf
+  - kind: recommended
+    title: Online Platforms and the Digital Single Market - House of Lords
+    url: https://media2-production.mightynetworks.com/asset/6158de87-4ab6-4b2d-9c31-48a6b8aebf51/Online_Platforms_and_the_Digital_Single_Market_-_House_of_Lords.pdf
+    file: CT36 - Online_Platforms_and_the_Digital_Single_Market_-_House_of_Lords.pdf
+  - kind: recommended
+    title: Protecting Consumers In Peer Platform Markets - OECD
+    url: https://media2-production.mightynetworks.com/asset/a2c46b26-628b-4c1b-82f3-c0c627dd265e/Protecting_Consumers_In_Peer_Platform_Markets_-_OECD.pdf
+    file: CT36 - Protecting_Consumers_In_Peer_Platform_Markets_-_OECD.pdf
+  - kind: recommended
+    title: Sources of Platform Power - Lina M Khan
+    url: https://media2-production.mightynetworks.com/asset/cc9bfeaa-7c58-4d4d-9f2d-1beab8fc23c9/Sources_of_Platform_Power_-_Lina_M_Khan.pdf
+    file: CT36 - Sources_of_Platform_Power_-_Lina_M_Khan.pdf
 - id: CP44
   title: Complexity
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/tp-45-cp44-complexity
+  resources:
+  - kind: mandatory
+    title: Introduction to Complexity
+    url: https://media2-production.mightynetworks.com/asset/fb56fadf-ac5c-446f-8943-e6b6834732d6/Introdution_to_Complex_Systems.pdf
+    note: A chapter from Business Dynamics by John Sterman on complex systems and systems thinking.
+    file: CP44 - Introdution_to_Complex_Systems (1).pdf
+  - kind: mandatory
+    title: Causal Loop Diagrams
+    url: https://media2-production.mightynetworks.com/asset/adf0ea1e-426a-456f-b325-f464a6f8eff3/Causal_Loop_Diagrams.pdf
+    file: CP44 - Causal_Loop_Diagrams.pdf
+  - kind: mandatory
+    title: Stocks and Flow
+    url: https://media2-production.mightynetworks.com/asset/d439ce4c-0652-44e7-978c-fceabf9fe55c/Stocks_and_Flows.pdf
+    file: CP44 - Stocks and Flow.pdf
+  - kind: mandatory
+    title: Complexity Theory in Political Science and Public Policy
+    url: https://paulcairney.wordpress.com/wp-content/uploads/2013/08/cairney-2012-psr-complexity-theory.pdf
+    note: Paul Cairney
+  - kind: recommended
+    title: The Fifth Discipline
+    url: https://media2-production.mightynetworks.com/asset/5298d451-f42b-4cda-b25d-321dd96609c3/The_Fifth_Discipline.pdf
+    note: Chapters 5 to 8, Peter Senge
+    file: CP44 - The Fifth Discipline.pdf
