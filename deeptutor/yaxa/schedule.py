@@ -354,6 +354,7 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
     home = {u.id: m for m in modules for u in m.units}  # session code -> module
     opened = store.opened(user.user_id)
     groups_cache: dict[str, dict] = {}
+    files_cache: dict[str, dict] = {}
     rows = []
     for s in sorted(c.sessions, key=starts_at):
         start = starts_at(s)
@@ -364,6 +365,15 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
             groups_cache[mod.code] = module_page.module_groups(cat, mod)
         items = groups_cache[mod.code].get(s.code, [])
         unit = next(u for u in mod.units if u.id == s.code)
+        if unit.resources:  # the course's own list: only the mandatory ones are "to do first"
+            if mod.code not in files_cache:
+                files_cache[mod.code] = module_page._files(mod.kb) if mod.kb else {}
+            prep = [{"title": r["title"], "open": r["open"], "opened": r["opened"]}
+                    for r in module_page.unit_resources(mod, unit, files_cache[mod.code], opened) if r["kind"] == "mandatory"]
+        else:
+            prep = [{"title": r["title"], "open": r["open"],
+                     "opened": r["open"].startswith(FILES) and r["open"][len(FILES):] in opened}
+                    for r in items if r["kind"] != "video"]
         rows.append({
             "code": s.code,
             "module": mod.code,
@@ -373,11 +383,7 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
             "host": s.host,
             "note": s.note,
             "webinar_url": s.webinar_url if start - JOIN_BEFORE <= now <= start + JOIN_AFTER else "",
-            "readings": [
-                {"title": r["title"], "open": r["open"],
-                 "opened": r["open"].startswith(FILES) and r["open"][len(FILES):] in opened}
-                for r in items if r["kind"] != "video"
-            ],
+            "readings": prep,
             "transcript_ready": any(r["kind"] == "video" and c.code in (r.get("corpus") or "") for r in items),
         })
     today = now.date()
@@ -387,6 +393,21 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
         if (not d.track or d.track == track) and today <= date.fromisoformat(d.date) <= today + DATES_AHEAD
     ]
     return {"cohort": c.code, "sessions": rows, "dates": dates}
+
+
+class OpenedBody(BaseModel):
+    url: str
+
+
+@router.post("/me/opened")
+async def mark_link_opened(body: OpenedBody) -> dict:
+    """A learner opened a reading that lives on another website (for the tick on their week)."""
+    url = body.url.strip()
+    if not re.match(r"^https?://", url) or len(url) > 1000:
+        raise HTTPException(400, "Not a link")
+    cu, _user = _me()
+    store.mark_opened(cu.id, "web", url)
+    return {"ok": True}
 
 
 @router.get("/schedule/week")

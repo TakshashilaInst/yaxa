@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 import yaml
@@ -44,12 +44,23 @@ def _list_yaml(subdir: str) -> list[str]:
 
 
 # ------------------------------------------------------------------ models
+class Resource(BaseModel):
+    """One item on a session's reading list, as the course lists it (was on the OpenTakshashila session page)."""
+
+    kind: Literal["mandatory", "recommended", "self_assessment"] = "mandatory"
+    title: str
+    url: str = ""  # the original link (a website, a video, or the file's old LMS address)
+    note: str = ""  # the course's one-line description of it
+    file: str = ""  # our copy in the module's library, when there is one (opened in Yaxa, and Yaxa answers from it)
+
+
 class Unit(BaseModel):
     id: str  # the session code from the LMS (CP10, CT31, ...); U01... for modules without one
     title: str
     outcomes: str = ""
     lms_url: str = ""  # the session's page on OpenTakshashila (current cohort)
     aliases: list[str] = Field(default_factory=list)  # older codes the library still uses for this session
+    resources: list[Resource] = Field(default_factory=list)  # the session's reading list
 
 
 class Module(BaseModel):

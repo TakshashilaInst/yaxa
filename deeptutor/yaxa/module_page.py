@@ -16,6 +16,7 @@ from fastapi import APIRouter
 
 from . import practice
 from .access import _me, _require_module
+from . import store
 from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
 from .grounding import _title_from_file, admin_kb_base_dir
 
@@ -131,6 +132,32 @@ def module_groups(cat: Any, module: Module) -> dict[str, list[dict[str, Any]]]:
     return group_readings(module, _files(module.kb) if module.kb else {}, shared_kb=len(siblings) > 1, owners=owners)
 
 
+_KIND_ORDER = {"mandatory": 0, "recommended": 1, "self_assessment": 2}
+FILES = "/api/yaxa/files/"
+
+
+def unit_resources(module: Module, unit: Unit, files: dict[str, SourceInfo], opened: set[str]) -> list[dict[str, Any]]:
+    """The session's reading list: mandatory, then recommended, then self-assessment.
+
+    A reading we hold in the module's library opens our copy (so it never depends on
+    OpenTakshashila, and the tick works); otherwise it opens its original link.
+    """
+    rows = []
+    for r in sorted(unit.resources, key=lambda r: _KIND_ORDER.get(r.kind, 9)):
+        held = bool(r.file and module.kb and r.file in files)
+        mighty = "mightynetworks.com" in r.url
+        link = f"{FILES}{module.kb}/{r.file}" if held else ("" if mighty else r.url)
+        rows.append({
+            "kind": r.kind,
+            "title": r.title,
+            "note": r.note,
+            "open": link,
+            "in_library": held,
+            "opened": (f"{module.kb}/{r.file}" in opened) if held else (f"web/{r.url}" in opened),
+        })
+    return rows
+
+
 @router.get("/{code}")
 async def module_view(code: str) -> dict[str, Any]:
     cu, user = _me()
@@ -148,6 +175,9 @@ async def module_view(code: str) -> dict[str, Any]:
 
     cohort = schedule.learner_cohort(user)
     dated = {s.code: s for s in cohort.sessions} if cohort else {}
+    files = _files(module.kb) if module.kb else {}
+    seen = store.opened(cu.id)
+    res = {u.id: unit_resources(module, u, files, seen) for u in module.units}
     return {
         "code": module.code,
         "title": module.title,
@@ -157,11 +187,12 @@ async def module_view(code: str) -> dict[str, Any]:
                 "id": u.id,
                 "title": u.title,
                 "outcomes": u.outcomes,
-                "lms_url": u.lms_url,
                 "session": {"starts_at": schedule.starts_at(dated[u.id]).isoformat(), "host": dated[u.id].host}
                 if u.id in dated
                 else None,
-                "readings": groups.get(u.id, []),
+                "resources": res[u.id],
+                # library items not already on the reading list (webinar transcripts, extra material)
+                "readings": [r for r in groups.get(u.id, []) if r.get("open") not in {x["open"] for x in res[u.id]}],
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
             }
             for u in module.units
