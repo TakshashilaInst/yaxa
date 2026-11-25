@@ -160,6 +160,9 @@ export default function SchedulePage() {
               <label style={{ display: "inline-flex", gap: 6, marginTop: 8 }}>
                 <input type="checkbox" checked={draft.join_open} onChange={(e) => set({ join_open: e.target.checked })} /> Open for joining
               </label>
+              <label style={{ display: "inline-flex", gap: 6, marginTop: 8, marginLeft: 18 }}>
+                <input type="checkbox" checked={!!draft.closed} onChange={(e) => set({ closed: e.target.checked })} /> Programme finished (chat and discussion become read-only)
+              </label>
               <div className="yx-sched-toolbar">
                 <label>Programme <input value={draft.programme} onChange={(e) => set({ programme: e.target.value.toUpperCase() })} style={{ width: 90 }} /></label>
                 <label>Starts <input type="date" value={draft.start} onChange={(e) => set({ start: e.target.value })} /></label>

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { EnrolPicker } from "@/features/yaxa/enrol";
+import { AnnouncementStrip } from "@/features/yaxa/announcements";
 import { ThisWeek } from "@/features/yaxa/week";
 import {
   yaxa,
@@ -22,6 +23,7 @@ import {
   type ReviewDue,
   type SimScenarioCard,
   type WeekView,
+  type AnnouncementList,
 } from "@/lib/yaxa-api";
 
 function convHref(c: ConversationSummary) {
@@ -138,11 +140,17 @@ function ProgrammeSection({ p, summary }: { p: ProgrammeView; summary: Record<st
 }
 
 // ---------------------------------------------------------------- tools
-function Tools() {
+function Tools({ cohort }: { cohort?: string | null }) {
   return (
     <section style={{ marginTop: 34 }}>
       <h2 className="yx-section-title">Across your programme</h2>
       <div className="yx-grid">
+        {cohort && (
+          <Link href="/learn/cohort" className="yx-card yx-carry">
+            <div className="yx-carry-title">{cohort} chat →</div>
+            <p className="yx-muted yx-carry-note">Talk to your classmates: study groups, logistics, a reading you found useful.</p>
+          </Link>
+        )}
         <Link href="/learn/chat/new?scope=programme" className="yx-card yx-carry">
           <div className="yx-carry-title">Ask across my programme →</div>
           <p className="yx-muted yx-carry-note">For questions that cut across modules. Yaxa draws on all your modules and the faculty&apos;s writing.</p>
@@ -165,6 +173,7 @@ export default function LearnHome() {
   const [summary, setSummary] = useState<Record<string, ModuleSummary>>({});
   const [sims, setSims] = useState<SimScenarioCard[]>([]);
   const [week, setWeek] = useState<WeekView | null>(null);
+  const [news, setNews] = useState<AnnouncementList | null>(null);
 
   useEffect(() => {
     if (me && !me.onboarded && !me.is_admin) router.replace("/learn/onboarding");
@@ -177,6 +186,7 @@ export default function LearnHome() {
     yaxa.practiceSummary().then((r) => setSummary(r.modules)).catch(() => {});
     yaxa.simScenarios().then(setSims).catch(() => {});
     yaxa.week().then(setWeek).catch(() => {});
+    yaxa.announcements().then(setNews).catch(() => {});
     if (me.is_admin && !me.enrolments.length) yaxa.catalog().then((c) => setAllProgrammes(c.programmes)).catch(() => {});
   }, [me]);
 
@@ -200,6 +210,7 @@ export default function LearnHome() {
           <Link href="/learn/onboarding">Edit your profile</Link>
         </p>
 
+        <AnnouncementStrip list={news} />
         <ThisWeek week={week} />
         <CarryOn due={due} last={recent[0]} sim={activeSim} />
 
@@ -212,7 +223,7 @@ export default function LearnHome() {
           </>
         )}
 
-        {enrolled && <Tools />}
+        {enrolled && <Tools cohort={week?.cohort ?? news?.cohort} />}
 
         {recent.length > 1 && (
           <section style={{ marginTop: 34 }}>

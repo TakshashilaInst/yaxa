@@ -283,7 +283,7 @@ export interface CohortSession { code: string; date: string; time: string; host:
 export interface CohortKeyDate { date: string; label: string; track?: string | null }
 export interface CohortSchedule {
   code: string; programme: string; start: string; email_group: string;
-  track_email_groups: Record<string, string>; join_code: string; join_open: boolean;
+  track_email_groups: Record<string, string>; join_code: string; join_open: boolean; closed?: boolean;
   sessions: CohortSession[]; dates: CohortKeyDate[];
 }
 export interface CohortDetail extends CohortSchedule {
@@ -308,6 +308,48 @@ async function json<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+// ---------- cohort life: announcements, session discussion, cohort chat
+export interface Announcement {
+  id: string;
+  cohort: string;
+  title: string;
+  body: string;
+  track: string | null;
+  session: string | null;
+  module: string | null;
+  author: string;
+  created_at: string;
+  emailed_at: string;
+  email_to: string;
+}
+export interface AnnouncementList { cohort: string | null; items: Announcement[]; unread: number }
+export type EmailStatus = "sent" | "not_configured" | "no_group" | "failed";
+export interface AnnouncementResult { item: Announcement; email: EmailStatus; mailto?: string; to?: string }
+export interface DiscussionSource { n: number; title: string; file?: string; kb?: string; url?: string; page?: number }
+export interface DiscussionReply { id?: string; author: string; staff?: boolean; text: string; created_at?: string; mine?: boolean }
+export interface DiscussionReview { status: "confirmed" | "corrected"; note: string; by: string; at?: string }
+export interface YaxaDraft { status: "ok" | "pending" | "unavailable" | "limit"; answer: string; sources: DiscussionSource[] }
+export interface DiscussionThread {
+  id: string;
+  text: string;
+  author: string;
+  mine: boolean;
+  created_at: string;
+  also: number;
+  i_also: boolean;
+  yaxa: YaxaDraft;
+  review: DiscussionReview | null;
+  replies: DiscussionReply[];
+}
+export interface PastThread { id: string; cohort: string; text: string; also: number; yaxa: YaxaDraft; review: DiscussionReview; replies: DiscussionReply[] }
+export interface DiscussionView { cohort: string | null; closed: boolean; threads: DiscussionThread[]; past: PastThread[] }
+export interface QueueItem extends DiscussionThread { session: string; module: string; session_title: string; needs_faculty: boolean }
+export interface ChatChannel { id: string; name: string }
+export interface ChatMessage { id: string; author: string; staff: boolean; text: string; created_at: string; edited: boolean; mine: boolean }
+export interface ChatPage { messages: ChatMessage[]; closed: boolean; me: string }
+
+const q = (cohort?: string) => (cohort ? `?cohort=${encodeURIComponent(cohort)}` : "");
+
 const send = (method: string, body?: unknown): RequestInit => ({
   method,
   headers: { "Content-Type": "application/json" },
@@ -317,6 +359,37 @@ const send = (method: string, body?: unknown): RequestInit => ({
 export const yaxa = {
   me: () => json<Me>("/me"),
   week: () => json<WeekView>("/schedule/week"),
+  // announcements
+  announcements: (cohort?: string) => json<AnnouncementList>(`/announcements${q(cohort)}`),
+  seenAnnouncements: () => json<{ ok: boolean }>("/announcements/seen", send("POST")),
+  postAnnouncement: (a: { cohort: string; title: string; body: string; track?: string | null; session?: string | null }) =>
+    json<AnnouncementResult>("/announcements", send("POST", a)),
+  emailAnnouncement: (cohort: string, id: string) =>
+    json<AnnouncementResult>(`/announcements/${encodeURIComponent(cohort)}/${id}/email`, send("POST")),
+  hideAnnouncement: (cohort: string, id: string) =>
+    json<{ ok: boolean }>(`/announcements/${encodeURIComponent(cohort)}/${id}`, send("DELETE")),
+  // session discussion
+  discussion: (module: string, session: string, cohort?: string) =>
+    json<DiscussionView>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}${q(cohort)}`),
+  ask: (module: string, session: string, text: string, cohort?: string) =>
+    json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}${q(cohort)}`, send("POST", { text })),
+  alsoAsk: (module: string, session: string, id: string, cohort?: string) =>
+    json<{ also: number; i_also: boolean }>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/also${q(cohort)}`, send("POST")),
+  replyTo: (module: string, session: string, id: string, text: string, cohort?: string) =>
+    json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/reply${q(cohort)}`, send("POST", { text })),
+  reviewThread: (module: string, session: string, id: string, status: "confirmed" | "corrected", note: string, cohort?: string) =>
+    json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/review${q(cohort)}`, send("POST", { status, note })),
+  removeThread: (module: string, session: string, id: string, cohort?: string) =>
+    json<{ ok: boolean }>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}${q(cohort)}`, send("DELETE")),
+  discussionQueue: (cohort: string) => json<QueueItem[]>(`/discussion/queue${q(cohort)}`),
+  // cohort chat
+  chatChannels: (cohort?: string) => json<ChatChannel[]>(`/chat/channels${q(cohort)}`),
+  chatMessages: (channel: string, after = "") =>
+    json<ChatPage>(`/chat/${encodeURIComponent(channel)}${after ? `?after=${encodeURIComponent(after)}` : ""}`),
+  chatSend: (channel: string, text: string) => json<ChatMessage>(`/chat/${encodeURIComponent(channel)}`, send("POST", { text })),
+  chatEdit: (channel: string, id: string, text: string) =>
+    json<ChatMessage>(`/chat/${encodeURIComponent(channel)}/${id}`, send("PATCH", { text })),
+  chatDelete: (channel: string, id: string) => json<{ ok: boolean }>(`/chat/${encodeURIComponent(channel)}/${id}`, send("DELETE")),
   joinPreview: (code: string) => json<JoinPreview>(`/join/${encodeURIComponent(code)}`),
   join: (code: string, track?: string | null) =>
     json<{ ok: boolean; cohort: string }>(`/join/${encodeURIComponent(code)}`, send("POST", { track: track || null })),

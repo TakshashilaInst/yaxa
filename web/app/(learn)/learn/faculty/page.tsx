@@ -85,7 +85,9 @@ export default function CohortBriefPage() {
       <LearnHeader me={me} center={<span className="yx-header-title">Cohort brief</span>} />
       <main className="yx-page">
         <p style={{ margin: "0 0 12px", fontSize: 15 }}>
-          <Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
+          <Link href="/learn/faculty/discussion">Class questions to review →</Link>
+          {" · "}<Link href="/learn/faculty/announcements">Announcements →</Link>
+          {" · "}<Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
         </p>
         <div className="yx-eyebrow">For faculty · anonymised</div>
         <h1 style={{ margin: "4px 0 6px" }}>What your students are asking</h1>

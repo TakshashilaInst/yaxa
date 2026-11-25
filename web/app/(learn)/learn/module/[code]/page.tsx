@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
+import { SessionDiscussion } from "@/features/yaxa/discussion";
 import { sessionWhen } from "@/features/yaxa/week";
 import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail } from "@/lib/yaxa-api";
 
@@ -102,6 +103,7 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
           <a href={u.lms_url} target="_blank" rel="noreferrer">Full session page on OpenTakshashila (all readings, live webinar) →</a>
         </p>
       )}
+      {/^C[A-Z]\d/.test(u.id) && <SessionDiscussion module={code} session={u.id} />}
     </section>
   );
 }
