@@ -55,6 +55,7 @@ class Cohort(BaseModel):
     track_email_groups: dict[str, str] = Field(default_factory=dict)
     join_code: str = ""
     join_open: bool = True
+    closed: bool = False  # once the programme ends: chat and discussion become read-only
     sessions: list[Session] = Field(default_factory=list)
     dates: list[KeyDate] = Field(default_factory=list)
 

@@ -20,6 +20,7 @@ from deeptutor.multi_user.context import get_current_user
 from . import (
     announcements,
     cohort,
+    discussion,
     grounding,
     library_api,
     module_page,
@@ -53,6 +54,7 @@ router.include_router(panel.router)
 router.include_router(module_page.router)
 router.include_router(schedule.router)
 router.include_router(announcements.router)
+router.include_router(discussion.router)
 router.include_router(library_api.router)
 router.include_router(sim_api.router)
 
