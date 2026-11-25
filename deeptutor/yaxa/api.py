@@ -30,6 +30,7 @@ from . import (
     schedule,
     store,
 )
+from . import chat as cohort_chat  # cohort chat; `chat` below is the Yaxa tutor route
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
     _allowed_modules,
     _cited_numbers,
@@ -55,6 +56,7 @@ router.include_router(module_page.router)
 router.include_router(schedule.router)
 router.include_router(announcements.router)
 router.include_router(discussion.router)
+router.include_router(cohort_chat.router)
 router.include_router(library_api.router)
 router.include_router(sim_api.router)
 
