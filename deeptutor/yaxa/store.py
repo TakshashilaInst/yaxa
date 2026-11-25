@@ -53,6 +53,7 @@ class YaxaUser(BaseModel):
     profile: dict[str, str] = Field(default_factory=dict)
     enrolments: list[Enrolment] = Field(default_factory=list)
     calendar_token: str = ""  # private calendar feed address; reset makes the old one dead
+    seen: dict[str, str] = Field(default_factory=dict)  # cohort -> when they last opened its announcements
     turns_today: int = 0
     turns_day: str = ""
 
