@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
+import { sessionWhen } from "@/features/yaxa/week";
 import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail } from "@/lib/yaxa-api";
 
 const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar", note: "Article", anecdote: "Anecdote" };
@@ -67,7 +68,10 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
     <section className="yx-card yx-unit-card" id={u.id}>
       <div className="yx-unit-card-head">
         <div>
-          <div className="yx-eyebrow">{/^C[A-Z]\d/.test(u.id) ? `Session ${u.id}` : `Unit ${n}`}</div>
+          <div className="yx-eyebrow">
+            {/^C[A-Z]\d/.test(u.id) ? `Session ${u.id}` : `Unit ${n}`}
+            {u.session && <> · {sessionWhen(u.session.starts_at)}{u.session.host ? ` · ${u.session.host}` : ""}</>}
+          </div>
           <h2 style={{ fontSize: 21, margin: "2px 0 0" }}>{u.title}</h2>
         </div>
         {u.progress && (

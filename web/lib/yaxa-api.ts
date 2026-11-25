@@ -137,6 +137,7 @@ export interface ModuleUnitDetail {
   title: string;
   outcomes: string;
   lms_url: string; // the session's page on OpenTakshashila
+  session: { starts_at: string; host: string } | null; // this cohort's date for the session
   readings: ModuleReading[];
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
 }
@@ -270,6 +271,28 @@ export interface SimFacultyView {
 }
 
 /** Throws with the server's `detail` message, so the UI can show it as is. */
+// ------------------------------------------------------------ cohort life
+export interface WeekReading { title: string; open: string; opened: boolean }
+export interface WeekSession {
+  code: string; module: string; module_title: string; title: string;
+  starts_at: string; host: string; note: string; webinar_url: string;
+  readings: WeekReading[]; transcript_ready: boolean;
+}
+export interface WeekView { cohort: string | null; sessions: WeekSession[]; dates: { date: string; label: string }[] }
+export interface CohortSession { code: string; date: string; time: string; host: string; webinar_url: string; note: string }
+export interface CohortKeyDate { date: string; label: string; track?: string | null }
+export interface CohortSchedule {
+  code: string; programme: string; start: string; email_group: string;
+  track_email_groups: Record<string, string>; join_code: string; join_open: boolean;
+  sessions: CohortSession[]; dates: CohortKeyDate[];
+}
+export interface CohortDetail extends CohortSchedule {
+  modules: { code: string; title: string; sessions: { code: string; title: string }[] }[];
+}
+export interface CohortRow { code: string; programme: string; start: string; sessions: number; members: number; join_code: string; join_open: boolean }
+export interface CohortMember { user_id: string; display_name: string; track: string | null }
+export interface JoinPreview { cohort: string; programme: string; programme_name: string; tracks: { code: string; name: string }[]; open: boolean }
+
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await apiFetch(apiUrl(`/api/yaxa${path}`), init);
   if (!res.ok) {
@@ -293,6 +316,20 @@ const send = (method: string, body?: unknown): RequestInit => ({
 
 export const yaxa = {
   me: () => json<Me>("/me"),
+  week: () => json<WeekView>("/schedule/week"),
+  joinPreview: (code: string) => json<JoinPreview>(`/join/${encodeURIComponent(code)}`),
+  join: (code: string, track?: string | null) =>
+    json<{ ok: boolean; cohort: string }>(`/join/${encodeURIComponent(code)}`, send("POST", { track: track || null })),
+  calendarUrl: () => json<{ url: string }>("/me/calendar"),
+  resetCalendar: () => json<{ url: string }>("/me/calendar/reset", send("POST")),
+  cohorts: () => json<CohortRow[]>("/schedule/cohorts"),
+  cohort: (code: string) => json<CohortDetail>(`/schedule/cohorts/${encodeURIComponent(code)}`),
+  saveCohort: (c: CohortSchedule) => json<CohortSchedule>(`/schedule/cohorts/${encodeURIComponent(c.code)}`, send("PUT", c)),
+  copyCohort: (code: string, to: string, weeks: number) =>
+    json<CohortSchedule>(`/schedule/cohorts/${encodeURIComponent(code)}/copy`, send("POST", { to, weeks })),
+  cohortMembers: (code: string) => json<CohortMember[]>(`/schedule/cohorts/${encodeURIComponent(code)}/members`),
+  setMember: (code: string, userId: string, cohort: string, track: string | null) =>
+    json<{ ok: boolean }>(`/schedule/cohorts/${encodeURIComponent(code)}/members/${encodeURIComponent(userId)}`, send("PUT", { cohort, track })),
   saveProfile: (profile: Profile, display_name?: string) =>
     json<{ ok: boolean }>("/me/profile", send("PUT", { profile, display_name })),
   enrol: (programme: string, track?: string | null) =>

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { EnrolPicker } from "@/features/yaxa/enrol";
+import { ThisWeek } from "@/features/yaxa/week";
 import {
   yaxa,
   type ConversationSummary,
@@ -20,6 +21,7 @@ import {
   type ProgrammeView,
   type ReviewDue,
   type SimScenarioCard,
+  type WeekView,
 } from "@/lib/yaxa-api";
 
 function convHref(c: ConversationSummary) {
@@ -162,6 +164,7 @@ export default function LearnHome() {
   const [due, setDue] = useState<ReviewDue[]>([]);
   const [summary, setSummary] = useState<Record<string, ModuleSummary>>({});
   const [sims, setSims] = useState<SimScenarioCard[]>([]);
+  const [week, setWeek] = useState<WeekView | null>(null);
 
   useEffect(() => {
     if (me && !me.onboarded && !me.is_admin) router.replace("/learn/onboarding");
@@ -173,6 +176,7 @@ export default function LearnHome() {
     yaxa.practiceReview().then((r) => setDue(r.due)).catch(() => {});
     yaxa.practiceSummary().then((r) => setSummary(r.modules)).catch(() => {});
     yaxa.simScenarios().then(setSims).catch(() => {});
+    yaxa.week().then(setWeek).catch(() => {});
     if (me.is_admin && !me.enrolments.length) yaxa.catalog().then((c) => setAllProgrammes(c.programmes)).catch(() => {});
   }, [me]);
 
@@ -196,6 +200,7 @@ export default function LearnHome() {
           <Link href="/learn/onboarding">Edit your profile</Link>
         </p>
 
+        <ThisWeek week={week} />
         <CarryOn due={due} last={recent[0]} sim={activeSim} />
 
         {!enrolled && <EnrolPicker onDone={reload} />}

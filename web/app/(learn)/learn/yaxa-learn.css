@@ -291,3 +291,28 @@ a.yx-carry:hover, a.yx-module-link:hover { border-color: var(--yx-maroon-2); }
 .yx-unit-sub { font-size: 13px; margin: 16px 0 4px; font-family: var(--font-sans), system-ui, sans-serif; color: var(--yx-muted); text-transform: uppercase; letter-spacing: .06em; }
 .yx-readings { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 6px; font-size: 15.5px; }
 .yx-reading-kind { display: inline-block; min-width: 64px; margin-right: 8px; font-family: var(--font-sans), system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--yx-muted); }
+
+/* ---------- cohort life: this week, join, schedule ---------- */
+.yx-week-session { display: flex; flex-direction: column; gap: 6px; }
+.yx-week-title { font-size: 18px; font-weight: 600; color: var(--yx-ink); text-decoration: none; }
+.yx-week-title:hover { color: var(--yx-maroon); }
+.yx-week-note { margin: 0; font-size: 15px; }
+.yx-week-prep { margin: 4px 0 0; font-size: 15px; color: var(--yx-maroon); }
+.yx-week-readings { list-style: none; margin: 0; padding: 0; font-size: 15px; }
+.yx-week-readings li { margin: 2px 0; }
+.yx-week-readings li.is-done { color: var(--yx-muted); }
+.yx-week-readings li.is-done a { color: var(--yx-muted); }
+.yx-week-dates { list-style: none; padding: 0; margin: 12px 0 0; font-size: 15px; }
+.yx-week-dates li { margin: 3px 0; }
+.yx-week-calendar { margin-top: 10px; font-size: 15px; }
+.yx-week-calendar-panel { margin-top: 8px; display: grid; gap: 8px; max-width: 640px; }
+.yx-week-calendar-row { display: flex; gap: 8px; }
+.yx-week-calendar-row input { flex: 1; min-width: 0; font-family: ui-monospace, monospace; font-size: 13px; padding: 6px 8px; border: 1px solid var(--yx-line); border-radius: 6px; }
+.yx-linklike { background: none; border: 0; padding: 0; color: var(--yx-maroon); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.yx-sched-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.yx-sched-table th { text-align: left; font-weight: 600; padding: 6px 4px; border-bottom: 1px solid var(--yx-line); }
+.yx-sched-table td { padding: 4px; border-bottom: 1px solid var(--yx-line); vertical-align: top; }
+.yx-sched-table input, .yx-sched-table select { width: 100%; min-width: 0; padding: 4px 6px; border: 1px solid var(--yx-line); border-radius: 5px; font: inherit; }
+.yx-sched-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+.yx-sched-toolbar input, .yx-sched-toolbar select { padding: 5px 8px; border: 1px solid var(--yx-line); border-radius: 6px; font: inherit; }
+@media (max-width: 720px) { .yx-sched-scroll { overflow-x: auto; } .yx-sched-table { min-width: 720px; } }
