@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 import fcntl
 import json
 from pathlib import Path
+import re
 import secrets
 import threading
 import time
@@ -46,7 +47,11 @@ class Viewer:
 
     @property
     def name(self) -> str:
-        return self.user.display_name or self.cu.id
+        """The name others see. Never an email address (staff accounts often have one as their name)."""
+        name = (self.user.display_name or self.cu.id or "").strip()
+        if "@" in name:
+            name = re.sub(r"[._-]+", " ", name.split("@")[0]).title()
+        return name or "A member"
 
     def require_cohort(self) -> Cohort:
         if not self.cohort:

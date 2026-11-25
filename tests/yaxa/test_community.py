@@ -105,3 +105,10 @@ def test_mailer_not_configured_then_configured(tmp_path, monkeypatch):
     mailer.send("gcpp45@example.org", "Hello", "Body text")
     assert sent["to_host"] == ("smtp.example.org", 587) and sent["tls"] and sent["login"] == "u"
     assert sent["msg"]["To"] == "gcpp45@example.org" and sent["msg"]["Subject"] == "Hello"
+
+
+def test_name_never_shows_an_email_address(monkeypatch):
+    u = store.load_user("pk", display_name="pranay.k@example.org")
+    store.save_user(u)
+    monkeypatch.setattr(community, "_me", lambda: (SimpleNamespace(id="pk", is_admin=True), store.load_user("pk")))
+    assert community.viewer(None).name == "Pranay K"
