@@ -18,10 +18,15 @@ import re
 import secrets
 import tempfile
 
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 import yaml
 
 from . import store
+from .access import _me
+from .catalog import get_catalog
+
+router = APIRouter()
 
 IST = timezone(timedelta(hours=5, minutes=30))
 _CODE = re.compile(r"^[A-Z0-9-]{2,20}$")
@@ -130,3 +135,49 @@ def copy_schedule(src: Cohort, code: str, weeks: int) -> Cohort:
 def starts_at(s: Session) -> datetime:
     hh, mm = (int(x) for x in s.time.split(":")) if s.time else (0, 0)
     return datetime.combine(date.fromisoformat(s.date), time(hh, mm), tzinfo=IST)
+
+
+# ------------------------------------------------------------------ joining
+CLOSED = "This link is no longer open"
+
+
+def _open_cohort(code: str) -> Cohort:
+    c = cohort_by_join_code(code)
+    if not c or not c.join_open:
+        raise HTTPException(404, CLOSED)
+    return c
+
+
+@router.get("/join/{code}")
+async def join_preview(code: str) -> dict:
+    c = _open_cohort(code)
+    prog = get_catalog().programme(c.programme)
+    return {
+        "cohort": c.code,
+        "programme": c.programme,
+        "programme_name": prog.name if prog else c.programme,
+        "tracks": [{"code": t.code, "name": t.name} for t in (prog.tracks if prog else [])],
+        "open": True,
+    }
+
+
+class JoinBody(BaseModel):
+    track: str | None = None
+
+
+@router.post("/join/{code}")
+async def join(code: str, body: JoinBody) -> dict:
+    """Enrol in the link's cohort. Works even when self-enrolment is off: the link is the invitation."""
+    _, user = _me()
+    c = _open_cohort(code)
+    prog = get_catalog().programme(c.programme)
+    if not prog:
+        raise HTTPException(404, CLOSED)
+    old = next((e for e in user.enrolments if e.programme == prog.code), None)
+    track = body.track or (old.track if old else None)
+    if body.track and not prog.track(body.track):
+        raise HTTPException(400, f"{prog.code} has no track {body.track}")
+    user.enrolments = [e for e in user.enrolments if e.programme != prog.code]
+    user.enrolments.append(store.Enrolment(programme=prog.code, track=track, cohort=c.code))
+    store.save_user(user)
+    return {"ok": True, "programme": prog.code, "cohort": c.code, "track": track}

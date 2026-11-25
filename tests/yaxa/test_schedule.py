@@ -67,3 +67,58 @@ def test_join_code_lookup():
     assert schedule.cohort_by_join_code("abcDEF1234").code == "GCPP45"
     assert schedule.cohort_by_join_code("nope") is None
     assert len(schedule.new_join_code()) == 10
+
+
+# ------------------------------------------------------------------ task 2
+import asyncio  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+from fastapi import HTTPException  # noqa: E402
+
+from deeptutor.yaxa import store  # noqa: E402
+
+
+def _as(monkeypatch, uid: str, *, admin: bool = False, role: str = "student", enrolments=()):
+    user = store.load_user(uid, display_name=uid.title())
+    user.role = role
+    user.enrolments = list(enrolments)
+    store.save_user(user)
+    cu = SimpleNamespace(id=uid, is_admin=admin)
+    monkeypatch.setattr(schedule, "_me", lambda: (cu, store.load_user(uid)))
+    return cu
+
+
+def test_join_enrols_in_programme_and_cohort(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    _as(monkeypatch, "asha")
+    preview = asyncio.run(schedule.join_preview("abcDEF1234"))
+    assert preview["cohort"] == "GCPP45" and preview["open"] and {t["code"] for t in preview["tracks"]} >= {"DFA", "TP"}
+    out = asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody(track="DFA")))
+    assert out == {"ok": True, "programme": "GCPP", "cohort": "GCPP45", "track": "DFA"}
+    assert store.load_user("asha").enrolments == [store.Enrolment(programme="GCPP", track="DFA", cohort="GCPP45")]
+
+
+def test_join_moves_from_old_cohort_and_keeps_track(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    _as(monkeypatch, "ravi", enrolments=[store.Enrolment(programme="GCPP", track="APP", cohort="GCPP44")])
+    asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody()))
+    assert store.load_user("ravi").enrolments == [store.Enrolment(programme="GCPP", track="APP", cohort="GCPP45")]
+
+
+def test_closed_or_unknown_code_is_404(monkeypatch):
+    schedule.save_cohort(_gcpp45(join_open=False))
+    _as(monkeypatch, "asha")
+    for code in ("abcDEF1234", "unknown123"):
+        with pytest.raises(HTTPException) as e:
+            asyncio.run(schedule.join(code, schedule.JoinBody()))
+        assert e.value.status_code == 404 and e.value.detail == "This link is no longer open"
+
+
+def test_bad_track_is_400_and_join_ignores_self_enrol_switch(monkeypatch):
+    schedule.save_cohort(_gcpp45())
+    _as(monkeypatch, "asha")
+    monkeypatch.setattr(catalog.get_catalog().settings, "allow_self_enrol", False)
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody(track="XX")))
+    assert e.value.status_code == 400
+    assert asyncio.run(schedule.join("abcDEF1234", schedule.JoinBody(track="TP")))["ok"]
