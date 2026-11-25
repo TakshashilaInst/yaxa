@@ -1,16 +1,42 @@
 code: APP-CS
 title: Complexity Science
 kb: APP
-description: Advanced Public Policy specialisation. Seeing policy problems as complex adaptive systems, and the
-  tools for working with them.
+description: Advanced Public Policy specialisation. Seeing policy problems as complex adaptive systems, and the tools for
+  working with them.
 units:
 - id: CP61
   title: Complexity I
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp61-complexity
   aliases:
   - CP44
+  resources:
+  - kind: mandatory
+    title: Introduction to Complexity
+    url: https://media2-production.mightynetworks.com/asset/fb56fadf-ac5c-446f-8943-e6b6834732d6/Introdution_to_Complex_Systems.pdf
+    note: This book (Business Dynamics by John Sterman) chapter introduces the concept of complex systems and explores the
+      essential skills needed to cultivate systems thinking capabilities.
+    file: CP61 - Introduction to Complexity.pdf
+  - kind: mandatory
+    title: Causal Loop Diagrams
+    url: https://media2-production.mightynetworks.com/asset/adf0ea1e-426a-456f-b325-f464a6f8eff3/Causal_Loop_Diagrams.pdf
+    note: This chapter explains how causal loop diagrams can effectively represent the feedback structure within systems.
+    file: CP61 - Causal Loop Diagrams.pdf
+  - kind: mandatory
+    title: Stocks and Flow
+    url: https://media2-production.mightynetworks.com/asset/d439ce4c-0652-44e7-978c-fceabf9fe55c/Stocks_and_Flows.pdf
+    note: Understanding stocks and flows can provide valuable insights into significant problems. This chapter illustrates
+      this with a compelling example.
+    file: CP61 - Stocks and Flow.pdf
+  - kind: mandatory
+    title: Complexity Theory in Political Science and Public Policy
+    url: https://paulcairney.wordpress.com/wp-content/uploads/2013/08/cairney-2012-psr-complexity-theory.pdf
+    note: In this paper, Paul Cairney explores the application of complexity theory in public policy.
+  - kind: recommended
+    title: The Fifth Discipline
+    url: https://media2-production.mightynetworks.com/asset/5298d451-f42b-4cda-b25d-321dd96609c3/The_Fifth_Discipline.pdf
+    note: Chapters 5, 6, 7 and 8 from the book "The Fifth Discipline" by Peter Senge
+    file: CP61 - The Fifth Discipline.pdf
 - id: CP62
   title: Complexity II
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp62-complexity
+  resources: []

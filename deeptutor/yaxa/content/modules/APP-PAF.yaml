@@ -1,26 +1,77 @@
 code: APP-PAF
 title: Policy Analysis and Frameworks
 kb: APP
-description: Advanced Public Policy specialisation. Why markets, governments and societies fail, how change happens,
-  and how policies get implemented.
+description: Advanced Public Policy specialisation. Why markets, governments and societies fail, how change happens, and how
+  policies get implemented.
 units:
 - id: CP41
   title: Policy Analysis
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp41-policy-analysis
+  resources: []
 - id: CP42
   title: Market, Government, and Societal Failures in Public Policy
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-42-market-government-and-societal-failures-in-public-policy
+  resources:
+  - kind: mandatory
+    title: In Service of the Republic
+    url: https://media2-production.mightynetworks.com/asset/939d8aca-2c05-4e56-887f-637248048303/11__12__16_17_20_-_In_service_of_the_republic__the_art_and_science_of_economic_policy_by_Kelkar__Vijay_L._Shah__Ajay__z-lib.org_.epub__dragged_.pdf
+    note: Chapters 11, 12, 16, 17 and 20
+    file: CP42 - In Service of the Republic.pdf
+  - kind: recommended
+    title: Bill Gates wants to give the poor chickens. What they need is cash.
+    url: https://media2-production.mightynetworks.com/asset/66a8d29b-040f-4679-a26b-d60305d17f93/Bill_Gates_wants_to_give_the_poor_chickens._What_they_need_is_cash._-_Vox.pdf
+    file: CP42 - Bill Gates wants to give the poor chickens. What they need is cash.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/fe89999d-796a-41e6-8a97-5f6ce696e4b7/Self_Assessment_-_CP42_Failures_in_public_policy_I_and_II.pdf
+    note: to assess your understanding of this module.
+    file: CP42 - self-assessment quiz.pdf
 - id: CP43
   title: Effecting Change
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp43-effecting-change-107476426
+  resources:
+  - kind: mandatory
+    title: In Service of the Republic
+    url: https://media2-production.mightynetworks.com/asset/6b8c65c4-4658-424c-97d4-6b11b2a51858/19__20_-_In_service_of_the_republic__the_art_and_science_of_economic_policy_by_Kelkar__Vijay_L._Shah__Ajay__z-lib.org_.epub__dragged_.pdf
+    note: Chapters 29 and 30
+    file: CP43 - In Service of the Republic.pdf
+  - kind: mandatory
+    title: Public Policymaking in India
+    url: https://media2-production.mightynetworks.com/asset/07041504-b668-4611-ab5c-46635396e5ab/Public_Policymaking_in_India.pdf
+    note: Chapter 9
+    file: CP43 - Public Policymaking in India.pdf
+  - kind: mandatory
+    title: Escaping Capability Traps through Problem-Driven Iterative Adaptation (PDIA)
+    url: https://media2-production.mightynetworks.com/uploads/6c9ad9d0-faa2-4cbc-ab05-16c190c1b5db/1426292_file_Andrews_Pritchett_Woolcock_traps_FINAL_0.pdf
+    file: CP43 - Escaping Capability Traps through Problem-Driven Iterative Adaptation (PDIA).pdf
+  - kind: recommended
+    title: A DIY Approach to Solving Complex Problems
+    url: https://media2-production.mightynetworks.com/uploads/74619599-4742-4412-9250-80e532c9960a/20181017_PDIAtoolkit_Version_12_FINAL_45a79cfe41395b59.pdf
+    file: CP43 - A DIY Approach to Solving Complex Problems.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/cbbe1abc-4834-4875-893b-8b8d2a507aac/GCPP35_Self_Assessment_-_CP43_Effecting_Change.pdf
+    note: to assess your understanding of this module.
+    file: CP43 - self-assessment quiz.pdf
 - id: CP45
   title: Implementation Frameworks and Banishing Bureaucracy
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp45-implementation-frameworks
+  resources:
+  - kind: mandatory
+    title: 'Diplomacy and Domestic Politics: The Logic of Two-Level Games'
+    url: https://www.diplomacy.edu/wp-content/uploads/2021/11/putnamdiplomacy-and-doestic-politicspdf.pdf
+  - kind: mandatory
+    title: 'Sequencing in the construction of State capacity: Walk before you can run'
+    url: https://bsc.hks.harvard.edu/2017/07/17/sequencing-in-the-construction-of-state-capacity-walk-before-you-can-run/
 - id: CP46
   title: Reflections on Policy Practice
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp46-reflections-on-policy-practice
+  resources:
+  - kind: mandatory
+    title: Politics and the Indian Language
+    url: https://media2-production.mightynetworks.com/asset/f6468c11-1c6c-4bec-b3b3-4e6aea758a2b/Politics_and_the_English_Language.pdf
+    file: CP46 - Politics and the Indian Language.pdf
+  - kind: mandatory
+    title: This Article Wonʼt Change Your Mind
+    url: https://media2-production.mightynetworks.com/asset/55f5355d-2438-4a89-9cbe-0b9d601506b7/This_Article_Won_t_Change_Your_Mind_-_The_Atlantic.pdf
+    file: CP46 - This Article Wonʼt Change Your Mind.pdf

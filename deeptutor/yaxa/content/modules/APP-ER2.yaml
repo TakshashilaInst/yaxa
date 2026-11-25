@@ -1,46 +1,389 @@
 code: APP-ER2
 title: Economic Reasoning II
 kb: APP
-description: Advanced Public Policy specialisation. Government failures and price controls, market failures, currency
-  and the balance of payments, fiscal and monetary policy.
+description: Advanced Public Policy specialisation. Government failures and price controls, market failures, currency and
+  the balance of payments, fiscal and monetary policy.
 units:
 - id: CP50
   title: Price and Price Controls
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-50-price-and-price-controls-107476446
+  resources:
+  - kind: mandatory
+    title: 'Price Controls: Still a bad idea'
+    url: https://www.hoover.org/research/price-controls-still-bad-idea
+    note: An essay by David R. Henderson
+  - kind: mandatory
+    title: Price Controls
+    url: https://www.econlib.org/library/Enc/PriceControls.html
+    note: An essay by Hugh Rockoff
+  - kind: mandatory
+    title: 'Price Ceilings: Shortages and Quality Reduction'
+    url: https://youtu.be/RBGHmCIBr9M
+    note: This MRU video explains how price ceilings lead to a shortage of goods and low-quality goods.
+  - kind: mandatory
+    title: 'Price Ceilings: Misallocation of Resources'
+    url: https://youtu.be/yiSrxuZW1zI
+    note: This MRU video demonstrates how price controls render the price signals ineffective, leading to the misallocation
+      of resources.
+  - kind: mandatory
+    title: Price Ceilings
+    url: https://youtu.be/YbLAASzzo6A
+    note: Price ceilings lead to deadweight loss. This MRU video shows how to calculate deadweight loss.
+  - kind: mandatory
+    title: Rent Control in New York
+    url: https://www.aier.org/article/the-perpetual-tragedy-of-new-yorks-rent-control/
+    note: '& in Mumbai: Essays that point out how rent controls distort the incentives of builders and developers, leading
+      to consistent degradation of the housing stock.'
+  - kind: mandatory
+    title: Price caps on stents
+    url: https://www.livemint.com/Science/SxE5A08NgQbC5x2lQpZTzM/Patients-did-not-benefit-from-reduced-stent-prices-Study.html
+    note: This article shows how price caps on stents have not benefitted patients.
+  - kind: recommended
+    title: Price Controls and Their Effects
+    url: https://www.e-education.psu.edu/ebf200/node/161
+    note: A slightly advanced read exploring the effects of price controls.
+  - kind: recommended
+    title: Price Controls Cause Shortages
+    url: https://fee.org/articles/price-controls-and-shortages/
+    note: An essay by George Reisman
+  - kind: recommended
+    title: A Day in the Venezuelan black markets
+    url: https://www.marketplace.org/2016/03/23/day-out-black-market-venezuela/
+    note: A podcast that explores the consequence of having price controls on various products.
+  - kind: recommended
+    title: Uncle Sam wants YOU to fight inflation
+    url: https://www.npr.org/2022/02/04/1078374263/uncle-sam-wants-you-to-fight-inflation
+    note: A podcast on the series of price controls enacted in the United States during the World War. These measures lead
+      to a thriving underground economy.
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/c2921b37-c084-4c5a-acf8-3ac398f17f0e/Self_Assessment__GCPP35_Price_and_Price_Controls.pdf
+    note: to assess your understanding of this module.
+    file: CP50 - self-assessment quiz.pdf
 - id: CP51
   title: Taxes and Subsidies
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-51-taxes-and-subsidies-107476449
+  resources:
+  - kind: mandatory
+    title: Who pays the tax?
+    url: https://youtu.be/1H5uU_6Ax_4
+    note: This MRU video explains who bears the burden of a tax.
+  - kind: mandatory
+    title: Tax revenue and deadweight loss
+    url: https://youtu.be/dbuU8S1x0Ro
+    note: This MRU video shows how taxes affect consumer surplus and producer surplus.
+  - kind: mandatory
+    title: Subsidies
+    url: https://youtu.be/LTFxRlACebk
+    note: This MRU video explains how a subsidy plays out. Who benefits the most from a subsidy?
+  - kind: mandatory
+    title: Berkeley has America’s first soda tax, but stores are barely raising drink prices
+    url: https://www.vox.com/2015/8/20/9181891/berkeley-soda-tax
+    note: A news article on the effectiveness of soda taxes.
+  - kind: recommended
+    title: Types of Subsidies
+    url: https://media2-production.mightynetworks.com/asset/10221c5a-6473-45bc-82c5-3782cf47c3c5/Types_of_subsidies.pdf
+    note: A slightly advanced but in-depth exploration of subsidies.
+    file: CP51 - Types of Subsidies.pdf
 - id: CP52
   title: Externalities
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-52-externalities
+  resources:
+  - kind: mandatory
+    title: An Introduction to Externalities
+    url: https://youtu.be/CpVf11f09Pk
+    note: This MRU video is an introduction to externalities, including the concepts of private cost, external cost, and social
+      cost.
+  - kind: mandatory
+    title: Externalities
+    url: https://media2-production.mightynetworks.com/asset/9661d23f-9a72-4301-a43a-873dc75577ab/Externalities_-_Econlib.pdf
+    note: An essay by Bryan Caplan
+    file: CP52 - Externalities.pdf
+  - kind: mandatory
+    title: External Benefits
+    url: https://youtu.be/1G-_HL9ZE24
+    note: This MRU video discusses how vaccines produce positive externalities that help people stay healthy.
+  - kind: mandatory
+    title: The Coase Theorem
+    url: https://youtu.be/00HPak2RLlQ
+    note: This video shows how bees and pollination demonstrate the Coase Theorem in action.
+  - kind: mandatory
+    title: Trading Pollution
+    url: https://youtu.be/9tUb3MDrgEc
+    note: Watch this video to discover how the invisible hand of the market helped discover the lowest-cost way of reducing
+      pollution.
+  - kind: mandatory
+    title: Command and Control Solutions
+    url: https://youtu.be/gRolVmFOk1U
+    note: When do a command and control solution to a problem make the most sense? This video looks at the eradication of
+      smallpox as one example.
+  - kind: recommended
+    title: 'Externality: Origins and Classifications'
+    url: https://digitalrepository.unm.edu/cgi/viewcontent.cgi
+    note: A slightly advanced reading, this paper by Donald J. Boudreaux & Roger Meiners explores the origins and classification
+      of externalities.
+  - kind: recommended
+    title: Air Pollution Kills
+    url: https://marginalrevolution.com/marginalrevolution/2019/07/air-pollution-kills.html
+    note: A Blog by Alex Tabarrok
+  - kind: recommended
+    title: Is Public Schooling a Public Good?
+    url: https://www.cato.org/policy-analysis/public-schooling-public-good-analysis-schooling-externalities
+    note: A slightly advanced reading. This is an analysis of externalities associated with schooling
+  - kind: recommended
+    title: How Stupid Is Our Obsession With Lawns?
+    url: https://freakonomics.com/podcast/how-stupid-is-our-obsession-with-lawns/
+    note: '"Lawns" are beautiful. But they impose costs on third parties. Listen to this Freakonomics Radio podcast.'
+  - kind: recommended
+    title: The long-run consequences of Chernobyl
+    url: https://www.sciencedirect.com/science/article/abs/pii/S0047272716000025
+    note: A slightly advanced reading that measures the welfare loss from the largest nuclear accident.
+  - kind: recommended
+    title: Economic Scene; When it comes to enforcing taste, it's best to tread lightly -- if at all
+    url: https://media2-production.mightynetworks.com/asset/7ab4a9f0-bb4b-425d-bb68-ae46d585cd0d/Economic_Scene__When_it_comes_to_enforcing_taste__it_s_best_to_tread_lightly_--_if_at_all._-_The_New_York_Times.pdf
+    note: A NYT article that talks about the spillover effect of poor aesthetics.
+    file: CP52 - Economic Scene; When it comes to enforcing taste, it's best to tread lightly -- if at all.pdf
+  - kind: recommended
+    title: 'Orange Blossom Special: Externalities and the Coase Theorem'
+    url: https://media2-production.mightynetworks.com/asset/f87b3bfa-efd8-4161-ae33-2f470ba00368/Orange_Blossom_Special__Externalities_and_the_Coase_Theorem_-_Econlib.pdf
+    note: An essay by Michael Munger.
+    file: CP52 - Orange Blossom Special Externalities and the Coase Theorem.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/c488efa8-818f-433f-a85d-22cdcc891783/GCPP35_Self_Assessment_-_CP53_Introduction_to_Market_Failures_and_Externality_.pdf
+    note: to assess your understanding of this module.
+    file: CP52 - self-assessment quiz.pdf
 - id: CP53
   title: Public Goods
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-53-public-goods
+  resources:
+  - kind: mandatory
+    title: Introduction to Public Goods
+    url: https://www.econlib.org/library/Enc/PublicGoods.html
+    note: An Essay by Tyler Cowen.
+  - kind: mandatory
+    title: Public Goods and Asteroid Defence
+    url: https://youtu.be/lLzcW5NG5eA
+    note: Can the markets provide for asteroid defence mechanism? This MRU video uses the case of asteroid defence to explain
+      the concept of public goods.
+  - kind: mandatory
+    title: A deeper look at Public Goods
+    url: https://youtu.be/hA2z-X31IvI
+    note: How can goods be classified? This MRU video categorises goods based on two properties - rivalry and excludability.
+  - kind: recommended
+    title: Ending the tragedy of commons
+    url: https://youtu.be/Qr5Q3VvpI7w
+    note: Elinor Ostrom, the Nobel-prize winning economist argues that, contrary to the widespread theory, with the right
+      governance, humans are likely to forge peaceful solutions to coping with resource scarcity.
+  - kind: recommended
+    title: The Public Goods Dilemma
+    url: https://www.econlib.org/library/Columns/y2006/Jasayfailureii.html
+    note: Anthony de Jasay explains the public goods dilemma and the potential solutions.
+  - kind: recommended
+    title: 'The Public Goods Model vs. Social Desirability Bias: A Case of Observational Equivalence'
+    url: https://media2-production.mightynetworks.com/asset/99c28d76-be8a-4ec2-8540-596d591325cc/The_Public_Goods_Model_vs._Social_Desirability_Bias__A_Case_of_Observational_Equivalence_-_Econlib__1_.pdf
+    note: An essay by Bryan Caplan
+    file: CP53 - The Public Goods Model vs. Social Desirability Bias A Case of Observational Equivalence.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/44137755-2baa-4210-be33-c5279c4a1319/GCPP35_Self_Assessment_-_CP54_Public_Goods_.pdf
+    note: to assess your understanding of this module.
+    file: CP53 - self-assessment quiz.pdf
 - id: CP54
   title: Information Asymmetry
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-54-information-asymmetry
+  resources:
+  - kind: mandatory
+    title: Implications of Costly Information
+    url: https://media2-production.mightynetworks.com/asset/be253353-53d9-4ead-aa94-90a2c4b1c221/Implications_of_Costly_Information_-_Econlib.pdf
+    note: An essay by Morgan Rose
+    file: CP54 - Implications of Costly Information.pdf
+  - kind: mandatory
+    title: Asymmetric Information and used cars
+    url: https://youtu.be/sXPXpJ5vMnU
+    note: This MRU video demonstrates how sellers in the market for used cars have more information about the car’s quality
+      than buyers, which leads to the death spiral of the market.
+  - kind: mandatory
+    title: Asymmetric Information and Health Insurance
+    url: https://youtu.be/pUkRo9COd38
+    note: Consumers possess more information about their health compared to insurers. How does this impact the health insurance
+      market? The MRU video excellently captures and explains this impact.
+  - kind: mandatory
+    title: Moral Hazard
+    url: https://youtu.be/5v7TWKlYoN0
+    note: When one party has an information advantage, it has an incentive to exploit the other party. This MRU video explains
+      the concept of "moral hazard".
+  - kind: mandatory
+    title: Moral Hazard May Be Negating Efforts To Decrease Opioid Overdoses
+    url: https://www.forbes.com/sites/adammillsap/2018/03/08/moral-hazard-may-be-negating-efforts-to-decrease-opioid-overdoses/
+    note: A Forbes article where the authors highlight that opioid abuse has increased after it has become less risky and
+      less costly.
+  - kind: mandatory
+    title: Solutions to Moral Hazard
+    url: https://youtu.be/6faL76QZ2AA
+    note: This MRU video explores some solutions to moral hazard.
+  - kind: mandatory
+    title: What Is the Principal-Agent Problem?
+    url: https://youtu.be/kd2r3ARB2tk
+    note: This MRU video talks about how the principal-agent problem with some interesting examples.
+  - kind: mandatory
+    title: Signalling
+    url: https://youtu.be/F8ZHZRMSxKg
+    note: A signal is an action that reveals information. Watch this video for some examples.
+  - kind: recommended
+    title: 'The Market for "Lemons": Quality Uncertainty and the Market Mechanism'
+    url: https://www.sfu.ca/~wainwrig/Econ400/akerlof.pdf
+    note: George A. Akerlof's widely cited paper.
+  - kind: recommended
+    title: A Closer Look at Adverse Selection and Mandatory Insurance
+    url: https://www.econlib.org/archives/2009/07/a_closer_look_a.html
+    note: An Essay by Bryan Caplan.
+  - kind: recommended
+    title: Moral Hazard and Health Insurance
+    url: https://www.econlib.org/moral-hazard-and-health-insurance/
+    note: An Essay by Kevin Corcoran.
+  - kind: recommended
+    title: Firefighters in Sicily accused of starting blazes for cash
+    url: https://www.theguardian.com/world/2017/aug/07/firefighters-arrested-in-sicily-for-starting-blazes-to-earn-extra-money
+    note: A news article on misaligned incentives.
+  - kind: recommended
+    title: Corruption is BOTH a “Principal-Agent Problem” AND a “Collective Action Problem
+    url: https://media2-production.mightynetworks.com/asset/d8d3e380-4165-43e6-b519-e6084870192f/Corruption_is_BOTH_a__Principal-Agent_Problem__AND_a__Collective_Action_Problem____GAB___The_Global_Anticorruption_Blog.pdf
+    note: An interesting analysis of corruption.
+    file: CP54 - Corruption is BOTH a “Principal-Agent Problem” AND a “Collective Action Problem.pdf
+  - kind: recommended
+    title: The Liars Of Romance
+    url: https://www.npr.org/sections/money/2018/09/11/646735351/the-liars-of-romance
+    note: A Planet Money podcast on the information asymmetry in the dating World.
+  - kind: recommended
+    title: 'Econ Duel: Is Education Signalling or Skill Building?'
+    url: https://youtu.be/MvWnyUT7vPk
+    note: Individuals with college degrees earn more in their lifetime than individuals with only a high school diploma. Is
+      this because education is about building skills, or does it serve only to transmit intangible traits, like
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/671ae6e1-a4d3-45f7-8c5f-3d3d630c4c93/GCPP35_Self_Assessment_-_CP52_Information_Asymmetry.pdf
+    note: to assess your understanding of this module.
+    file: CP54 - self-assessment quiz.pdf
 - id: CP55
   title: Market Structure
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-55-market-structure-107476459
+  resources:
+  - kind: mandatory
+    title: 'Oligopoly: Competition Among the Few'
+    url: https://media2-production.mightynetworks.com/asset/b89cb26c-4a7a-4df0-9d9f-dc318c9a314f/11.2_Oligopoly__Competition_Among_the_Few___Principles_of_Economics.pdf
+    file: CP55 - Oligopoly Competition Among the Few.pdf
+  - kind: mandatory
+    title: Monopoly
+    url: https://media2-production.mightynetworks.com/asset/ef82601f-3ed6-4349-8d2c-78a361e37693/Monopoly_By_George_J._Stigler.pdf
+    file: CP55 - Monopoly.pdf
 - id: CP56
   title: Fiscal and Monetary Policy
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-56-fiscal-and-monetary-policy
+  resources:
+  - kind: mandatory
+    title: Introduction to Fiscal Policy
+    url: https://youtu.be/4FNdUTN4cHY
+    note: A quick introduction to fiscal policy. (MRU video)
+  - kind: mandatory
+    title: 'Fiscal Policy: The Best Case Scenario'
+    url: https://youtu.be/NMlmij7FRkI
+    note: Why is it hard to get expansionary fiscal policy right? (MRU video)
+  - kind: mandatory
+    title: 'Monetary Policy: The Best Case Scenario'
+    url: https://youtu.be/Qocx1Wh4BZo
+    note: A quick introduction to monetary policy
+  - kind: recommended
+    title: 'Introduction: The Macroeconomics of Fiscal Policy'
+    url: https://media2-production.mightynetworks.com/asset/4acea37f-cd5b-41f2-adc6-8a04c327bf6e/introduction_to_Fiscal_Policy.pdf
+    note: A paper by Kopcke, Tootell, and Triest discusses the macroeconomics of fiscal policy.
+    file: CP56 - Introduction The Macroeconomics of Fiscal Policy.pdf
+  - kind: recommended
+    title: Fiscal Dominance – A Theory of Everything in India
+    url: https://media2-production.mightynetworks.com/asset/afd8aab6-dd0a-4eea-b50c-b2908ac1b385/Fiscal_Dominance___A_Theory_of_Everything_in_India.pdf
+    note: A paper by IPPR discusses the various channels through which fiscal dominance influences financial stability within
+      the Indian context.
+    file: CP56 - Fiscal Dominance – A Theory of Everything in India.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/f496bbe6-df90-4b8f-a7dc-3c79adb641ee/Self_Assessment_-_CP56_Fiscal_and_Monetary_policy.pdf
+    note: to assess your understanding of this module.
+    file: CP56 - self-assessment quiz.pdf
 - id: CP57
   title: Currency and Balance of Payments
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-57-currency-and-balance-of-payments-107476469
+  resources:
+  - kind: mandatory
+    title: The Murky Connections between Trade and Exchange Rate
+    url: https://media2-production.mightynetworks.com/asset/ab2378da-e2f8-411b-a1f2-ad0c7f4e6ed6/The_Murky_Connections_between_Trade_and_Exchange_Rate___by_Anupam_Manur___Indian_National_Interest.pdf
+    file: CP57 - The Murky Connections between Trade and Exchange Rate.pdf
+  - kind: mandatory
+    title: Does a strong currency mean a strong economy?
+    url: https://media2-production.mightynetworks.com/asset/fa608ad6-a509-4758-ae56-27aca40df85f/Does_a_strong_currency_mean_a_strong_economy____by_Anupam_Manur___Indian_National_Interest.pdf
+    file: CP57 - Does a strong currency mean a strong economy.pdf
+  - kind: mandatory
+    title: 'Current Account Deficits: Is There a Problem?'
+    url: https://media2-production.mightynetworks.com/asset/d3de04fb-1ba5-4e7b-80a6-bcc21020a50f/Current_Account_Deficits__Is_There_a_Problem__-_Back_to_Basics__Finance___Development.pdf
+    file: CP57 - Current Account Deficits Is There a Problem.pdf
+  - kind: mandatory
+    title: Balance of Payments (BOP)
+    url: https://media2-production.mightynetworks.com/asset/797665d4-c27c-4b8a-9958-37b8c2dd7b3f/Balance_of_Payments__BOP__Definition.pdf
+    file: CP57 - Balance of Payments (BOP).pdf
 - id: CP58
   title: Introduction to Public Finance
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-cp-58-introduction-to-public-finance-107476473
+  resources:
+  - kind: mandatory
+    title: 'Public Finance in India: Some Reflections'
+    url: https://media2-production.mightynetworks.com/asset/384eb8fa-c466-4a47-b5a7-2cf65edb67b5/504645_1563514330.pdf
+    note: A paper by Dr. M. Govinda Rao provides a bird's eye view of India's public finance landscape in the context of its
+      economic development.
+    file: CP58 - Public Finance in India Some Reflections.pdf
+  - kind: recommended
+    title: Redesigning the Fiscal Transfer System in India
+    url: https://media2-production.mightynetworks.com/asset/cd1c39a2-0ad6-47a6-aba9-e11b7b1f5a7b/504643_1563514087.pdf
+    note: This paper elucidates the role of intergovernmental finance in ensuring comparable levels of basic social services
+      and physical infrastructure provision.
+    file: CP58 - Redesigning the Fiscal Transfer System in India.pdf
+  - kind: recommended
+    title: Dictatorship, Democracy, and Development
+    url: https://media2-production.mightynetworks.com/asset/612c60bf-6d57-43e0-979c-aa429b053d44/282146.pdf
+    note: An exploration of the linkages between a stationary bandit and the government in an advanced reading.
+    file: CP58 - Dictatorship, Democracy, and Development.pdf
+  - kind: self_assessment
+    title: self-assessment quiz
+    url: https://media2-production.mightynetworks.com/asset/61db6539-9bfc-4ae7-9f72-0fe1db18f76e/GCPP35_Self_Assessment_-_Introduction_to_Public_Finance__1_.pdf
+    note: to assess your understanding of this module.
+    file: CP58 - self-assessment quiz.pdf
 - id: CT36
   title: Market Power and Regulation
   outcomes: ''
-  lms_url: https://opentakshashila.net/posts/app-45-ct36-market-power-and-regulation
+  resources:
+  - kind: mandatory
+    title: TRP Regulating Platforms - Anupam Manur
+    url: https://media2-production.mightynetworks.com/asset/d41c1289-7c7f-4f5c-b948-bf0a518bd198/TRP_Regulating_Platforms_-_Anupam_Manur.pdf
+    file: CT36 - TRP Regulating Platforms - Anupam Manur.pdf
+  - kind: mandatory
+    title: How to Regulate Internet Platforms Without Breaking Them - Anupam Manur
+    url: https://media2-production.mightynetworks.com/asset/9c1d68f6-c33d-4520-91dc-e6cf56063ffd/How_to_Regulate_Internet_Platforms_Without_Breaking_Them_-_Anupam_Manur.pdf
+    file: CT36 - How to Regulate Internet Platforms Without Breaking Them - Anupam Manur.pdf
+  - kind: mandatory
+    title: Go Easy on Amazon and Flipkart - Anupam Manur
+    url: https://media2-production.mightynetworks.com/asset/102c52b3-db4b-466b-8d65-d747425bde75/Go_Easy_on_Amazon_and_Flipkart_-_Anupam_Manur.pdf
+    file: CT36 - Go Easy on Amazon and Flipkart - Anupam Manur.pdf
+  - kind: recommended
+    title: Amazon Antitrust Paradox - Lina M Khan
+    url: https://media2-production.mightynetworks.com/asset/95207123-24e7-4463-bcd3-87ac0e60410c/Amazon_Antitrust_Paradox_-_Lina_M_Khan.pdf
+    file: CT36 - Amazon Antitrust Paradox - Lina M Khan.pdf
+  - kind: recommended
+    title: Online Platforms and the Digital Single Market - House of Lords
+    url: https://media2-production.mightynetworks.com/asset/6158de87-4ab6-4b2d-9c31-48a6b8aebf51/Online_Platforms_and_the_Digital_Single_Market_-_House_of_Lords.pdf
+    file: CT36 - Online Platforms and the Digital Single Market - House of Lords.pdf
+  - kind: recommended
+    title: Protecting Consumers In Peer Platform Markets - OECD
+    url: https://media2-production.mightynetworks.com/asset/a2c46b26-628b-4c1b-82f3-c0c627dd265e/Protecting_Consumers_In_Peer_Platform_Markets_-_OECD.pdf
+    file: CT36 - Protecting Consumers In Peer Platform Markets - OECD.pdf
+  - kind: recommended
+    title: Sources of Platform Power - Lina M Khan
+    url: https://media2-production.mightynetworks.com/asset/cc9bfeaa-7c58-4d4d-9f2d-1beab8fc23c9/Sources_of_Platform_Power_-_Lina_M_Khan.pdf
+    file: CT36 - Sources of Platform Power - Lina M Khan.pdf

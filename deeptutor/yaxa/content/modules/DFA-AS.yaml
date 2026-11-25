@@ -1,17 +1,111 @@
 code: DFA-AS
 title: Introduction to Arthashastra
 kb: DFA
-description: Defence and Foreign Affairs specialisation. Kautilya's treatise on statecraft and its relevance to
-  modern international relations and strategy.
+description: Defence and Foreign Affairs specialisation. Kautilya's treatise on statecraft and its relevance to modern international
+  relations and strategy.
 units:
 - id: CS21
   title: 'Kautilya''s Arthashastra: An Introduction'
   outcomes: The text, its author and vocabulary, and reading it beyond popular stereotypes.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs21-kautilyas-arthashastra-an-introduction
+  resources:
+  - kind: mandatory
+    title: Book One ‘Concerning the Topic of Training’ Pg 1 to 14
+    url: https://media2-production.mightynetworks.com/asset/6aaea9ef-899a-4885-bf58-c05d1c6b1d85/Book_One__Concerning_the_Topic_of_Training__Pg_1_to_14.pdf
+    note: This reading covers the aspects of training of the prince for the duties of rulership.
+    file: CS2 - Book_One__Concerning_the_Topic_of_Training__Pg_1_to_14.pdf
+  - kind: mandatory
+    title: 'Chanakya: Latent Influence on Indian Strategic Thoughts'
+    url: https://chanakyaforum.com/chanakya-latent-influence-on-indian-strategic-thoughts/
+    note: An article written by Dr Kajari Kamal on Chankaya and the influence of his Arthashastra on Indian strategic thoughts.
+  - kind: mandatory
+    title: Glossary
+    url: https://media2-production.mightynetworks.com/asset/6105fc5d-5d5a-4fef-9939-097d9c10280d/Glossary.pdf
+    note: A glossary of Sanskrit and Hindi terms.
+    file: CS21 - Glossary.pdf
+  - kind: mandatory
+    title: In Search of the India Way - Dr Kajari Kamal
+    url: https://media2-production.mightynetworks.com/asset/1cbf02f9-799f-4e9b-8a29-f7797a23fefc/In_Search_of_the_India_Way_-_Dr_Kajari_Kamal.pdf
+    note: Dr Kajari Kamal combines the discourse in three texts on Indian statecraft that helps identify and shape India’s
+      narrative or ‘grand ideology’ as a rising power.
+    file: CS2 - In_Search_of_the_India_Way_-_Dr_Kajari_Kamal.pdf
+  - kind: mandatory
+    title: Introduction
+    url: https://media2-production.mightynetworks.com/asset/8d1086e0-4820-4610-b8df-4b336a7746f2/Introduction_compressed__1_.pdf
+    note: This is a helpful reading that highlights the central ideas and concepts of the Arthashastra with respect to domestic
+      and foreign policy and the relevance of them in a post independence India.
+    file: CS2 - Introduction_compressed__1_.pdf
+  - kind: mandatory
+    title: Kautilyan Strategy for Hybrid Scenarios - Brig Nick Sawyer
+    url: https://media2-production.mightynetworks.com/asset/d32cfe97-995f-419d-a212-d7fa3e432d3b/Kautilyan_Strategy_for_Hybrid_Scenarios_-_Brig_Nick_Sawyer.pdf
+    note: Brig Nick Sawyer (British Army) investigates whether Kautilya's work can be analysed to develop a new strategic
+      toolset better suited to complex and hybrid scenarios.
+    file: CS2 - Kautilyan_Strategy_for_Hybrid_Scenarios_-_Brig_Nick_Sawyer.pdf
+  - kind: mandatory
+    title: 'Statecraft and International Relations: Contemporary Lessons from Ancient India (ORF)'
+    url: https://media2-production.mightynetworks.com/asset/9916a500-946b-4906-8e91-15092c2874b1/Statecraft_and_International_Relations__Contemporary_Lessons_from_Ancient_India___ORF.pdf
+    file: CS2 - Statecraft_and_International_Relations__Contemporary_Lessons_from_Ancient_India___ORF.pdf
+  - kind: mandatory
+    title: Imaging Kautilya Beyond Popular Stereotypes
+    url: https://media2-production.mightynetworks.com/asset/07ef8415-1b71-4a3d-bfbf-351e53b0f752/Imaging_Kautilya_Beyond_Popular_Stereotypes.pdf
+    file: CS2 - Imaging_Kautilya_Beyond_Popular_Stereotypes.pdf
+  - kind: recommended
+    title: India's Strategic Culture and its Kautilyan Lineage
+    url: https://media2-production.mightynetworks.com/asset/a8057996-1e56-46ad-920d-ef2444855692/India_s_Strategic_Culture_and_its_Kautilyan_Lineage.pdf
+    file: CS21 - India's Strategic Culture and its Kautilyan Lineage.pdf
+  - kind: recommended
+    title: 'Kauṭilya Arthaśāstra: A Classic Text of Statecraft and an Untapped Political Science Resource'
+    url: https://media2-production.mightynetworks.com/asset/a0d5da5c-ddc2-48a8-8919-a25681b80a5f/Kaut_ilya_Arthas_a_stra_A_Classic_Text_of_Statecraft_and_an_Untapped_Political_Science_Resource.pdf
+    file: CS21 - Kauṭilya Arthaśāstra A Classic Text of Statecraft and an Untapped Political Science Resour.pdf
+  - kind: recommended
+    title: One Hundred Years of Kautilya’s Arthashastra
+    url: https://media2-production.mightynetworks.com/asset/f301ec75-2b45-4408-87b0-a23f6bce4c27/One_Hundred_Years_of_Kautilya_s_Arthashastra.pdf
+    file: CS21 - One Hundred Years of Kautilya’s Arthashastra.pdf
+  - kind: recommended
+    title: Revisiting the Arthasastra – Back to Understanding IR
+    url: https://media2-production.mightynetworks.com/asset/0bae5d97-ae1e-4170-ac15-78acfb172626/Revisiting_the_Arthasastra___Back_to_Understanding_IR.pdf
+    file: CS21 - Revisiting the Arthasastra – Back to Understanding IR.pdf
+  - kind: recommended
+    title: The Text as Tradition – Interpreting India’s Strategic History
+    url: https://media2-production.mightynetworks.com/asset/a92d27dd-b964-423a-9224-8bef2f2ef89a/The_Text_as_Tradition___Interpreting_India_s_Strategic_History.pdf
+    file: CS21 - The Text as Tradition – Interpreting India’s Strategic History.pdf
+  - kind: recommended
+    title: Decoding the Bangladesh crisis through the lens of Kautilya
+    url: https://www.orfonline.org/expert-speak/decoding-the-bangladesh-crisis-through-the-lens-of-kautilya
 - id: CS22
   title: 'Concept Cluster I: Anvikshiki, Matsya-nyaya, Rajadharma and Saptanga Theory'
   outcomes: Anvikshiki, matsya-nyaya, rajadharma and the saptanga theory of the state.
-  lms_url: https://opentakshashila.net/posts/dfa-specialisation-dfa27-gcpp45-cs22-concept-cluster-i-anvikshiki-matsya-nyaya-rajadharma-and-saptanga-theory
+  resources:
+  - kind: mandatory
+    title: Generality of Kautilyan Tenets Informed by Unique Indianness - Dr. Kajari Kamal - IDSA
+    url: https://media2-production.mightynetworks.com/asset/296a3f84-3614-4978-aa55-1a6638549053/Generality_of_Kautilyan_Tenets_Informed_by_Unique_Indianness_-_Dr._Kajari_Kamal_-_IDSA.pdf
+    note: An article written by Dr Kajari Kamal for the Manohar Parrikar Institute for Defence Studies and Analyses.
+    file: CS2 - Generality_of_Kautilyan_Tenets_Informed_by_Unique_Indianness_-_Dr._Kajari_Kamal_-_IDSA.pdf
+  - kind: mandatory
+    title: Overcoming the Ways of Matsya Nyaya pp. 521-525
+    url: https://media2-production.mightynetworks.com/asset/1739116f-773a-4feb-b2b2-265c8279be57/Overcoming_the_Ways_of_Matsya_Nyaya_pp._521-525.pdf
+    note: A paper by Col P.K. Gautam (Retd), a research fellow at IDSA, Delhi.
+    file: CS2 - Overcoming_the_Ways_of_Matsya_Nyaya_pp._521-525.pdf
+  - kind: mandatory
+    title: Rajadharma, Legitimacy and Sovereignty in the Arthashastra pp. 195-221
+    url: https://media2-production.mightynetworks.com/asset/9230cf43-1e5b-423a-a7a9-78caa20c24e2/Rajadharma__Legitimacy_and_Sovereignty_in_the_Arthashastra_pp._195-221.pdf
+    file: CS2 - Rajadharma__Legitimacy_and_Sovereignty_in_the_Arthashastra_pp._195-221.pdf
+  - kind: mandatory
+    title: The Kautilyan legacy of spycraft and the India-Canada diplomatic row (ORF)
+    url: https://media2-production.mightynetworks.com/asset/9b6fbcb5-08ac-4fc4-bb82-6ee2f2e60f85/The_Kautilyan_legacy_of_spycraft_and_the_India-Canada_diplomatic_row___ORF.pdf
+    note: An article for the Observer Research Foundation by Dr Kajari Kamal.
+    file: CS2 - The_Kautilyan_legacy_of_spycraft_and_the_India-Canada_diplomatic_row___ORF.pdf
+  - kind: mandatory
+    title: The State in Kautilya pp.116-142
+    url: https://media2-production.mightynetworks.com/asset/cd6010da-5ec5-41f2-a4a3-a830349d3da1/The_State_in_Kautilya_pp.116-142.pdf
+    file: CS2 - The_State_in_Kautilya_pp.116-142.pdf
+  - kind: recommended
+    title: 'Dharmavijay: Winning the Peace and War Without Spilling Blood'
+    url: https://media2-production.mightynetworks.com/asset/7514a1e4-3b46-4d9f-9b66-8d7667075195/Dharmavijay_Winning_the_Peace_and_War_Without_Spilling_Blood.pdf
+    file: CS22 - Dharmavijay Winning the Peace and War Without Spilling Blood.pdf
+  - kind: recommended
+    title: Hindu theory of IR
+    url: https://media2-production.mightynetworks.com/asset/74ae211b-6116-4c6d-9fa0-3674fdb829fd/Hindu_theory_of_IR.pdf
+    file: CS22 - Hindu theory of IR.pdf
 - id: CS23
   title: 'Concept Cluster II: Rajamandala, Sadgunyas, Upayas and Yogakshema'
   outcomes: The rajamandala (circle of kings), the six measures of foreign policy (sadgunya), the upayas and yogakshema.
