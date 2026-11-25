@@ -22,8 +22,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 import yaml
 
-from . import store
-from . import module_page
+from . import module_page, store
 from .access import _allowed_modules, _me, _privileged
 from .catalog import get_catalog
 
@@ -393,3 +392,27 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
 async def my_week() -> dict:
     cu, user = _me()
     return week(cu, user)
+
+
+# ------------------------------------------------------------------ calendar feed address
+FEED = "/api/yaxa-public/calendar/"
+
+
+def _feed_url(user: store.YaxaUser) -> str:
+    if not user.calendar_token:
+        user.calendar_token = secrets.token_urlsafe(24)
+        store.save_user(user)
+    return f"{FEED}{user.calendar_token}.ics"
+
+
+@router.get("/me/calendar")
+async def my_calendar() -> dict:
+    _, user = _me()
+    return {"url": _feed_url(user)}
+
+
+@router.post("/me/calendar/reset")
+async def reset_calendar() -> dict:
+    _, user = _me()
+    user.calendar_token = ""
+    return {"url": _feed_url(user)}

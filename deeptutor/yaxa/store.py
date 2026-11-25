@@ -52,6 +52,7 @@ class YaxaUser(BaseModel):
     avatar: dict[str, str] = Field(default_factory=dict)  # gallery illustration colours/style
     profile: dict[str, str] = Field(default_factory=dict)
     enrolments: list[Enrolment] = Field(default_factory=list)
+    calendar_token: str = ""  # private calendar feed address; reset makes the old one dead
     turns_today: int = 0
     turns_day: str = ""
 

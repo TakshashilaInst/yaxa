@@ -17,7 +17,17 @@ from pydantic import BaseModel
 
 from deeptutor.multi_user.context import get_current_user
 
-from . import cohort, grounding, library_api, module_page, panel, practice, prompting, schedule, store
+from . import (
+    cohort,
+    grounding,
+    library_api,
+    module_page,
+    panel,
+    practice,
+    prompting,
+    schedule,
+    store,
+)
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
     _allowed_modules,
     _cited_numbers,
