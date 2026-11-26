@@ -19,6 +19,7 @@ from deeptutor.multi_user.context import get_current_user
 
 from . import (
     announcements,
+    checks,
     cohort,
     discussion,
     grounding,
@@ -50,6 +51,7 @@ from .sim import api as sim_api
 logger = logging.getLogger(__name__)
 router = APIRouter()
 router.include_router(practice.router)
+router.include_router(checks.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)
