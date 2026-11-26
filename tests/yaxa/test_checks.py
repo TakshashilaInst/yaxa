@@ -134,6 +134,8 @@ def test_submit_marks_and_explains(monkeypatch):
     q1 = r["results"][0]
     assert q1["right"] is False and q1["picked"] == 1 and q1["correct"] == 0
     assert q1["why_picked"] == "no" and q1["why_correct"] == "because" and q1["reading"] == "CP11 - State.pdf"
+    kb = catalog.get_catalog().module("GCPP-PAC").kb
+    assert q1["reading_open"] == f"/api/yaxa/files/{kb}/CP11 - State.pdf"
 
 
 def test_first_flag_only_on_first_attempt(monkeypatch):

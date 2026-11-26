@@ -120,6 +120,15 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
       </div>
       {u.outcomes && <p className="yx-muted" style={{ margin: "6px 0 0" }}>{u.outcomes}</p>}
 
+      {u.check?.available && (
+        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
+          <b>Before the session:</b>{" "}
+          <Link href={`/learn/check/${encodeURIComponent(code)}/${encodeURIComponent(u.id)}`}>
+            {u.check.ready ? `Ready ✓ (best ${u.check.best}/5)` : u.check.attempts ? `Best so far ${u.check.best}/5 · try again` : "Take the 5-question check"}
+          </Link>
+        </p>
+      )}
+
       <div className="yx-study-modes">
         <Link className="yx-btn yx-btn-primary yx-btn-sm" href={chat(code, u.id)} title="Ask anything; Yaxa explains from the readings">
           Explain it to me

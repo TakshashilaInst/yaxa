@@ -158,7 +158,7 @@ async def take(module: str, session: str) -> dict[str, Any]:
 
 @router.post("/{module}/{session}")
 async def submit(module: str, session: str, body: SubmitBody) -> dict[str, Any]:
-    cu, user, _mod = _session_unit(module, session)
+    cu, user, mod = _session_unit(module, session)
     s = load_set(module, session)
     if not s or s.status != "approved":
         raise HTTPException(404, "This session has no check yet")
@@ -175,6 +175,8 @@ async def submit(module: str, session: str, body: SubmitBody) -> dict[str, Any]:
         results.append({
             "id": q.id, "picked": picked, "correct": correct, "right": picked == correct,
             "why_picked": q.options[picked].why, "why_correct": q.options[correct].why, "reading": q.reading,
+            # opens our library copy, like the session's reading list does
+            "reading_open": f"/api/yaxa/files/{mod.kb}/{q.reading}" if mod.kb and q.reading else "",
         })
     score = sum(r["right"] for r in results)
     path = _attempts_path(_cohort_code(user), module, session)

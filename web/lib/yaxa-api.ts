@@ -149,6 +149,7 @@ export interface ModuleUnitDetail {
   resources: SessionResource[]; // the session's reading list
   readings: ModuleReading[]; // more from the library (webinar transcripts, extra material)
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
+  check?: CheckStatus; // the 5-question check before the session
 }
 
 export interface ModuleDetail {
@@ -194,6 +195,50 @@ export interface PracticeResult {
   citations: Citation[];
   sources: Passage[];
   unit: UnitProgress | null;
+}
+
+// ------------------------------------------------------------ session check
+export interface CheckStatus { available: boolean; best: number | null; ready: boolean; attempts: number }
+
+export interface CheckView extends CheckStatus {
+  version: number;
+  questions: { id: string; text: string; reading: string; options: { i: number; text: string }[] }[];
+}
+
+export interface CheckResult {
+  score: number;
+  ready: boolean;
+  results: { id: string; picked: number; correct: number; right: boolean; why_picked: string; why_correct: string; reading: string; reading_open: string }[];
+}
+
+export interface CheckOption { text: string; correct: boolean; why: string; misconception: string }
+export interface CheckQuestion { id: string; text: string; reading: string; options: CheckOption[] }
+
+export interface CheckSetAdmin {
+  module: string;
+  session: string;
+  status: "draft" | "approved" | "none";
+  version?: number;
+  answer_version?: number;
+  approved_by?: string;
+  approved_at?: string;
+  questions: CheckQuestion[];
+}
+
+export interface CheckAdminRow { session: string; title: string; status: "draft" | "approved" | "none"; version: number; attempts: number }
+
+export interface CheckBriefSession {
+  module: string;
+  session: string;
+  title: string;
+  date: string;
+  time: string;
+  enrolled: number;
+  took: number;
+  ready: number;
+  misconceptions: { name: string; question: string; count: number; share: number }[];
+  suggestions: { misconception: string; suggestion: string }[];
+  suggestions_error: string | null;
 }
 
 // ------------------------------------------------------------ cohort brief
@@ -309,6 +354,7 @@ async function json<T>(path: string, init?: RequestInit): Promise<T> {
     try {
       const body = await res.json();
       if (typeof body?.detail === "string") detail = body.detail;
+      else if (Array.isArray(body?.detail?.problems)) detail = body.detail.problems.join(" ");
     } catch {
       /* not JSON */
     }
@@ -439,6 +485,24 @@ export const yaxa = {
     json<PracticeQuestion>("/practice/question", send("POST", { module, unit: unit || null })),
   practiceAnswer: (itemId: string, answer: string) =>
     json<PracticeResult>("/practice/answer", send("POST", { item_id: itemId, answer })),
+  checkGet: (module: string, session: string) => json<CheckView>(`/checks/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  checkSubmit: (module: string, session: string, version: number, answers: Record<string, number>) =>
+    json<CheckResult>(`/checks/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("POST", { version, answers })),
+  checkAdminList: (module: string) => json<CheckAdminRow[]>(`/checks/admin/${encodeURIComponent(module)}`),
+  checkAdminGet: (module: string, session: string) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  checkDraft: (module: string, session: string) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  checkRegenerate: (module: string, session: string, qid: string) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/regenerate/${encodeURIComponent(qid)}`, send("POST")),
+  checkSave: (module: string, session: string, questions: CheckQuestion[]) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { questions })),
+  checkApprove: (module: string, session: string) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
+  checkUnpublish: (module: string, session: string) =>
+    json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
+  checkBrief: (cohort: string, refresh = false) =>
+    json<{ cohort: string; sessions: CheckBriefSession[] }>(`/checks/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
   cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
   cohortBrief: (module: string, days: number, refresh = false) =>
     json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),

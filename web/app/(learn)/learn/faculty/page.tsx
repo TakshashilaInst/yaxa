@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
-import { yaxa, type CohortBrief } from "@/lib/yaxa-api";
+import { yaxa, type CheckBriefSession, type CohortBrief, type CohortRow } from "@/lib/yaxa-api";
 
 const PERIODS = [
   { days: 7, label: "Last 7 days" },
@@ -24,6 +24,61 @@ function Stat({ value, label }: { value: number; label: string }) {
       <b>{value}</b>
       <span>{label}</span>
     </div>
+  );
+}
+
+/** Before this week's webinars: what each cohort got wrong in the session checks. Anonymised. */
+function WebinarPrep() {
+  const [cohorts, setCohorts] = useState<CohortRow[]>([]);
+  const [cohort, setCohort] = useState("");
+  const [data, setData] = useState<{ cohort: string; sessions: CheckBriefSession[] } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    yaxa.cohorts().then((c) => { setCohorts(c); setCohort((x) => x || c[0]?.code || ""); }).catch((e) => setError(String(e?.message ?? e)));
+  }, []);
+  useEffect(() => {
+    if (!cohort) return;
+    yaxa.checkBrief(cohort).then(setData).catch((e) => setError(String(e?.message ?? e)));
+  }, [cohort]);
+  const shown = data && data.cohort === cohort ? data : null;
+  if (!cohorts.length) return null;
+  return (
+    <section style={{ margin: "8px 0 28px" }}>
+      <div className="yx-tools" style={{ gap: 8, alignItems: "baseline" }}>
+        <h2 style={{ fontSize: 20, margin: 0 }}>Before this week&apos;s webinars</h2>
+        <select value={cohort} onChange={(e) => setCohort(e.target.value)}>
+          {cohorts.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+        </select>
+      </div>
+      {error && <p className="yx-error">{error}</p>}
+      {!shown && !error && <p className="yx-muted">Loading…</p>}
+      {shown && !shown.sessions.length && (
+        <p className="yx-muted">No sessions with an approved check in the next 7 days. <Link href="/learn/faculty/checks">Set up session checks →</Link></p>
+      )}
+      {shown?.sessions.map((s) => (
+        <div key={s.session} className="yx-card" style={{ margin: "10px 0" }}>
+          <b>{s.session} · {s.title}</b> <span className="yx-muted">· {s.date}{s.time ? ` ${s.time}` : ""}</span>
+          <p style={{ margin: "4px 0" }}>
+            {s.took} of {s.enrolled || "?"} took the check · {s.ready} ready (4 or 5 out of 5)
+          </p>
+          {s.took > 0 && s.took < 3 && <p className="yx-muted" style={{ margin: 0 }}>Too few answers yet to say what the class got wrong.</p>}
+          {!!s.misconceptions.length && (
+            <ul style={{ margin: "6px 0 0" }}>
+              {s.misconceptions.slice(0, 6).map((m, i) => {
+                const tip = s.suggestions.find((x) => x.misconception === m.name);
+                return (
+                  <li key={i} style={{ marginBottom: 6 }}>
+                    <b>{Math.round(m.share * 100)}%</b> {m.name} <span className="yx-muted">(on “{m.question}”)</span>
+                    {tip && <div>In class: {tip.suggestion}</div>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          {s.suggestions_error && <p className="yx-muted">{s.suggestions_error}</p>}
+        </div>
+      ))}
+    </section>
   );
 }
 
@@ -88,7 +143,9 @@ export default function CohortBriefPage() {
           <Link href="/learn/faculty/discussion">Class questions to review →</Link>
           {" · "}<Link href="/learn/faculty/announcements">Announcements →</Link>
           {" · "}<Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
+          {" · "}<Link href="/learn/faculty/checks">Session checks →</Link>
         </p>
+        <WebinarPrep />
         <div className="yx-eyebrow">For faculty · anonymised</div>
         <h1 style={{ margin: "4px 0 6px" }}>What your students are asking</h1>
         <p className="yx-lede" style={{ marginTop: 0 }}>
