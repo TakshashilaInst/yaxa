@@ -50,12 +50,16 @@ units:
   resources:
   - kind: mandatory
     title: 'Country: a geographic concept (Open Course in Public Policy)'
+    file: CP11 - Country, a Geographic Concept (Open Course in Public Policy).pdf
   - kind: mandatory
     title: 'Nation: a mental construct (Open Course in Public Policy)'
+    file: CP11 - Nation, a Mental Construct (Open Course in Public Policy).pdf
   - kind: mandatory
     title: 'State: a political institution (Open Course in Public Policy)'
+    file: CP11 - State, a Political Institution (Open Course in Public Policy).pdf
   - kind: mandatory
     title: Democracies, Republics and Governments (Open Course in Public Policy)
+    file: CP11 - Democracies, Republics and Governments (Open Course in Public Policy).pdf
   - kind: recommended
     title: Imagined Communities (Benedict Anderson)
     url: https://media2-production.mightynetworks.com/asset/b515090d-97fe-4733-8e3d-d322c6dc4a3e/Anderson-Imagined_Communities.pdf
@@ -91,6 +95,7 @@ units:
   resources:
   - kind: mandatory
     title: Democracies, Republics and Governments (Open Course in Public Policy)
+    file: CP11 - Democracies, Republics and Governments (Open Course in Public Policy).pdf
   - kind: mandatory
     title: Why does the Indian State both fail and succeed? (Devesh Kapur)
     url: https://media2-production.mightynetworks.com/asset/1d1c4ad6-bdec-4b13-817c-e61b55b02eeb/Kapur__2020__-_Why_does_the_Indian_State_both_Fail_and_Succeed.pdf
@@ -121,8 +126,13 @@ units:
   resources:
   - kind: mandatory
     title: Goals of a Government (Open Course in Public Policy)
+    file: CP13 - Goals of a Government (Open Course in Public Policy).pdf
   - kind: mandatory
     title: Things Governments Do (Open Course in Public Policy)
+    file: CP13 - Things Governments Do (Open Course in Public Policy).pdf
+  - kind: recommended
+    title: Efficiency and Effectiveness
+    file: CP13 - Efficiency and Effectiveness.pdf
   - kind: recommended
     title: India's Failed Demonetization Program and Its Retreating Economic Defenders
     url: https://media2-production.mightynetworks.com/asset/76bf2572-055e-4265-a41c-df044e06e0db/India_s_Failed_Demonetization_Program_and_Its_Retreating_Economic_Defenders.pdf
