@@ -197,3 +197,23 @@ def test_labels_written_once_per_library_per_run(home: Path, monkeypatch) -> Non
     assert sync.run(fake.deps())["relabelled"] == 6
     assert saves == ["DFA"]
     assert all("renamed" in v["title"] for v in labels("DFA").values())
+
+
+def test_prune_versions_keeps_live_newer_and_one_spare(tmp_path: Path) -> None:
+    from deeptutor.yaxa.library.sync import prune_versions
+
+    for n in (1, 2, 3, 5, 6, 7):
+        (tmp_path / f"version-{n}").mkdir()
+    (tmp_path / "raw").mkdir()  # not an index copy
+    removed = prune_versions(tmp_path, live=tmp_path / "version-6")
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["raw", "version-5", "version-6", "version-7"]
+    assert removed == ["version-1", "version-2", "version-3"]
+
+
+def test_prune_versions_does_nothing_without_a_live_copy(tmp_path: Path) -> None:
+    from deeptutor.yaxa.library.sync import prune_versions
+
+    for n in (1, 2, 3):
+        (tmp_path / f"version-{n}").mkdir()
+    assert prune_versions(tmp_path, live=None) == []
+    assert len(list(tmp_path.iterdir())) == 3

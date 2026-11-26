@@ -316,3 +316,42 @@ def kb_add(kb: str, docs: Path) -> None:
         code = subprocess.run([str(exe), "kb", "add", kb, "--docs-dir", str(docs)], stdout=fh, stderr=subprocess.STDOUT).returncode
     if code != 0:
         raise RuntimeError(log.read_text(errors="replace")[-300:])
+    try:
+        _prune_live(kb)
+    except Exception:
+        logger.warning("yaxa library: pruning old index copies of %s failed", kb, exc_info=True)
+
+
+def _version_number(path: Path) -> int:
+    return int(path.name.split("-", 1)[1]) if path.name.split("-", 1)[1].isdigit() else -1
+
+
+def prune_versions(kb_dir: Path, live: Path | None) -> list[str]:
+    """Delete superseded ``version-N`` index copies of one library; returns the names removed.
+
+    Each ``kb add`` publishes a fresh copy and never removes the old ones, and the backend reads
+    every copy at startup, so they pile up until restarts time out. Keeps the live copy, anything
+    newer (a build in progress), and the newest older copy as a spare. No live copy: touch nothing.
+    """
+    if live is None:
+        return []
+    copies = sorted((d for d in kb_dir.glob("version-*") if d.is_dir() and _version_number(d) >= 0), key=_version_number)
+    older = [d for d in copies if _version_number(d) < _version_number(live)]
+    doomed = older[:-1]
+    for d in doomed:
+        shutil.rmtree(d)
+    return [d.name for d in doomed]
+
+
+def _prune_live(kb: str) -> None:
+    from deeptutor.services.rag.embedding_signature import signature_from_embedding_config  # noqa: PLC0415
+    from deeptutor.services.rag.index_versioning import find_matching_version  # noqa: PLC0415
+
+    from deeptutor.services.path_service import get_path_service  # noqa: PLC0415
+
+    kb_dir = get_path_service().get_knowledge_bases_root() / kb
+    sig = signature_from_embedding_config()
+    live = find_matching_version(kb_dir, sig) if sig else None
+    removed = prune_versions(kb_dir, Path(str(live["version_path"])) if live else None)
+    if removed:
+        logger.info("yaxa library: removed %d old index copies of %s", len(removed), kb)
