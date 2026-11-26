@@ -281,3 +281,106 @@ def test_learner_cannot_use_admin_routes(monkeypatch):
     with pytest.raises(HTTPException) as e:
         asyncio.run(checks.admin_get("GCPP-PAC", "CP11"))
     assert e.value.status_code == 403
+
+
+# ---------------------------------------------------------------- Task 4: the pre-webinar brief
+from datetime import datetime  # noqa: E402
+
+NOW = datetime(2026, 11, 26, 9, 0, tzinfo=schedule.IST)
+
+
+def _cohort(date: str = "2026-11-29"):
+    schedule.save_cohort(schedule.Cohort(code="GCPP45", programme="GCPP",
+                                         sessions=[schedule.Session(code="CP11", date=date, time="09:30")]))
+
+
+def _row(uid: str, wrong_q: list[int], pick: int = 1, *, first=True, staff=False, answer_version=1, cohort="GCPP45"):
+    answers = {f"q{i}": (pick if i in wrong_q else 0) for i in range(1, 6)}
+    community.append_jsonl(checks._attempts_path(cohort, "GCPP-PAC", "CP11"), {
+        "user_id": uid, "version": 1, "answer_version": answer_version, "answers": answers,
+        "score": 5 - len(wrong_q), "first": first, "staff": staff, "at": "2026-11-26T08:00:00+00:00"})
+
+
+def _three_takers():
+    _row("asha", [1, 2])        # q1 wrong (Mixes up A), q2 wrong (Mixes up A)
+    _row("ravi", [1])           # q1 wrong
+    _row("meera", [1], pick=2)  # q1 wrong (Mixes up B)
+
+
+def test_brief_ranks_misconceptions_from_first_attempts():
+    _cohort()
+    _approved()
+    _three_takers()
+    _row("ravi", [], first=False)  # a retry: doesn't count
+    [s] = checks.brief_data("GCPP45", now=NOW)
+    assert (s["session"], s["took"], s["ready"]) == ("CP11", 3, 2)
+    top = s["misconceptions"][0]
+    assert (top["name"], top["question"], top["count"]) == ("Mixes up A", "Q1?", 2) and round(top["share"], 2) == 0.67
+    assert [m["count"] for m in s["misconceptions"]] == sorted((m["count"] for m in s["misconceptions"]), reverse=True)
+
+
+def test_brief_hides_ranking_under_three_takers():
+    _cohort()
+    _approved()
+    _row("asha", [1])
+    _row("ravi", [1])
+    [s] = checks.brief_data("GCPP45", now=NOW)
+    assert s["took"] == 2 and s["misconceptions"] == []
+
+
+def test_staff_attempts_not_counted():
+    _cohort()
+    _approved()
+    _three_takers()
+    _row("boss", [1, 2, 3], staff=True)
+    [s] = checks.brief_data("GCPP45", now=NOW)
+    assert s["took"] == 3
+
+
+def test_stale_answer_version_not_counted():
+    _cohort()
+    s = _approved()
+    s.answer_version = 2
+    checks.save_set(s)
+    _three_takers()  # all on answer_version 1
+    [b] = checks.brief_data("GCPP45", now=NOW)
+    assert b["took"] == 0
+
+
+def test_brief_only_sessions_in_next_seven_days():
+    _cohort(date="2026-12-10")
+    _approved()
+    assert checks.brief_data("GCPP45", now=NOW) == []
+
+
+def test_suggestions_cached_until_counts_move(monkeypatch, model):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    _cohort()
+    _approved()
+    _three_takers()
+    model.replies = [json.dumps({"suggestions": [{"misconception": "Mixes up A", "suggestion": "Ask who answers for violence."}]})]
+    first = asyncio.run(checks.brief("GCPP45"))
+    again = asyncio.run(checks.brief("GCPP45"))
+    assert model.calls == 1
+    assert first["sessions"][0]["suggestions"][0]["suggestion"] == "Ask who answers for violence." == again["sessions"][0]["suggestions"][0]["suggestion"]
+    for uid in ("p1", "p2", "p3"):
+        _row(uid, [1])
+    asyncio.run(checks.brief("GCPP45"))
+    assert model.calls == 2
+
+
+def test_brief_payload_has_no_user_ids(monkeypatch, model):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    _cohort()
+    _approved()
+    _three_takers()
+    model.replies = [json.dumps({"suggestions": []})]
+    out = json.dumps(asyncio.run(checks.brief("GCPP45")))
+    assert "asha" not in out and "ravi" not in out and "meera" not in out
+
+
+def test_brief_is_staff_only(monkeypatch):
+    as_user(monkeypatch, "asha")
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(checks.brief("GCPP45"))
+    assert e.value.status_code == 403

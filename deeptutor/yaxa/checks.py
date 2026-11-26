@@ -9,6 +9,7 @@ One set per session, shared by all cohorts: ``<data>/yaxa/checks/<MODULE>/<SESSI
 
 from __future__ import annotations
 
+from datetime import date, datetime, timedelta
 import logging
 import random
 from typing import Any, Literal
@@ -19,8 +20,9 @@ from pydantic import BaseModel, Field
 from . import community, grounding, prompting, store
 from .access import _me, _privileged, _require_module, _short, parse_json_reply
 from .catalog import get_catalog
+from .cohort import _staff_ids
 from .llm import ModelUnavailable, complete_text, resolve_for
-from .schedule import learner_cohort
+from .schedule import IST, learner_cohort, load_cohort
 
 logger = logging.getLogger(__name__)
 
@@ -375,3 +377,116 @@ async def admin_unpublish(module: str, session: str) -> dict[str, Any]:
     s.status = "draft"
     save_set(s)
     return s.model_dump()
+
+
+# ------------------------------------------------------------------ faculty: before the webinar
+BRIEF_DAYS = 7
+MIN_TAKERS = 3  # fewer than this: counts only (too few to rank, and it could single people out)
+SUGGEST_SHARE = 0.2  # a live-time suggestion only for misconceptions at least this common
+RECOMPUTE_AFTER = 3  # reuse cached suggestions until some count moves by this much
+
+SUGGEST_PROMPT = """\
+You help Takshashila faculty plan a live session. Before it, the cohort took a short check; below are
+the misconceptions many of them showed, with the question and the share who picked each.
+For each misconception, suggest one use of live time to correct it: a question to pose to the room, a case
+or example that exposes the error, and roughly how many minutes. Plain text, under 60 words each.
+
+Reply with JSON only, no other text:
+{"suggestions": [{"misconception": "<name exactly as given>", "suggestion": "<text>"}]}"""
+
+
+def _module_of(session: str):
+    return next((m for m in get_catalog().modules.values() if any(u.id == session for u in m.units)), None)
+
+
+def _enrolled(cohort: str) -> int:
+    staff = _staff_ids()
+    return sum(1 for u in store.list_users() if u.user_id not in staff and any(e.cohort == cohort for e in u.enrolments))
+
+
+def brief_data(cohort: str, now: datetime | None = None) -> list[dict[str, Any]]:
+    """Anonymised check results for a cohort's sessions in the coming week. No names, no ids."""
+    c = load_cohort(cohort)
+    if not c:
+        return []
+    today = (now or datetime.now(IST)).astimezone(IST).date()
+    enrolled = None
+    out = []
+    for sess in sorted(c.sessions, key=lambda x: (x.date, x.time)):
+        try:
+            d = date.fromisoformat(sess.date)
+        except ValueError:
+            continue
+        if not today <= d <= today + timedelta(days=BRIEF_DAYS):
+            continue
+        mod = _module_of(sess.code)
+        s = load_set(mod.code, sess.code) if mod else None
+        if not mod or not s or s.status != "approved":
+            continue
+        rows = [r for r in community.read_jsonl(_attempts_path(cohort, mod.code, sess.code))
+                if r.get("first") and not r.get("staff") and r.get("answer_version") == s.answer_version]
+        counts: dict[tuple[str, int], int] = {}
+        for r in rows:
+            for q in s.questions:
+                picked = r["answers"].get(q.id)
+                if isinstance(picked, int) and 0 <= picked < len(q.options) and not q.options[picked].correct:
+                    counts[(q.id, picked)] = counts.get((q.id, picked), 0) + 1
+        took = len(rows)
+        miscs = []
+        if took >= MIN_TAKERS:
+            by_id = {q.id: q for q in s.questions}
+            for (qid, i), n in counts.items():
+                miscs.append({"name": by_id[qid].options[i].misconception, "question": by_id[qid].text,
+                              "count": n, "share": n / took})
+            miscs.sort(key=lambda m: (-m["count"], m["question"]))
+        if enrolled is None:
+            enrolled = _enrolled(cohort)
+        out.append({"module": mod.code, "session": sess.code, "title": next(u.title for u in mod.units if u.id == sess.code),
+                    "date": sess.date, "time": sess.time, "enrolled": enrolled, "took": took,
+                    "ready": sum(1 for r in rows if r["score"] >= READY), "misconceptions": miscs})
+    return out
+
+
+def _suggest_cache(cohort: str, module: str, session: str):
+    return community.root("checks", "brief", store._safe(cohort)) / f"{store._safe(module)}__{store._safe(session)}.json"
+
+
+async def _suggestions(cu, cohort: str, sess: dict[str, Any], refresh: bool) -> list[dict[str, str]]:
+    common = [m for m in sess["misconceptions"] if m["share"] >= SUGGEST_SHARE]
+    if not common:
+        return []
+    counts = {f'{m["question"]}|{m["name"]}': m["count"] for m in common}
+    path = _suggest_cache(cohort, sess["module"], sess["session"])
+    cached = store._read_json(path)
+    if cached and not refresh:
+        old = cached.get("counts", {})
+        moved = max(abs(counts.get(k, 0) - old.get(k, 0)) for k in set(counts) | set(old))
+        if moved < RECOMPUTE_AFTER:
+            return cached.get("suggestions", [])
+    config = resolve_for(cu.id)
+    listing = "\n".join(f'- "{m["name"]}" ({round(m["share"] * 100)}% of takers) on: {m["question"]}' for m in common)
+    reply = await complete_text(config, [{"role": "system", "content": SUGGEST_PROMPT},
+                                         {"role": "user", "content": f'Session {sess["session"]}: {sess["title"]}\n\n{listing}'}],
+                                max_tokens=1500)
+    data = parse_json_reply(reply) or {}
+    names = {m["name"] for m in common}
+    suggestions = [{"misconception": str(x.get("misconception")), "suggestion": str(x.get("suggestion") or "").strip()}
+                   for x in data.get("suggestions") or [] if isinstance(x, dict) and x.get("misconception") in names]
+    community.update_json(path, lambda _old: {"counts": counts, "suggestions": suggestions})
+    return suggestions
+
+
+@router.get("/brief")
+async def brief(cohort: str, refresh: bool = False) -> dict[str, Any]:
+    cu, _user = _require_staff()
+    if not load_cohort(cohort):
+        raise HTTPException(404, "No such cohort")
+    sessions = brief_data(cohort)
+    for sess in sessions:
+        sess["suggestions"], sess["suggestions_error"] = [], None
+        try:
+            sess["suggestions"] = await _suggestions(cu, cohort, sess, refresh)
+        except Exception as exc:  # noqa: BLE001 - the counts are still worth showing
+            logger.warning("yaxa checks: suggestions failed", exc_info=True)
+            sess["suggestions_error"] = f"Couldn't write suggestions: {type(exc).__name__}"
+    return {"cohort": cohort, "sessions": sessions}
