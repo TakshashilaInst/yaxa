@@ -167,7 +167,8 @@ def test_short_webinar_titles_match_the_longer_session_title():
     assert _titles(groups, "other") == ["Webinar: Change, Someone"]
 
 
-def test_students_get_no_drive_links_until_recordings_are_shared_with_them(monkeypatch):
+def test_students_get_the_drive_recording_link(monkeypatch):
+    """The recordings the library uses are shared "anyone with the link can view", so students watch on Drive."""
     cu, user = _student()
     cat = catalog.get_catalog()
     code = next(c for c in access._allowed_modules(cat, cu, user) if cat.modules[c].units)
@@ -177,10 +178,7 @@ def test_students_get_no_drive_links_until_recordings_are_shared_with_them(monke
     monkeypatch.setattr(module_page, "_files", lambda kb: webinar)
     monkeypatch.setattr(module_page, "_me", lambda: (cu, user))
     row = asyncio.run(module_page.module_view(code))["units"][0]["readings"][0]
-    assert "watch" not in row and row["open"].endswith("Webinar - x.md")
-    staff = SimpleNamespace(id="a1", is_admin=True)
-    monkeypatch.setattr(module_page, "_me", lambda: (staff, store.load_user("a1", display_name="Admin")))
-    assert asyncio.run(module_page.module_view(code))["units"][0]["readings"][0]["watch"].startswith("https://drive")
+    assert row["watch"] == "https://drive.google.com/file/d/abc/view" and row["open"].endswith("Webinar - x.md")
 
 
 def test_unit_carries_my_session_date(monkeypatch):

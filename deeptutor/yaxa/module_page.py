@@ -2,9 +2,8 @@
 
 Readings come from the module's library (the files Yaxa answers from), so the
 reading list and the tutor always agree. Files open through /api/yaxa/files,
-which only serves a student's own modules. Webinars open as transcripts; the
-Drive recording link goes to staff only (Drive shares recordings with staff),
-and every session links to its OpenTakshashila page, where students watch.
+which only serves a student's own modules. Webinars open as transcripts, with
+a link to the recording on Drive (shared "anyone with the link can view").
 """
 
 from __future__ import annotations
@@ -164,11 +163,6 @@ async def module_view(code: str) -> dict[str, Any]:
     module = _require_module(cat, cu, user, code)
     assert module is not None
     groups = module_groups(cat, module)
-    if not (cu.is_admin or getattr(user, "role", "") == "faculty"):
-        # Recordings on Drive are shared with staff only; students watch them on the LMS session page.
-        for rows in groups.values():
-            for r in rows:
-                r.pop("watch", None)
     progress = {row["id"]: row for row in practice._progress(cu.id, module)}
     from . import schedule  # here, not at the top: schedule imports this module
 
