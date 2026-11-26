@@ -89,3 +89,17 @@ def test_opening_our_copy_ticks_it(monkeypatch):
 def test_opened_rejects_non_links():
     with pytest.raises(Exception):
         asyncio.run(schedule.mark_link_opened(schedule.OpenedBody(url="javascript:alert(1)")))
+
+
+def test_unit_row_carries_check_status():
+    from deeptutor.yaxa import checks, community
+
+    assert _cs12()["check"] == {"available": False, "best": None, "ready": False, "attempts": 0}
+    qs = [checks.Question(id=f"q{i}", text=f"Q{i}?", options=[
+        checks.Option(text="r", correct=True, why="w"), checks.Option(text="x", why="w", misconception="m"),
+        checks.Option(text="y", why="w", misconception="n")]) for i in range(1, 6)]
+    checks.save_set(checks.CheckSet(module="DFA-SSIR", session="CS12", status="approved", questions=qs))
+    community.append_jsonl(checks._attempts_path("_none", "DFA-SSIR", "CS12"),
+                           {"user_id": "asha", "version": 1, "answer_version": 1, "answers": {}, "score": 4,
+                            "first": True, "staff": False, "at": "x"})
+    assert _cs12()["check"] == {"available": True, "best": 4, "ready": True, "attempts": 1}

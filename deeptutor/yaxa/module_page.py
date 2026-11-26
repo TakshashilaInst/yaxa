@@ -156,6 +156,12 @@ def unit_resources(module: Module, unit: Unit, files: dict[str, SourceInfo], ope
     return rows
 
 
+def _check_status(user_id: str, module: str, session: str) -> dict[str, Any]:
+    from .checks import learner_status  # noqa: PLC0415 - checks -> schedule -> module_page: imported late to break the cycle
+
+    return learner_status(user_id, module, session)
+
+
 @router.get("/{code}")
 async def module_view(code: str) -> dict[str, Any]:
     cu, user = _me()
@@ -187,6 +193,7 @@ async def module_view(code: str) -> dict[str, Any]:
                 # library items not already on the reading list (webinar transcripts, extra material)
                 "readings": [r for r in groups.get(u.id, []) if r.get("open") not in {x["open"] for x in res[u.id]}],
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
+                "check": _check_status(cu.id, module.code, u.id),  # the 5-question check before the session
             }
             for u in module.units
         ],
