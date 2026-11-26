@@ -7,7 +7,13 @@ units:
 - id: CP41
   title: Policy Analysis
   outcomes: ''
-  resources: []
+  resources:
+  - kind: mandatory
+    title: Policy Analysis Framework (Part 1)
+    file: CP41 - Policy Analysis Framework (Part 1).pdf
+  - kind: mandatory
+    title: Takshashila Policy Analysis Framework (Part 2)
+    file: CP41 - Takshashila Policy Analysis Framework (Part 2).pdf
 - id: CP42
   title: Market, Government, and Societal Failures in Public Policy
   outcomes: ''

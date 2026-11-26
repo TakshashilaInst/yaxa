@@ -125,3 +125,13 @@ units:
 - id: CT47
   title: State of India's Tech Ecosystem
   outcomes: India's innovation system, its strengths and gaps, and why it has not produced global tech champions.
+  resources:
+  - kind: mandatory
+    title: The Politics of Innovation
+    file: CT47 - The Politics of Innovation.pdf
+  - kind: mandatory
+    title: Why India Can't Build the Next Apple or Tesla
+    file: CT47 - Why India Can't Build the Next Apple or Tesla.pdf
+  - kind: recommended
+    title: CTIER Handbook 2023
+    file: CT47 - CTIER Handbook 2023.pdf
