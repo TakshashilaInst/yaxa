@@ -51,6 +51,7 @@ from .sim import api as sim_api
 logger = logging.getLogger(__name__)
 router = APIRouter()
 router.include_router(practice.router)
+router.include_router(checks.admin_router)
 router.include_router(checks.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
