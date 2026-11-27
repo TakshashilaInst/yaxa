@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import re
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .catalog import Faculty, Module, Unit
+
+if TYPE_CHECKING:
+    from .cases import Case
 from .store import PROFILE_FIELDS
 
 TAKSHASHILA_FRAMING = """\
@@ -15,6 +18,7 @@ How Takshashila teaches policy (follow these in every answer):
 - Political feasibility is a real criterion. An analytically correct idea that is politically impossible is not a solution.
 - One rupee of government spending is not one rupee of welfare delivered: leakage, administrative cost and opportunity cost matter.
 - Use Indian examples and institutions first (Union/State/Concurrent List, Finance Commission, RBI, panchayats...). Don't import Western debates wholesale.
+- "State" means the political institution in Max Weber's sense: the body holding the monopoly on the legitimate use of force over a territory. It never means an Indian sub-national state; call those "state governments".
 - Say "West Asia" not "Middle East", "Indian subcontinent" not "South Asia".
 - Plain language. Explain a term the first time you use it."""
 
@@ -86,6 +90,25 @@ DIRECT_RULES = """\
 Answer directly and clearly, in a few short paragraphs. Start with the core idea, then make it concrete with an example from the student's world. End with one short question that checks understanding or invites them to apply the idea, unless they asked for something else."""
 
 
+def learn_block(case: "Case") -> str:
+    grasp = "\n".join(f"- {g}" for g in case.grasp)
+    return f"""\
+This is a Learn session: you teach this session's idea THROUGH the case below. AI takes the lecture here, so
+the learner should leave understanding the idea, not just the case.
+The case, which the learner can see: {case.title}
+{case.situation}
+You opened the session by asking: {case.opening}
+What a learner who has understood the idea can say (your private notes; never reveal them as a list, guide
+the learner to each one through their own reasoning):
+{grasp}
+How to run it:
+- The learner reasons first. Explain only after they have tried and a specific gap shows, then explain just
+  that gap, briefly and concretely, tied to the case, and ask them to apply it.
+- Move through the notes above one at a time, in whatever order their reasoning opens up.
+- When their answers cover the notes, tell them they seem to have it and invite them to use "Explain it
+  back" below the chat to put the whole idea in their own words."""
+
+
 def build_system(
     *,
     profile: dict[str, str],
@@ -95,6 +118,7 @@ def build_system(
     faculty: Faculty | None,
     socratic: bool,
     programme_modules: list[Module] | None = None,
+    case: "Case | None" = None,
 ) -> str:
     identity = (
         "You are Yaxa, the Takshashila Institution's AI tutor for public policy. "
@@ -108,7 +132,8 @@ def build_system(
         _profile_block(profile, learner_name),
         TAKSHASHILA_FRAMING,
         CITATION_RULES,
-        SOCRATIC_RULES if socratic else DIRECT_RULES,
+        learn_block(case) if case else "",
+        SOCRATIC_RULES if socratic or case else DIRECT_RULES,
     ]
     return "\n\n".join(p for p in parts if p)
 

@@ -266,7 +266,26 @@ class ChatBody(BaseModel):
     unit: str | None = None
     faculty: str | None = None
     socratic: bool = False
+    learn: bool = False  # a Learn session: teach the unit's idea through its approved case
     scope: Literal["module", "programme"] = "module"  # programme: search every library the student can use
+
+
+def _learn_case(module: str, unit: str) -> cases.Case | None:
+    return cases.approved_case(module, unit)
+
+
+def _start_learn(conv: store.Conversation, case: cases.Case | None) -> None:
+    """A new Learn conversation opens with Yaxa's question, so the learner reasons first."""
+    conv.kind = "learn"
+    if case:
+        conv.title = case.title
+        conv.turns.append(store.Turn(role="assistant", content=case.opening, socratic=True))
+
+
+def _record_learn(user_id: str, module: str, unit: str, conv_id: str) -> None:
+    current = cases.learn_status(user_id, module, unit)["status"]
+    cases.mark_learn(user_id, module, unit, conversation_id=conv_id,
+                     status=current if current in ("tried", "explained") else "in_progress")
 
 
 @router.post("/chat")
@@ -303,12 +322,17 @@ async def chat(body: ChatBody) -> StreamingResponse:
             unit=unit.id if unit else None,
             title=_short(message, 70),
         )
+    learn = bool(module and unit and not across and (body.learn or conv.kind == "learn"))
+    case = _learn_case(module.code, unit.id) if learn else None
+    if learn and conv.kind != "learn":
+        _start_learn(conv, case)
+    socratic = body.socratic or learn
 
     async def events():
         # 1) retrieve from the module KB (+ the faculty member's own KB)
         yield _sse("meta", {"conversation_id": conv.id, "faculty_label": fac.label if fac else None})
         query = message
-        if body.socratic and conv.turns:
+        if socratic and conv.turns:
             # short answers ("yes", "the cost?") retrieve poorly; add the topic
             query = f"{conv.title}. {message}"
         k = cat.settings.retrieval_top_k
@@ -330,8 +354,9 @@ async def chat(body: ChatBody) -> StreamingResponse:
             module=module,
             unit=unit,
             faculty=fac,
-            socratic=body.socratic,
+            socratic=socratic,
             programme_modules=programme_modules,
+            case=case,
         )
         history = [
             {"role": t.role, "content": t.content}
@@ -371,18 +396,20 @@ async def chat(body: ChatBody) -> StreamingResponse:
         yield _sse("worth_reading", worth)
 
         # 5) save the turn
-        conv.turns.append(store.Turn(role="user", content=message, socratic=body.socratic, faculty=body.faculty))
+        conv.turns.append(store.Turn(role="user", content=message, socratic=socratic, faculty=body.faculty))
         conv.turns.append(
             store.Turn(
                 role="assistant",
                 content=answer,
-                socratic=body.socratic,
+                socratic=socratic,
                 faculty=body.faculty,
                 sources=[_public_passage(p, i) for i, p in enumerate(passages, 1)],
                 citations=citations,
             )
         )
         store.save_conversation(conv)
+        if learn:
+            _record_learn(cu.id, module.code, unit.id, conv.id)
         yield _sse("done", {"conversation_id": conv.id})
 
     return StreamingResponse(
