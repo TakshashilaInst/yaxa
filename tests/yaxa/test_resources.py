@@ -103,3 +103,13 @@ def test_unit_row_carries_check_status():
                            {"user_id": "asha", "version": 1, "answer_version": 1, "answers": {}, "score": 4,
                             "first": True, "staff": False, "at": "x"})
     assert _cs12()["check"] == {"available": True, "best": 4, "ready": True, "attempts": 1}
+
+
+def test_unit_row_carries_learn_status():
+    from deeptutor.yaxa import cases
+
+    assert _cs12()["learn"] == {"case": False, "status": "not_started", "conversation_id": None}
+    cases.save_case(cases.Case(module="DFA-SSIR", session="CS12", status="approved", title="t", situation="w " * 100,
+                               opening="o?", grasp=["a", "b"]))
+    cases.mark_learn("asha", "DFA-SSIR", "CS12", status="explained")
+    assert _cs12()["learn"] == {"case": True, "status": "explained", "conversation_id": None}

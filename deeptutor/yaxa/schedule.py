@@ -385,6 +385,9 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
             "webinar_url": s.webinar_url if start - JOIN_BEFORE <= now <= start + JOIN_AFTER else "",
             "readings": prep,
             "transcript_ready": any(r["kind"] == "video" and c.code in (r.get("corpus") or "") for r in items),
+            # the sprint: Learn on the weekly case, then the check, then the live session
+            "learn": module_page._learn_status(user.user_id, mod.code, s.code),
+            "check": module_page._check_status(user.user_id, mod.code, s.code),
         })
     today = now.date()
     dates = [

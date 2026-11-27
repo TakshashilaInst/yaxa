@@ -162,6 +162,12 @@ def _check_status(user_id: str, module: str, session: str) -> dict[str, Any]:
     return learner_status(user_id, module, session)
 
 
+def _learn_status(user_id: str, module: str, session: str) -> dict[str, Any]:
+    from .cases import learn_status  # noqa: PLC0415 - late, like _check_status
+
+    return learn_status(user_id, module, session)
+
+
 @router.get("/{code}")
 async def module_view(code: str) -> dict[str, Any]:
     cu, user = _me()
@@ -194,6 +200,7 @@ async def module_view(code: str) -> dict[str, Any]:
                 "readings": [r for r in groups.get(u.id, []) if r.get("open") not in {x["open"] for x in res[u.id]}],
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
                 "check": _check_status(cu.id, module.code, u.id),  # the 5-question check before the session
+                "learn": _learn_status(cu.id, module.code, u.id),  # the Learn session on the weekly case
             }
             for u in module.units
         ],

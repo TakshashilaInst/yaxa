@@ -250,3 +250,17 @@ def test_opened_ticks(monkeypatch):
     store.mark_opened("asha", "DFA", "CS12 - a.pdf")
     row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]
     assert {r["title"]: r["opened"] for r in row["readings"]} == {"CS12 Windows of War": True, "CS12 Another Bloody Century": False}
+
+
+def test_week_rows_carry_learn_and_check(monkeypatch):
+    from deeptutor.yaxa import cases
+
+    schedule.save_cohort(_gcpp45(sessions=[Session(code="CS12", date="2026-11-29", time="11:30")]))
+    cu, user = _asha(monkeypatch)
+    row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]
+    assert row["learn"] == {"case": False, "status": "not_started", "conversation_id": None}
+    assert row["check"]["available"] is False
+    cases.save_case(cases.Case(module="DFA-SSIR", session="CS12", status="approved", title="t", situation="w " * 100,
+                               opening="o?", grasp=["a", "b"]))
+    row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]
+    assert row["learn"]["case"] is True and row["learn"]["status"] == "not_started"
