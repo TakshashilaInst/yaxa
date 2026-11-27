@@ -77,3 +77,8 @@ def test_track_level_file_goes_to_the_track_library() -> None:
 def test_mixed_case_module_folder() -> None:
     p = place(["GCPP", "Core", "GCPP-Fundamentals Policy Analysis and Concepts", "Readings"], "CP10 - Readings.pdf", PDF, CAT)
     assert p.module == "GCPP-Fundamentals" and p.kb == "GCPP-PAC" and p.unit == "CP10"
+
+
+def test_old_module_code_still_maps_through_alias() -> None:
+    p = place(["GCPP", "Core", "GCPP-PAC Policy Analysis and Concepts", "Readings"], "CP10 - Readings.pdf", PDF, CAT)
+    assert p.module == "GCPP-Fundamentals" and p.kb == "GCPP-PAC"
