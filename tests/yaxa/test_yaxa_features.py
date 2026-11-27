@@ -52,10 +52,10 @@ def test_progress_and_next_unit_follow_the_student_scores() -> None:
 
 def test_practice_items_are_per_user() -> None:
     store.save_practice(store.PracticeItem(user_id="u_a", module="GCPP-ER1", question="a"))
-    store.save_practice(store.PracticeItem(user_id="u_b", module="GCPP-PAC", question="b"))
+    store.save_practice(store.PracticeItem(user_id="u_b", module="GCPP-Fundamentals", question="b"))
     assert [i.question for i in store.list_practice("u_a")] == ["a"]
     assert len(store.list_practice()) == 2
-    assert [i.question for i in store.list_practice(module="GCPP-PAC")] == ["b"]
+    assert [i.question for i in store.list_practice(module="GCPP-Fundamentals")] == ["b"]
 
 
 # ------------------------------------------------------------ cohort brief

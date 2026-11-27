@@ -18,7 +18,7 @@ def _tmp_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _case(**kw) -> cases.Case:
-    base = dict(module="GCPP-PAC", session="CP11", status="approved", title="Delhi's free electricity",
+    base = dict(module="GCPP-Fundamentals", session="CP11", status="approved", title="Delhi's free electricity",
                 situation="Delhi gives 200 units free. " + "word " * 100, opening="What happens to demand?",
                 grasp=["Price below cost raises demand", "Someone pays the gap"])
     base.update(kw)
@@ -27,7 +27,7 @@ def _case(**kw) -> cases.Case:
 
 def _system(case):
     cat = catalog.get_catalog()
-    mod = cat.module("GCPP-PAC")
+    mod = cat.module("GCPP-Fundamentals")
     return prompting.build_system(profile={}, learner_name="Ravi", module=mod, unit=mod.unit("CP11"),
                                   faculty=None, socratic=False, case=case)
 
@@ -47,37 +47,37 @@ def test_framing_defines_state_as_weberian():
 
 
 def test_start_learn_seeds_opening_turn():
-    conv = store.Conversation(user_id="ravi", module="GCPP-PAC", unit="CP11")
+    conv = store.Conversation(user_id="ravi", module="GCPP-Fundamentals", unit="CP11")
     api._start_learn(conv, _case())
     assert conv.kind == "learn" and conv.turns[0].role == "assistant" and conv.turns[0].content == "What happens to demand?"
 
 
 def test_start_learn_without_case_is_plain_learn():
-    conv = store.Conversation(user_id="ravi", module="GCPP-PAC", unit="CP11")
+    conv = store.Conversation(user_id="ravi", module="GCPP-Fundamentals", unit="CP11")
     api._start_learn(conv, None)
     assert conv.kind == "learn" and conv.turns == []
 
 
 def test_learn_case_only_when_approved():
     cases.save_case(_case(status="draft"))
-    assert api._learn_case("GCPP-PAC", "CP11") is None
+    assert api._learn_case("GCPP-Fundamentals", "CP11") is None
     cases.save_case(_case())
-    assert api._learn_case("GCPP-PAC", "CP11").title == "Delhi's free electricity"
+    assert api._learn_case("GCPP-Fundamentals", "CP11").title == "Delhi's free electricity"
 
 
 def test_record_learn_turn_keeps_tried_and_explained():
-    api._record_learn("ravi", "GCPP-PAC", "CP11", "c1")
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "in_progress"
-    cases.mark_learn("ravi", "GCPP-PAC", "CP11", status="explained")
-    api._record_learn("ravi", "GCPP-PAC", "CP11", "c1")
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
+    api._record_learn("ravi", "GCPP-Fundamentals", "CP11", "c1")
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "in_progress"
+    cases.mark_learn("ravi", "GCPP-Fundamentals", "CP11", status="explained")
+    api._record_learn("ravi", "GCPP-Fundamentals", "CP11", "c1")
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "explained"
 
 
 def test_progress_survives_unpublish():
     cases.save_case(_case())
-    api._record_learn("ravi", "GCPP-PAC", "CP11", "c9")
-    c = cases.load_case("GCPP-PAC", "CP11")
+    api._record_learn("ravi", "GCPP-Fundamentals", "CP11", "c9")
+    c = cases.load_case("GCPP-Fundamentals", "CP11")
     c.status = "draft"
     cases.save_case(c)
-    st = cases.learn_status("ravi", "GCPP-PAC", "CP11")
+    st = cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")
     assert st["status"] == "in_progress" and st["conversation_id"] == "c9" and st["case"] is False

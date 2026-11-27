@@ -2,7 +2,7 @@
 
 /**
  * Faculty panel: two or three faculty personas take one question, respond to
- * each other, and Yaxa sums up. `/learn/panel?module=GCPP-PAC` starts one;
+ * each other, and Yaxa sums up. `/learn/panel?module=GCPP-Fundamentals` starts one;
  * `/learn/panel?id=<conversation>` reopens a saved panel.
  */
 import Link from "next/link";

@@ -30,7 +30,7 @@ def as_user(monkeypatch, uid: str, *, staff: bool = False):
 
 
 def _layer(**kw) -> layers.Layer:
-    base = dict(module="GCPP-PAC", session="CP11", prompt="Which institutions hold authority over your problem, and why do people accept it?",
+    base = dict(module="GCPP-Fundamentals", session="CP11", prompt="Which institutions hold authority over your problem, and why do people accept it?",
                 self_check=["I named the institution", "I said where its legitimacy comes from", "I named a constitutional limit"])
     base.update(kw)
     return layers.Layer(**base)
@@ -66,7 +66,7 @@ def test_validate():
 
 
 def test_hint_from_mapping_table():
-    assert "authority" in layers.hint_for("GCPP-PAC", "CP11").lower()
+    assert "authority" in layers.hint_for("GCPP-Fundamentals", "CP11").lower()
     assert "bardach" in layers.hint_for("TP-RS", "CT23").lower()
     assert "market failure" in layers.hint_for("TP-IE", "CT3x").lower()
     assert "second-order" in layers.hint_for("TP-IE", "CP44").lower()
@@ -76,41 +76,41 @@ def test_hint_from_mapping_table():
 
 def test_draft_uses_hint_and_saves_draft(monkeypatch, model):
     as_user(monkeypatch, "boss", staff=True)
-    out = asyncio.run(layers.admin_draft("GCPP-PAC", "CP11"))
+    out = asyncio.run(layers.admin_draft("GCPP-Fundamentals", "CP11"))
     assert out["status"] == "draft" and len(out["self_check"]) == 3
     assert "authority" in model.messages[1]["content"].lower()
-    assert layers.approved_layer("GCPP-PAC", "CP11") is None
+    assert layers.approved_layer("GCPP-Fundamentals", "CP11") is None
 
 
 def test_approve_then_visible(monkeypatch):
     as_user(monkeypatch, "boss", staff=True)
     layers.save_layer(_layer())
-    out = asyncio.run(layers.admin_approve("GCPP-PAC", "CP11"))
+    out = asyncio.run(layers.admin_approve("GCPP-Fundamentals", "CP11"))
     assert out["status"] == "approved" and out["approved_by"] == "Boss"
-    assert layers.approved_layer("GCPP-PAC", "CP11").prompt.startswith("Which")
-    asyncio.run(layers.admin_unpublish("GCPP-PAC", "CP11"))
-    assert layers.approved_layer("GCPP-PAC", "CP11") is None
+    assert layers.approved_layer("GCPP-Fundamentals", "CP11").prompt.startswith("Which")
+    asyncio.run(layers.admin_unpublish("GCPP-Fundamentals", "CP11"))
+    assert layers.approved_layer("GCPP-Fundamentals", "CP11") is None
 
 
 def test_edit_invalid_is_400(monkeypatch):
     as_user(monkeypatch, "boss", staff=True)
     layers.save_layer(_layer())
     with pytest.raises(HTTPException) as e:
-        asyncio.run(layers.admin_save("GCPP-PAC", "CP11", layers.EditBody(prompt="x", self_check=["a", "b", "c"])))
+        asyncio.run(layers.admin_save("GCPP-Fundamentals", "CP11", layers.EditBody(prompt="x", self_check=["a", "b", "c"])))
     assert e.value.status_code == 400
 
 
 def test_student_cannot_draft(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     with pytest.raises(HTTPException) as e:
-        asyncio.run(layers.admin_draft("GCPP-PAC", "CP11"))
+        asyncio.run(layers.admin_draft("GCPP-Fundamentals", "CP11"))
     assert e.value.status_code == 403 and e.value.detail == "Layer prompts are edited by faculty" and model.calls == 0
 
 
 def test_admin_list(monkeypatch):
     as_user(monkeypatch, "boss", staff=True)
     layers.save_layer(_layer(status="approved"))
-    rows = asyncio.run(layers.admin_list("GCPP-PAC"))
+    rows = asyncio.run(layers.admin_list("GCPP-Fundamentals"))
     assert next(r for r in rows if r["session"] == "CP11")["status"] == "approved"
     assert next(r for r in rows if r["session"] == "CP10")["status"] == "none"
     assert next(r for r in rows if r["session"] == "CP10")["hint"]

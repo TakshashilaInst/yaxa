@@ -31,9 +31,9 @@ def setup_cohort(n: int = 4):
     soon = (NOW + timedelta(days=1)).date().isoformat()
     schedule.save_cohort(schedule.Cohort(code="GCPP45", programme="GCPP",
                                          sessions=[schedule.Session(code="CP11", date=soon, time="10:00")]))
-    cases.save_case(cases.Case(module="GCPP-PAC", session="CP11", status="approved", title="Manipur", situation="x " * 160,
+    cases.save_case(cases.Case(module="GCPP-Fundamentals", session="CP11", status="approved", title="Manipur", situation="x " * 160,
                                opening="What broke?", grasp=["State holds legitimate force", "Government is temporary"]))
-    layers.save_layer(layers.Layer(module="GCPP-PAC", session="CP11", status="approved",
+    layers.save_layer(layers.Layer(module="GCPP-Fundamentals", session="CP11", status="approved",
                                    prompt="Which institutions hold authority over your problem?", self_check=["a", "b", "c"]))
     ids = []
     for i in range(n):
@@ -48,7 +48,7 @@ def setup_cohort(n: int = 4):
 def write_layer(uid: str, text: str, title: str = "Drone rules"):
     data = brief.load(uid)
     data["problem"]["title"] = title
-    data["layers"]["GCPP-PAC/CP11"] = {"text": text}
+    data["layers"]["GCPP-Fundamentals/CP11"] = {"text": text}
     brief._save(uid, data)
 
 
@@ -73,8 +73,8 @@ def model(monkeypatch):
 
 def test_counts_explained_share(monkeypatch, model):
     ids = setup_cohort()
-    cases.mark_learn(ids[0], "GCPP-PAC", "CP11", status="explained", attempts=[{"missing": []}])
-    cases.mark_learn(ids[1], "GCPP-PAC", "CP11", status="tried", attempts=[{"missing": ["Government is temporary"]}])
+    cases.mark_learn(ids[0], "GCPP-Fundamentals", "CP11", status="explained", attempts=[{"missing": []}])
+    cases.mark_learn(ids[1], "GCPP-Fundamentals", "CP11", status="tried", attempts=[{"missing": ["Government is temporary"]}])
     rows = sprint_brief.sprint_data("GCPP45", now=NOW)
     r = rows[0]
     assert (r["session"], r["enrolled"], r["learn"]["started"], r["learn"]["explained"]) == ("CP11", 4, 2, 1)
@@ -86,7 +86,7 @@ def test_staff_excluded(monkeypatch, model):
     boss = store.load_user("boss", display_name="Boss")
     boss.enrolments = [store.Enrolment(programme="GCPP", track="TP", cohort="GCPP45")]
     store.save_user(boss)
-    cases.mark_learn("boss", "GCPP-PAC", "CP11", status="explained")
+    cases.mark_learn("boss", "GCPP-Fundamentals", "CP11", status="explained")
     r = sprint_brief.sprint_data("GCPP45", now=NOW)[0]
     assert r["enrolled"] == 4 and r["learn"]["explained"] == 0
 

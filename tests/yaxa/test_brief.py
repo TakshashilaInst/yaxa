@@ -33,7 +33,7 @@ def words(n: int, w: str = "word") -> str:
     return " ".join([w] * n)
 
 
-def approve_layer(module="GCPP-PAC", session="CP11"):
+def approve_layer(module="GCPP-Fundamentals", session="CP11"):
     layers.save_layer(layers.Layer(module=module, session=session, status="approved",
                                    prompt="Which institutions hold authority over your problem, and why do people accept it?",
                                    self_check=["I named the institution", "I explained legitimacy", "I named a limit"]))
@@ -66,10 +66,10 @@ def model(monkeypatch):
 def test_empty_brief_lists_approved_layers_only(monkeypatch):
     as_user(monkeypatch, "ravi")
     approve_layer()
-    layers.save_layer(layers.Layer(module="GCPP-PAC", session="CP12", prompt=words(20), self_check=["a", "b", "c"]))  # draft
+    layers.save_layer(layers.Layer(module="GCPP-Fundamentals", session="CP12", prompt=words(20), self_check=["a", "b", "c"]))  # draft
     out = asyncio.run(brief.get_brief())
     assert out["problem"] == {"title": "", "text": "", "updated_at": ""}
-    assert [(r["module"], r["session"]) for r in out["layers"]] == [("GCPP-PAC", "CP11")]
+    assert [(r["module"], r["session"]) for r in out["layers"]] == [("GCPP-Fundamentals", "CP11")]
     assert out["layers"][0]["text"] == "" and out["layers"][0]["self_check"]
 
 
@@ -77,7 +77,7 @@ def test_problem_and_layer_saved_privately(monkeypatch):
     as_user(monkeypatch, "ravi")
     approve_layer()
     asyncio.run(brief.put_problem(brief.ProblemBody(title="Drone rules for farms", text="Farmers can't fly sprayers legally.")))
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="zebracrossing " * 50, ratings={"0": "yes", "2": "partly"})))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="zebracrossing " * 50, ratings={"0": "yes", "2": "partly"})))
     out = asyncio.run(brief.get_brief())
     assert out["problem"]["title"] == "Drone rules for farms"
     assert out["layers"][0]["ratings"] == {"0": "yes", "2": "partly"}
@@ -92,16 +92,16 @@ def test_bad_ratings_rejected(monkeypatch):
     as_user(monkeypatch, "ravi")
     approve_layer()
     with pytest.raises(HTTPException) as e:
-        asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="x", ratings={"0": "9/10"})))
+        asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="x", ratings={"0": "9/10"})))
     assert e.value.status_code == 400
     with pytest.raises(HTTPException):
-        asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="x", ratings={"7": "yes"})))
+        asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="x", ratings={"7": "yes"})))
 
 
 def test_layer_must_be_approved(monkeypatch):
     as_user(monkeypatch, "ravi")
     with pytest.raises(HTTPException) as e:
-        asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="x")))
+        asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="x")))
     assert e.value.status_code == 404
 
 
@@ -109,8 +109,8 @@ def test_critique_cites_web_and_never_rewrites(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     approve_layer()
     asyncio.run(brief.put_problem(brief.ProblemBody(title="Drone rules for farms", text="")))
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text=words(60))))
-    out = asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text=words(60))))
+    out = asyncio.run(brief.critique("GCPP-Fundamentals", "CP11"))
     assert "[W1]" in out["critique"] and out["sources"][0]["url"] == "https://example.gov.in/drones"
     system = model.messages[0]["content"]
     assert "never rewrite" in system.lower()
@@ -122,31 +122,31 @@ def test_critique_cites_web_and_never_rewrites(monkeypatch, model):
 def test_critique_needs_some_writing(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     approve_layer()
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="too short")))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="too short")))
     with pytest.raises(HTTPException) as e:
-        asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+        asyncio.run(brief.critique("GCPP-Fundamentals", "CP11"))
     assert e.value.status_code == 400 and model.calls == 0
 
 
 def test_critique_survives_search_failure(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     approve_layer()
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text=words(60))))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text=words(60))))
 
     def boom(q):
         raise RuntimeError("offline")
 
     monkeypatch.setattr(brief, "_web_search", boom)
-    out = asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+    out = asyncio.run(brief.critique("GCPP-Fundamentals", "CP11"))
     assert not any(x["ref"].startswith("W") for x in out["sources"]) and out["critique"]
 
 
 def test_keeps_last_three_critiques(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     approve_layer()
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text=words(60))))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text=words(60))))
     for _ in range(5):
-        asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+        asyncio.run(brief.critique("GCPP-Fundamentals", "CP11"))
     assert len(asyncio.run(brief.get_brief())["layers"][0]["critiques"]) == brief.KEEP_CRITIQUES == 3
 
 
@@ -154,7 +154,7 @@ def test_export_is_markdown_of_own_work(monkeypatch):
     as_user(monkeypatch, "ravi")
     approve_layer()
     asyncio.run(brief.put_problem(brief.ProblemBody(title="Drone rules for farms", text="Farmers can't fly.")))
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="The DGCA holds authority.")))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="The DGCA holds authority.")))
     res = asyncio.run(brief.export())
     body = res.body.decode()
     assert body.startswith("# Drone rules for farms") and "The DGCA holds authority." in body
@@ -175,11 +175,11 @@ def test_unseen_topic_matches_track(monkeypatch, model):
 
 def test_layer_status(monkeypatch):
     as_user(monkeypatch, "ravi")
-    assert brief.layer_status("ravi", "GCPP-PAC", "CP11") == {"available": False, "written": False}
+    assert brief.layer_status("ravi", "GCPP-Fundamentals", "CP11") == {"available": False, "written": False}
     approve_layer()
-    assert brief.layer_status("ravi", "GCPP-PAC", "CP11") == {"available": True, "written": False}
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text="Something.")))
-    assert brief.layer_status("ravi", "GCPP-PAC", "CP11") == {"available": True, "written": True}
+    assert brief.layer_status("ravi", "GCPP-Fundamentals", "CP11") == {"available": True, "written": False}
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text="Something.")))
+    assert brief.layer_status("ravi", "GCPP-Fundamentals", "CP11") == {"available": True, "written": True}
 
 
 def test_no_route_exposes_another_students_brief():
@@ -200,8 +200,8 @@ def test_unseen_critique_after_writing(monkeypatch, model):
 def test_critique_accepts_plain_text_reply(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     approve_layer()
-    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text=words(60))))
+    asyncio.run(brief.put_layer("GCPP-Fundamentals", "CP11", brief.LayerBody(text=words(60))))
     model.reply = "Your paragraph names one institution [W1].\n\nWho actually enforces it?"
-    out = asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+    out = asyncio.run(brief.critique("GCPP-Fundamentals", "CP11"))
     assert out["critique"] == "Your paragraph names one institution [W1].\n\nWho actually enforces it?"
     assert model.calls == 1

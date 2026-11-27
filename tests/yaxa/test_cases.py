@@ -23,7 +23,7 @@ def words(n: int) -> str:
 
 
 def _case(**kw) -> cases.Case:
-    base = dict(module="GCPP-PAC", session="CP11", title="Delhi's free electricity", situation=words(160),
+    base = dict(module="GCPP-Fundamentals", session="CP11", title="Delhi's free electricity", situation=words(160),
                 opening="Who should decide, and why?", grasp=["The State holds legitimate force", "Government is its agent"])
     base.update(kw)
     return cases.Case(**base)
@@ -50,8 +50,8 @@ def test_rejects_grasp_count():
 
 def test_roundtrip():
     cases.save_case(_case())
-    assert cases.load_case("GCPP-PAC", "CP11") == _case()
-    assert cases.load_case("GCPP-PAC", "CP12") is None
+    assert cases.load_case("GCPP-Fundamentals", "CP11") == _case()
+    assert cases.load_case("GCPP-Fundamentals", "CP12") is None
 
 
 def test_public_view_hides_grasp():
@@ -108,8 +108,8 @@ def model(monkeypatch):
 
 def test_draft_saves_valid_draft(monkeypatch, model):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
-    out = asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
-    saved = cases.load_case("GCPP-PAC", "CP11")
+    out = asyncio.run(cases.admin_draft("GCPP-Fundamentals", "CP11"))
+    saved = cases.load_case("GCPP-Fundamentals", "CP11")
     assert saved.status == "draft" and saved.title == "Delhi's free electricity" and len(saved.grasp) == 2
     assert out["grasp"] == saved.grasp  # staff see the grasp notes
 
@@ -122,8 +122,8 @@ def test_bad_draft_twice_is_502_and_nothing_saved(monkeypatch, model):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     model.replies = ["not json"]
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
-    assert e.value.status_code == 502 and model.calls == 2 and cases.load_case("GCPP-PAC", "CP11") is None
+        asyncio.run(cases.admin_draft("GCPP-Fundamentals", "CP11"))
+    assert e.value.status_code == 502 and model.calls == 2 and cases.load_case("GCPP-Fundamentals", "CP11") is None
 
 
 def _body(**kw):
@@ -135,39 +135,39 @@ def test_edit_invalid_is_400_with_problems(monkeypatch):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     cases.save_case(_case())
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.admin_save("GCPP-PAC", "CP11", _body(opening="")))
+        asyncio.run(cases.admin_save("GCPP-Fundamentals", "CP11", _body(opening="")))
     assert e.value.status_code == 400 and e.value.detail["problems"]
 
 
 def test_edit_keeps_approval_and_bumps_version(monkeypatch):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     cases.save_case(_case(status="approved", version=3))
-    asyncio.run(cases.admin_save("GCPP-PAC", "CP11", _body(title="Delhi's subsidy, revisited")))
-    c = cases.load_case("GCPP-PAC", "CP11")
+    asyncio.run(cases.admin_save("GCPP-Fundamentals", "CP11", _body(title="Delhi's subsidy, revisited")))
+    c = cases.load_case("GCPP-Fundamentals", "CP11")
     assert c.status == "approved" and c.version == 4 and c.title == "Delhi's subsidy, revisited"
 
 
 def test_approve_and_unpublish(monkeypatch):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     cases.save_case(_case())
-    out = asyncio.run(cases.admin_approve("GCPP-PAC", "CP11"))
+    out = asyncio.run(cases.admin_approve("GCPP-Fundamentals", "CP11"))
     assert out["status"] == "approved" and out["approved_by"] == "Boss" and out["approved_at"]
-    assert asyncio.run(cases.admin_unpublish("GCPP-PAC", "CP11"))["status"] == "draft"
+    assert asyncio.run(cases.admin_unpublish("GCPP-Fundamentals", "CP11"))["status"] == "draft"
 
 
 def test_approve_invalid_is_400(monkeypatch):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     cases.save_case(_case(grasp=["only one"]))
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.admin_approve("GCPP-PAC", "CP11"))
+        asyncio.run(cases.admin_approve("GCPP-Fundamentals", "CP11"))
     assert e.value.status_code == 400
 
 
 def test_admin_list_covers_every_unit(monkeypatch):
     as_user(monkeypatch, "boss", cohort=None, staff=True)
     cases.save_case(_case(status="approved"))
-    rows = asyncio.run(cases.admin_list("GCPP-PAC"))
-    assert len(rows) == len(catalog.get_catalog().module("GCPP-PAC").units)
+    rows = asyncio.run(cases.admin_list("GCPP-Fundamentals"))
+    assert len(rows) == len(catalog.get_catalog().module("GCPP-Fundamentals").units)
     assert next(r for r in rows if r["session"] == "CP11")["status"] == "approved"
     assert next(r for r in rows if r["session"] == "CP12")["status"] == "none"
 
@@ -175,7 +175,7 @@ def test_admin_list_covers_every_unit(monkeypatch):
 def test_learner_cannot_draft(monkeypatch, model):
     as_user(monkeypatch, "ravi")
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
+        asyncio.run(cases.admin_draft("GCPP-Fundamentals", "CP11"))
     assert e.value.status_code == 403 and model.calls == 0
 
 
@@ -183,7 +183,7 @@ def test_learner_cannot_draft(monkeypatch, model):
 def test_learner_sees_approved_case_without_grasp(monkeypatch):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
-    v = asyncio.run(cases.learner_get("GCPP-PAC", "CP11"))
+    v = asyncio.run(cases.learner_get("GCPP-Fundamentals", "CP11"))
     assert v["title"] == "Delhi's free electricity" and "grasp" not in v
     assert "legitimate force" not in json.dumps(v)
 
@@ -192,7 +192,7 @@ def test_learn_without_case_is_404(monkeypatch):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case())  # a draft is not visible
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.learner_get("GCPP-PAC", "CP11"))
+        asyncio.run(cases.learner_get("GCPP-Fundamentals", "CP11"))
     assert e.value.status_code == 404
 
 
@@ -211,24 +211,24 @@ def test_explain_too_short_is_400(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.explain("GCPP-PAC", "CP11", cases.ExplainBody(text="the state is big")))
+        asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", cases.ExplainBody(text="the state is big")))
     assert e.value.status_code == 400 and "own words" in e.value.detail and judge.calls == 0
 
 
 def test_explain_records_explained_when_nothing_missing(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
-    out = asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    out = asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", EXPLAIN))
     assert out == {"got": ["The State holds legitimate force"], "missing": [], "next": [], "feedback": "Clear."}
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "explained"
 
 
 def test_explain_records_tried_when_something_missing(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
     judge.replies = [json.dumps({"got": [], "missing": ["Government is its agent"], "feedback": "Close."})]
-    asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "tried"
+    asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", EXPLAIN))
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "tried"
 
 
 def test_explain_bad_reply_is_502(monkeypatch, judge):
@@ -236,16 +236,16 @@ def test_explain_bad_reply_is_502(monkeypatch, judge):
     cases.save_case(_case(status="approved"))
     judge.replies = ["nope"]
     with pytest.raises(HTTPException) as e:
-        asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+        asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", EXPLAIN))
     assert e.value.status_code == 502 and judge.calls == 2
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "not_started"
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "not_started"
 
 
 def test_explain_text_stays_in_own_file(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
     secret = "zebracrossing " * 30
-    asyncio.run(cases.explain("GCPP-PAC", "CP11", cases.ExplainBody(text=secret)))
+    asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", cases.ExplainBody(text=secret)))
     for f in community.root("cases").rglob("*"):
         if f.is_file():
             assert "zebracrossing" not in f.read_text()
@@ -253,10 +253,10 @@ def test_explain_text_stays_in_own_file(monkeypatch, judge):
 
 
 def test_learn_status_defaults(monkeypatch):
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11") == {"case": False, "status": "not_started", "conversation_id": None}
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11") == {"case": False, "status": "not_started", "conversation_id": None}
     cases.save_case(_case(status="approved"))
-    cases.mark_learn("ravi", "GCPP-PAC", "CP11", status="in_progress", conversation_id="c1")
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11") == {"case": True, "status": "in_progress", "conversation_id": "c1"}
+    cases.mark_learn("ravi", "GCPP-Fundamentals", "CP11", status="in_progress", conversation_id="c1")
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11") == {"case": True, "status": "in_progress", "conversation_id": "c1"}
 
 
 # ---------------------------------------------------------------- explain-back judges the core idea
@@ -270,12 +270,12 @@ def test_explain_returns_next_prompts_and_case_points_do_not_block(monkeypatch, 
     cases.save_case(_case(status="approved"))
     judge.replies = [json.dumps({"got": ["State vs government"], "missing": [],
                                  "next": ["What did President's Rule change on the ground?"], "feedback": "Right."})]
-    out = asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    out = asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", EXPLAIN))
     assert out["next"] == ["What did President's Rule change on the ground?"]
-    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
+    assert cases.learn_status("ravi", "GCPP-Fundamentals", "CP11")["status"] == "explained"
 
 
 def test_explain_without_next_defaults_to_empty(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
-    assert asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))["next"] == []
+    assert asyncio.run(cases.explain("GCPP-Fundamentals", "CP11", EXPLAIN))["next"] == []
