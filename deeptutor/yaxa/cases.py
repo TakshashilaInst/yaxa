@@ -15,7 +15,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from . import community, grounding, prompting, store
-from .access import _me, _privileged, _short, parse_json_reply
+from .access import _me, _privileged, _require_module, _short, parse_json_reply
 from .catalog import get_catalog
 from .llm import ModelUnavailable, complete_text, resolve_for
 
@@ -26,6 +26,8 @@ MAX_WORDS = 400
 MIN_GRASP = 2
 MAX_GRASP = 5
 PASSAGES = 10
+MIN_EXPLAIN_WORDS = 25
+KEEP_ATTEMPTS = 5
 
 router = APIRouter(prefix="/cases")
 admin_router = APIRouter(prefix="/cases/admin")  # mounted before `router`, whose /{module}/{session} would match it
@@ -239,3 +241,115 @@ async def admin_unpublish(module: str, session: str) -> dict[str, Any]:
     c.status = "draft"
     save_case(c)
     return c.model_dump()
+
+
+# ------------------------------------------------------------------ learners: the case, progress, explain-back
+def _progress_path(user_id: str):
+    return store.yaxa_root() / "learn" / f"{store._safe(user_id)}.json"  # private to the student
+
+
+def learn_progress(user_id: str) -> dict[str, dict[str, Any]]:
+    return store._read_json(_progress_path(user_id)) or {}
+
+
+def mark_learn(user_id: str, module: str, session: str, **fields: Any) -> None:
+    data = learn_progress(user_id)
+    data.setdefault(f"{module}/{session}", {}).update(fields)
+    store._write_json(_progress_path(user_id), data)
+
+
+def learn_status(user_id: str, module: str, session: str) -> dict[str, Any]:
+    c = load_case(module, session)
+    row = learn_progress(user_id).get(f"{module}/{session}", {})
+    return {"case": bool(c and c.status == "approved"), "status": row.get("status", "not_started"),
+            "conversation_id": row.get("conversation_id")}
+
+
+def approved_case(module: str, session: str) -> Case | None:
+    c = load_case(module, session)
+    return c if c and c.status == "approved" else None
+
+
+def _session_unit(module: str, session: str):
+    cu, user = _me()
+    mod = _require_module(get_catalog(), cu, user, module)
+    if not mod or not any(u.id == session for u in mod.units):
+        raise HTTPException(404, "No such session in this module")
+    return cu, user, mod
+
+
+@router.get("/{module}/{session}")
+async def learner_get(module: str, session: str) -> dict[str, Any]:
+    cu, _user, _mod = _session_unit(module, session)
+    c = approved_case(module, session)
+    if not c:
+        raise HTTPException(404, "This session doesn't have a case yet")
+    return public_view(c) | {"learn": learn_status(cu.id, module, session)}
+
+
+EXPLAIN_PROMPT = """\
+A learner in a Takshashila public policy course has just worked through a case and now explains this
+session's idea back in their own words. Compare their explanation with the notes on what a learner who has
+understood the idea can say. Judge understanding, not wording, grammar or length. Never give a score.
+- "got": the notes their explanation covers, rephrased as short statements (may be empty).
+- "missing": the notes it does not yet cover or gets wrong (empty if none).
+- "feedback": 2-4 sentences to the learner, second person, warm and direct: what is right, and for anything
+  missing a question that points them towards it, without giving the answer away.
+Plain text, no markdown.
+
+Reply with JSON only, no other text:
+{"got": ["..."], "missing": ["..."], "feedback": "..."}"""
+
+
+class ExplainBody(BaseModel):
+    text: str
+
+
+def _parse_judgement(data: dict | None) -> dict[str, Any] | None:
+    if not isinstance(data, dict) or not isinstance(data.get("feedback"), str):
+        return None
+    got, missing = data.get("got"), data.get("missing")
+    if not isinstance(got, list) or not isinstance(missing, list):
+        return None
+    return {"got": [str(g) for g in got], "missing": [str(m) for m in missing], "feedback": data["feedback"].strip()}
+
+
+@router.post("/{module}/{session}/explain")
+async def explain(module: str, session: str, body: ExplainBody) -> dict[str, Any]:
+    cu, user, mod = _session_unit(module, session)
+    c = approved_case(module, session)
+    if not c:
+        raise HTTPException(404, "This session doesn't have a case yet")
+    text = body.text.strip()
+    if len(text.split()) < MIN_EXPLAIN_WORDS:
+        raise HTTPException(400, "Write a few sentences in your own words")
+    if len(text) > 6000:
+        raise HTTPException(413, "That's too long: a short paragraph is enough")
+    try:
+        config = resolve_for(cu.id)
+    except ModelUnavailable as exc:
+        raise HTTPException(503, str(exc)) from exc
+    if not store.count_turn(user, get_catalog().settings.daily_turn_limit):
+        raise HTTPException(429, "You've reached today's question limit. It resets tomorrow.")
+    unit = next(u for u in mod.units if u.id == session)
+    context = (f"{prompting._module_block(mod, unit)}\n\nThe case: {c.title}\n{c.situation}\n\n"
+               "What a learner who has understood the idea can say:\n" + "\n".join(f"- {g}" for g in c.grasp)
+               + f"\n\nThe learner's explanation:\n{text}")
+    for _attempt in range(2):
+        try:
+            reply = await complete_text(config, [{"role": "system", "content": EXPLAIN_PROMPT},
+                                                 {"role": "user", "content": context}], max_tokens=1200)
+        except Exception as exc:
+            logger.exception("yaxa cases: explain-back failed")
+            raise HTTPException(502, f"Yaxa couldn't reach its model: {type(exc).__name__}") from exc
+        result = _parse_judgement(parse_json_reply(reply))
+        if result:
+            break
+        logger.warning("yaxa cases: unusable judgement: %s", _short(reply, 300))
+    else:
+        raise HTTPException(502, "Yaxa couldn't read your explanation just now. Try again.")
+    row = learn_progress(cu.id).get(f"{module}/{session}", {})
+    attempts = (row.get("attempts") or [])[-(KEEP_ATTEMPTS - 1):] + [result | {"text": text, "at": now()}]
+    status = "explained" if not result["missing"] or row.get("status") == "explained" else "tried"
+    mark_learn(cu.id, module, session, status=status, attempts=attempts)
+    return result

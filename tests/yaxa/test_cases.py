@@ -177,3 +177,83 @@ def test_learner_cannot_draft(monkeypatch, model):
     with pytest.raises(HTTPException) as e:
         asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
     assert e.value.status_code == 403 and model.calls == 0
+
+
+# ---------------------------------------------------------------- Task 3: learner view, progress, explain-back
+def test_learner_sees_approved_case_without_grasp(monkeypatch):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    v = asyncio.run(cases.learner_get("GCPP-PAC", "CP11"))
+    assert v["title"] == "Delhi's free electricity" and "grasp" not in v
+    assert "legitimate force" not in json.dumps(v)
+
+
+def test_learn_without_case_is_404(monkeypatch):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case())  # a draft is not visible
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.learner_get("GCPP-PAC", "CP11"))
+    assert e.value.status_code == 404
+
+
+@pytest.fixture
+def judge(monkeypatch):
+    monkeypatch.setattr(cases, "resolve_for", lambda uid: object())
+    fake = FakeModel(json.dumps({"got": ["The State holds legitimate force"], "missing": [], "feedback": "Clear."}))
+    monkeypatch.setattr(cases, "complete_text", fake)
+    return fake
+
+
+EXPLAIN = cases.ExplainBody(text=words(30))
+
+
+def test_explain_too_short_is_400(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.explain("GCPP-PAC", "CP11", cases.ExplainBody(text="the state is big")))
+    assert e.value.status_code == 400 and "own words" in e.value.detail and judge.calls == 0
+
+
+def test_explain_records_explained_when_nothing_missing(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    out = asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    assert out == {"got": ["The State holds legitimate force"], "missing": [], "feedback": "Clear."}
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
+
+
+def test_explain_records_tried_when_something_missing(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    judge.replies = [json.dumps({"got": [], "missing": ["Government is its agent"], "feedback": "Close."})]
+    asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "tried"
+
+
+def test_explain_bad_reply_is_502(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    judge.replies = ["nope"]
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    assert e.value.status_code == 502 and judge.calls == 2
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "not_started"
+
+
+def test_explain_text_stays_in_own_file(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    secret = "zebracrossing " * 30
+    asyncio.run(cases.explain("GCPP-PAC", "CP11", cases.ExplainBody(text=secret)))
+    for f in community.root("cases").rglob("*"):
+        if f.is_file():
+            assert "zebracrossing" not in f.read_text()
+    assert "zebracrossing" in json.dumps(cases.learn_progress("ravi"))
+
+
+def test_learn_status_defaults(monkeypatch):
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11") == {"case": False, "status": "not_started", "conversation_id": None}
+    cases.save_case(_case(status="approved"))
+    cases.mark_learn("ravi", "GCPP-PAC", "CP11", status="in_progress", conversation_id="c1")
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11") == {"case": True, "status": "in_progress", "conversation_id": "c1"}
