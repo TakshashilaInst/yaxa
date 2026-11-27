@@ -28,7 +28,7 @@ GOOGLE_TYPES = {
     "application/vnd.google-apps.presentation": "Google Slides",
 }
 _CODE = re.compile(r"^(C[PST]\d+\w*|U\d{1,2})$")  # CS22, CT4x, CP21, U02
-_MODULE_LIKE = re.compile(r"^([A-Z]+[A-Z0-9]*(?:-[A-Z0-9]+)*)\s")  # "DFA-AS ...", "GCPP173 ..."
+_MODULE_LIKE = re.compile(r"^([A-Z]+[A-Z0-9]*(?:-[A-Za-z0-9]+)*)\s")  # "DFA-AS ...", "GCPP173 ...", "GCPP-Fundamentals ..."
 _COHORT = re.compile(r"^(\S+)\s+([A-Z][a-z]{2}\s+\d{4})$")  # "DFA26 Jun 2026"
 
 

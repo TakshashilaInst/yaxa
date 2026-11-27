@@ -3,7 +3,7 @@
 /**
  * Session check: five questions on a session's readings, taken before the webinar.
  * Marked on the server; each answer comes back with why it is right or wrong and the reading to go to.
- * `/learn/check/GCPP-PAC/CP11`
+ * `/learn/check/GCPP-Fundamentals/CP11`
  */
 import Link from "next/link";
 import { useParams } from "next/navigation";

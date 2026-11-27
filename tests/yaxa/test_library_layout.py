@@ -72,3 +72,8 @@ def test_track_level_file_goes_to_the_track_library() -> None:
     p = place(["GCPP", "APP Advanced Public Policy"], "APP - Module guide.md", "text/markdown", CAT)
     assert isinstance(p, Placement) and (p.kb, p.kind, p.module) == ("APP", "reading", "")
     assert place(["GCPP", "Core"], "x.pdf", PDF, CAT) == "not inside a module folder"  # core modules have separate libraries
+
+
+def test_mixed_case_module_folder() -> None:
+    p = place(["GCPP", "Core", "GCPP-Fundamentals Policy Analysis and Concepts", "Readings"], "CP10 - Readings.pdf", PDF, CAT)
+    assert p.module == "GCPP-Fundamentals" and p.kb == "GCPP-PAC" and p.unit == "CP10"

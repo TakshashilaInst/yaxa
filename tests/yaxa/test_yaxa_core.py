@@ -33,7 +33,7 @@ def test_gcpp_has_tracks_and_pgp_does_not() -> None:
     gcpp, pgp = cat.programme("GCPP"), cat.programme("PGP")
     assert gcpp.tracks and not pgp.tracks
     app, tp = gcpp.module_codes("APP"), gcpp.module_codes("TP")
-    core = ["GCPP-PAC", "GCPP-ER1", "GCPP-COMM"]
+    core = ["GCPP-Fundamentals", "GCPP-ER1", "GCPP-COMM"]
     assert app[:3] == core and tp[:3] == core  # every track shares the core weeks
     assert "APP-ER2" in app and "APP-ER2" not in tp
 

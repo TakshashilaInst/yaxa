@@ -8,15 +8,15 @@ programmes:
     tracks:
       - code: APP
         name: Advanced Public Policy
-        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        core: [GCPP-Fundamentals, GCPP-ER1, GCPP-COMM]
         specialisation: [APP-PAF, APP-ER2, APP-CS]
       - code: TP
         name: Technology and Policy
-        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        core: [GCPP-Fundamentals, GCPP-ER1, GCPP-COMM]
         specialisation: [TP-AI, TP-RS, TP-IE, TP-HTG]
       - code: DFA
         name: Defence and Foreign Affairs
-        core: [GCPP-PAC, GCPP-ER1, GCPP-COMM]
+        core: [GCPP-Fundamentals, GCPP-ER1, GCPP-COMM]
         specialisation: [DFA-SSIR, DFA-AS, DFA-SE]
 
   - code: PGP

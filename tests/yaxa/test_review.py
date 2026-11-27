@@ -79,7 +79,7 @@ def test_due_units_lists_only_due_units_most_overdue_first():
 def test_due_units_ignore_other_students_and_other_modules():
     er1 = catalog.get_catalog().module("GCPP-ER1")
     store.save_practice(_item(er1.units[0].id, 0, 0, user="someone_else"))
-    store.save_practice(_item("X1", 0, 0, module="GCPP-PAC"))
+    store.save_practice(_item("X1", 0, 0, module="GCPP-Fundamentals"))
     assert review.due_units("u_r", [er1], now=T0.timestamp() + 30 * DAY) == []
 
 
