@@ -25,6 +25,7 @@ from . import (
     cohort,
     discussion,
     grounding,
+    keys,
     layers,
     library_api,
     module_page,
@@ -62,6 +63,7 @@ router.include_router(cases.router)
 router.include_router(layers.admin_router)
 router.include_router(brief.router)
 router.include_router(sprint_brief.router)
+router.include_router(keys.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)

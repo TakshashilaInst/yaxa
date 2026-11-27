@@ -1,9 +1,9 @@
 """Which model answers a student, and how Yaxa calls it.
 
-Two modes, chosen in content/config.yaml:
-  shared   - every student uses one admin profile (the demo: Claude via an API key)
-  per_user - each student uses their own ChatGPT/Codex sign-in (real deployment;
-             not built yet, so it raises a clear error)
+Modes, chosen in content/config.yaml:
+  shared   - everyone uses one admin profile (the demo), unless a student added their own key
+  byok     - students use their own Claude/OpenAI key (keys.py); staff use the shared profile
+  per_user - each student's ChatGPT/Codex sign-in (not built; raises a clear error)
 
 All model access goes through ``resolve_for`` so switching modes later touches
 one function.
@@ -46,12 +46,14 @@ def _find_shared_selection(catalog: dict[str, Any], wanted_profile: str, wanted_
     return None
 
 
-def resolve_for(user_id: str) -> LLMConfig:
+def _staff_ids() -> set[str]:
+    from .cohort import _staff_ids as staff  # noqa: PLC0415 - cohort imports llm
+
+    return staff()
+
+
+def _shared_config() -> LLMConfig:
     settings = get_catalog().settings
-    if settings.model_mode != "shared":
-        raise ModelUnavailable(
-            "Per-student ChatGPT sign-in is not switched on yet. Ask Takshashila to enable it."
-        )
     wanted = settings.shared_model or {}
     catalog = admin_catalog()
     picked = _find_shared_selection(
@@ -67,6 +69,29 @@ def resolve_for(user_id: str) -> LLMConfig:
         catalog, llm_selection={"profile_id": profile_id, "model_id": model_id}
     )
     return llm_config_from_resolved(resolved)
+
+
+def resolve_for(user_id: str) -> LLMConfig:
+    """shared: everyone on the shared model, except students who added their own key.
+    byok: students must use their own key; faculty and admins stay on the shared model."""
+    from . import keys  # noqa: PLC0415 - keys imports llm's helpers late too
+
+    mode = get_catalog().settings.model_mode
+    if mode not in ("shared", "byok"):
+        raise ModelUnavailable(
+            "Per-student ChatGPT sign-in is not switched on yet. Ask Takshashila to enable it."
+        )
+    if mode == "byok" and user_id in _staff_ids():
+        return _shared_config()
+    own = keys.config_for(user_id)
+    if own:
+        return own
+    if mode == "byok":
+        raise ModelUnavailable(
+            "Add your own AI key (Claude or OpenAI) under Profile → Your AI key. "
+            "Yaxa uses it for your questions; Takshashila doesn't pay for students' AI use."
+        )
+    return _shared_config()
 
 
 @contextmanager
