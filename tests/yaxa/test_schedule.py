@@ -260,6 +260,7 @@ def test_week_rows_carry_learn_and_check(monkeypatch):
     row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]
     assert row["learn"] == {"case": False, "status": "not_started", "conversation_id": None}
     assert row["check"]["available"] is False
+    assert row["layer"] == {"available": False, "written": False}
     cases.save_case(cases.Case(module="DFA-SSIR", session="CS12", status="approved", title="t", situation="w " * 100,
                                opening="o?", grasp=["a", "b"]))
     row = schedule.week(cu, user, now=datetime(2026, 11, 25, 10, 0, tzinfo=IST))["sessions"][0]

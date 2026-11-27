@@ -388,6 +388,7 @@ def week(cu, user: store.YaxaUser, now: datetime | None = None) -> dict:
             # the sprint: Learn on the weekly case, then the check, then the live session
             "learn": module_page._learn_status(user.user_id, mod.code, s.code),
             "check": module_page._check_status(user.user_id, mod.code, s.code),
+            "layer": module_page._layer_status(user.user_id, mod.code, s.code),
         })
     today = now.date()
     dates = [
