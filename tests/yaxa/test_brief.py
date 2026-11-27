@@ -186,3 +186,12 @@ def test_no_route_exposes_another_students_brief():
     paths = [r.path for r in brief.router.routes]
     assert paths and all(p.startswith("/brief") for p in paths)
     assert not any("{user" in p or "admin" in p or "cohort" in p for p in paths)
+
+
+def test_unseen_critique_after_writing(monkeypatch, model):
+    as_user(monkeypatch, "ravi")
+    asyncio.run(brief.propose_unseen(brief.UnseenBody()))
+    asyncio.run(brief.put_unseen(brief.UnseenText(text=words(50))))
+    out = asyncio.run(brief.critique_unseen())
+    assert out["critique"] and "Drone rules for farms" in model.messages[1]["content"]
+    assert len(brief.load("ravi")["unseen"]["critiques"]) == 1
