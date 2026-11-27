@@ -160,12 +160,9 @@ They are applying this session's idea to a problem they chose. Your job is to ma
   the session's idea would make them notice.
 - Use the web results [W1]... and course passages [C1]... for facts, and cite them inline. Never invent sources.
   If a result is irrelevant, ignore it.
-- Under 250 words, second person, plain text, no markdown headings.
+- Under 250 words, second person, plain text, no markdown headings. Reply with the critique only.
 Takshashila's usage: "State" means the political institution in Max Weber's sense, never an Indian
-sub-national state.
-
-Reply with JSON only, no other text:
-{"critique": "<text>"}"""
+sub-national state."""
 
 
 def _web_search(query: str) -> list[dict[str, str]]:
@@ -205,15 +202,16 @@ async def _critique(cu, user, *, mod, unit, task: str, problem: str, text: str) 
     for _attempt in range(2):
         try:
             reply = await complete_text(config, [{"role": "system", "content": CRITIQUE_PROMPT},
-                                                 {"role": "user", "content": context}], max_tokens=1200)
+                                                 {"role": "user", "content": context}], max_tokens=1600)
         except Exception as exc:
             logger.exception("yaxa brief: critique failed")
             raise HTTPException(502, f"Yaxa couldn't reach its model: {type(exc).__name__}") from exc
-        data = parse_json_reply(reply)
-        if isinstance(data, dict) and isinstance(data.get("critique"), str) and data["critique"].strip():
+        data = parse_json_reply(reply) if reply.lstrip().startswith(("{", "```")) else None
+        text_out = data.get("critique") if isinstance(data, dict) else reply  # plain text; older prompts asked for JSON
+        if isinstance(text_out, str) and text_out.strip():
             sources = [{"ref": f"W{i}", "title": w["title"], "url": w["url"]} for i, w in enumerate(web, 1)]
             sources += [{"ref": f"C{i}", "title": prompting.passage_label(p), "url": ""} for i, p in enumerate(passages, 1)]
-            return {"critique": data["critique"].strip(), "sources": sources, "at": now()}
+            return {"critique": text_out.strip(), "sources": sources, "at": now()}
         logger.warning("yaxa brief: unusable critique: %s", _short(reply, 300))
     raise HTTPException(502, "Yaxa couldn't write a critique just now. Try again.")
 

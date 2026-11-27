@@ -195,3 +195,13 @@ def test_unseen_critique_after_writing(monkeypatch, model):
     out = asyncio.run(brief.critique_unseen())
     assert out["critique"] and "Drone rules for farms" in model.messages[1]["content"]
     assert len(brief.load("ravi")["unseen"]["critiques"]) == 1
+
+
+def test_critique_accepts_plain_text_reply(monkeypatch, model):
+    as_user(monkeypatch, "ravi")
+    approve_layer()
+    asyncio.run(brief.put_layer("GCPP-PAC", "CP11", brief.LayerBody(text=words(60))))
+    model.reply = "Your paragraph names one institution [W1].\n\nWho actually enforces it?"
+    out = asyncio.run(brief.critique("GCPP-PAC", "CP11"))
+    assert out["critique"] == "Your paragraph names one institution [W1].\n\nWho actually enforces it?"
+    assert model.calls == 1
