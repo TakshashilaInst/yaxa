@@ -156,7 +156,7 @@ export interface ModuleUnitDetail {
 // ---------- weekly case and Learn session
 export interface LearnStatus { case: boolean; status: "not_started" | "in_progress" | "tried" | "explained"; conversation_id: string | null }
 export interface CaseView { module: string; session: string; version: number; title: string; situation: string; opening: string; learn: LearnStatus }
-export interface ExplainResult { got: string[]; missing: string[]; feedback: string }
+export interface ExplainResult { got: string[]; missing: string[]; next: string[]; feedback: string }
 export interface CaseAdmin {
   module: string; session: string; status: "none" | "draft" | "approved"; version: number;
   title: string; situation: string; opening: string; grasp: string[]; approved_by?: string; approved_at?: string;

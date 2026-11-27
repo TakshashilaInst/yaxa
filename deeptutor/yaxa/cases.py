@@ -289,16 +289,21 @@ async def learner_get(module: str, session: str) -> dict[str, Any]:
 
 EXPLAIN_PROMPT = """\
 A learner in a Takshashila public policy course has just worked through a case and now explains this
-session's idea back in their own words. Compare their explanation with the notes on what a learner who has
-understood the idea can say. Judge understanding, not wording, grammar or length. Never give a score.
-- "got": the notes their explanation covers, rephrased as short statements (may be empty).
-- "missing": the notes it does not yet cover or gets wrong (empty if none).
+session's idea back in their own words. The notes below say what a learner who has understood the idea can
+say; they mix the session's core idea (the concept itself) with how it applies to this particular case.
+Judge only whether the learner has the core idea. Judge understanding, not wording, grammar or length.
+Never give a score.
+- "got": the parts of the core idea their explanation covers, as short statements (may be empty).
+- "missing": parts of the core idea it does not cover or gets wrong (empty if they have it). Never list
+  case-specific applications here.
+- "next": 1-3 questions that take the idea further into this case (applications they did not mention).
+  These are invitations to think, not gaps.
 - "feedback": 2-4 sentences to the learner, second person, warm and direct: what is right, and for anything
   missing a question that points them towards it, without giving the answer away.
 Plain text, no markdown.
 
 Reply with JSON only, no other text:
-{"got": ["..."], "missing": ["..."], "feedback": "..."}"""
+{"got": ["..."], "missing": ["..."], "next": ["..."], "feedback": "..."}"""
 
 
 class ExplainBody(BaseModel):
@@ -311,7 +316,9 @@ def _parse_judgement(data: dict | None) -> dict[str, Any] | None:
     got, missing = data.get("got"), data.get("missing")
     if not isinstance(got, list) or not isinstance(missing, list):
         return None
-    return {"got": [str(g) for g in got], "missing": [str(m) for m in missing], "feedback": data["feedback"].strip()}
+    nxt = data.get("next") if isinstance(data.get("next"), list) else []
+    return {"got": [str(g) for g in got], "missing": [str(m) for m in missing], "next": [str(n) for n in nxt][:3],
+            "feedback": data["feedback"].strip()}
 
 
 @router.post("/{module}/{session}/explain")

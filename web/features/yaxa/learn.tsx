@@ -64,11 +64,17 @@ export function ExplainBack({ module, session, explained }: { module: string; se
           )}
           {!!result.missing.length && (
             <>
-              <b>Still to think about</b>
+              <b>Still missing from the idea</b>
               <ul style={{ margin: "4px 0 8px" }}>{result.missing.map((g, i) => <li key={i}>{g}</li>)}</ul>
             </>
           )}
           <p style={{ margin: "0 0 10px" }}>{result.feedback}</p>
+          {!!result.next?.length && (
+            <>
+              <b>Take it further into the case</b>
+              <ul style={{ margin: "4px 0 8px" }}>{result.next.map((g, i) => <li key={i}>{g}</li>)}</ul>
+            </>
+          )}
           <button className="yx-btn yx-btn-sm yx-btn-ghost" onClick={() => setResult(null)}>Try again</button>
         </>
       ) : (

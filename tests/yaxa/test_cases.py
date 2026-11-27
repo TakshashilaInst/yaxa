@@ -219,7 +219,7 @@ def test_explain_records_explained_when_nothing_missing(monkeypatch, judge):
     as_user(monkeypatch, "ravi")
     cases.save_case(_case(status="approved"))
     out = asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
-    assert out == {"got": ["The State holds legitimate force"], "missing": [], "feedback": "Clear."}
+    assert out == {"got": ["The State holds legitimate force"], "missing": [], "next": [], "feedback": "Clear."}
     assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
 
 
@@ -257,3 +257,25 @@ def test_learn_status_defaults(monkeypatch):
     cases.save_case(_case(status="approved"))
     cases.mark_learn("ravi", "GCPP-PAC", "CP11", status="in_progress", conversation_id="c1")
     assert cases.learn_status("ravi", "GCPP-PAC", "CP11") == {"case": True, "status": "in_progress", "conversation_id": "c1"}
+
+
+# ---------------------------------------------------------------- explain-back judges the core idea
+def test_explain_prompt_judges_core_idea_not_case_application():
+    p = cases.EXPLAIN_PROMPT
+    assert "core idea" in p and '"next"' in p
+
+
+def test_explain_returns_next_prompts_and_case_points_do_not_block(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    judge.replies = [json.dumps({"got": ["State vs government"], "missing": [],
+                                 "next": ["What did President's Rule change on the ground?"], "feedback": "Right."})]
+    out = asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))
+    assert out["next"] == ["What did President's Rule change on the ground?"]
+    assert cases.learn_status("ravi", "GCPP-PAC", "CP11")["status"] == "explained"
+
+
+def test_explain_without_next_defaults_to_empty(monkeypatch, judge):
+    as_user(monkeypatch, "ravi")
+    cases.save_case(_case(status="approved"))
+    assert asyncio.run(cases.explain("GCPP-PAC", "CP11", EXPLAIN))["next"] == []
