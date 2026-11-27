@@ -1,6 +1,7 @@
 code: GCPP-Fundamentals
 title: Policy Analysis and Concepts
 kb: GCPP-PAC
+aliases: [GCPP-PAC]  # the former code; the Drive folder may still use it
 description: 'Core module, weeks 1-5. Foundations of public policy: nations, states and governments, the Constitution, what
   governments try to do and the paradoxes they face.'
 units:

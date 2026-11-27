@@ -70,6 +70,7 @@ class Module(BaseModel):
     description: str = ""
     units: list[Unit] = Field(default_factory=list)
     available: bool = True  # False for placeholders (no content file yet)
+    aliases: list[str] = Field(default_factory=list)  # former codes, still recognised in Drive folder names
 
     def unit(self, unit_id: str | None) -> Unit | None:
         return next((u for u in self.units if u.id == unit_id), None)

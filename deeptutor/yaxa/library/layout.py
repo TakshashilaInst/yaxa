@@ -102,7 +102,7 @@ def place(path: list[str] | tuple[str, ...], name: str, mime: str, cat: Catalog)
         if not m:
             continue
         code = m.group(1)
-        module = cat.modules.get(code)
+        module = cat.modules.get(code) or next((m for m in cat.modules.values() if code in m.aliases), None)
         if module:
             break
         # "GCPP", "TP Technology and Policy" are programme/track folders; a code with a
