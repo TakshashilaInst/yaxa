@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
 import { SessionDiscussion } from "@/features/yaxa/discussion";
-import { sessionWhen } from "@/features/yaxa/week";
+import { learnHref, sessionWhen } from "@/features/yaxa/week";
 import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail, type SessionResource } from "@/lib/yaxa-api";
 
 const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar", note: "Article", anecdote: "Anecdote" };
@@ -120,6 +120,14 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
       </div>
       {u.outcomes && <p className="yx-muted" style={{ margin: "6px 0 0" }}>{u.outcomes}</p>}
 
+      {u.learn?.case && (
+        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
+          <b>Learn:</b>{" "}
+          <Link href={learnHref(code, u.id, u.learn)}>
+            {u.learn.status === "explained" ? "Explained ✓ · revisit the case" : u.learn.status === "not_started" ? "Learn this through a real case" : "Carry on with the case"}
+          </Link>
+        </p>
+      )}
       {u.check?.available && (
         <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
           <b>Before the session:</b>{" "}

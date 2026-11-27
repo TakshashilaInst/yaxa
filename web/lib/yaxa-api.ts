@@ -94,7 +94,7 @@ export interface Turn {
 
 export interface Conversation {
   id: string;
-  kind: "chat" | "panel" | "programme";
+  kind: "chat" | "panel" | "programme" | "learn";
   module: string | null;
   unit: string | null;
   title: string;
@@ -103,7 +103,7 @@ export interface Conversation {
 
 export interface ConversationSummary {
   id: string;
-  kind: "chat" | "panel" | "programme";
+  kind: "chat" | "panel" | "programme" | "learn";
   title: string;
   module: string | null;
   unit: string | null;
@@ -150,7 +150,18 @@ export interface ModuleUnitDetail {
   readings: ModuleReading[]; // more from the library (webinar transcripts, extra material)
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
   check?: CheckStatus; // the 5-question check before the session
+  learn?: LearnStatus; // the Learn session on the weekly case
 }
+
+// ---------- weekly case and Learn session
+export interface LearnStatus { case: boolean; status: "not_started" | "in_progress" | "tried" | "explained"; conversation_id: string | null }
+export interface CaseView { module: string; session: string; version: number; title: string; situation: string; opening: string; learn: LearnStatus }
+export interface ExplainResult { got: string[]; missing: string[]; feedback: string }
+export interface CaseAdmin {
+  module: string; session: string; status: "none" | "draft" | "approved"; version: number;
+  title: string; situation: string; opening: string; grasp: string[]; approved_by?: string; approved_at?: string;
+}
+export interface CaseAdminRow { session: string; title: string; case_title: string; status: CaseAdmin["status"] }
 
 export interface ModuleDetail {
   code: string;
@@ -331,6 +342,7 @@ export interface WeekSession {
   code: string; module: string; module_title: string; title: string;
   starts_at: string; host: string; note: string; webinar_url: string;
   readings: WeekReading[]; transcript_ready: boolean;
+  learn?: LearnStatus; check?: CheckStatus; // the sprint steps
 }
 export interface WeekView { cohort: string | null; sessions: WeekSession[]; dates: { date: string; label: string }[] }
 export interface CohortSession { code: string; date: string; time: string; host: string; webinar_url: string; note: string }
@@ -503,6 +515,17 @@ export const yaxa = {
     json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
   checkBrief: (cohort: string, refresh = false) =>
     json<{ cohort: string; sessions: CheckBriefSession[] }>(`/checks/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
+  caseGet: (module: string, session: string) =>
+    json<CaseView>(`/cases/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  caseExplain: (module: string, session: string, text: string) =>
+    json<ExplainResult>(`/cases/${encodeURIComponent(module)}/${encodeURIComponent(session)}/explain`, send("POST", { text })),
+  caseAdminList: (module: string) => json<CaseAdminRow[]>(`/cases/admin/${encodeURIComponent(module)}`),
+  caseAdminGet: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  caseDraft: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  caseSave: (module: string, session: string, c: Pick<CaseAdmin, "title" | "situation" | "opening" | "grasp">) =>
+    json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { title: c.title, situation: c.situation, opening: c.opening, grasp: c.grasp })),
+  caseApprove: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
+  caseUnpublish: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
   cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
   cohortBrief: (module: string, days: number, refresh = false) =>
     json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),
@@ -555,6 +578,7 @@ export interface ChatRequest {
   unit?: string | null;
   faculty?: string | null;
   socratic: boolean;
+  learn?: boolean; // a Learn session on the unit's weekly case
   scope?: "module" | "programme";
 }
 

@@ -10,7 +10,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { yaxa, type WeekSession, type WeekView } from "@/lib/yaxa-api";
+import { yaxa, type LearnStatus, type WeekSession, type WeekView } from "@/lib/yaxa-api";
 
 const IST = "Asia/Kolkata";
 
@@ -32,6 +32,38 @@ function chatHref(s: WeekSession, socratic: boolean) {
   return `/learn/chat/new?${q}`;
 }
 
+/** Where to start or carry on the Learn session for one unit. */
+export function learnHref(module: string, unit: string, learn?: LearnStatus): string {
+  if (learn?.conversation_id) return `/learn/chat/${learn.conversation_id}`;
+  return `/learn/chat/new?${new URLSearchParams({ learn: "1", module, unit })}`;
+}
+
+export function learnLabel(learn: LearnStatus): string {
+  if (learn.status === "explained") return "Learn ✓ explained";
+  if (learn.status === "not_started") return "Learn: start";
+  return "Learn: carry on";
+}
+
+/** The sprint for one session: Learn on the case, then the check, then the live session. */
+function SprintSteps({ s }: { s: WeekSession }) {
+  if (!s.learn?.case && !s.check?.available) return null;
+  return (
+    <ol className="yx-week-sprint" style={{ margin: "8px 0", paddingLeft: 18 }}>
+      {s.learn?.case && (
+        <li><Link href={learnHref(s.module, s.code, s.learn)}>{learnLabel(s.learn)}</Link> <span className="yx-muted">· the idea, through a real case</span></li>
+      )}
+      {s.check?.available && (
+        <li>
+          <Link href={`/learn/check/${encodeURIComponent(s.module)}/${encodeURIComponent(s.code)}`}>
+            {s.check.ready ? "Check ✓ ready" : s.check.attempts ? `Check: best ${s.check.best}/5` : "Check: 5 questions"}
+          </Link>
+        </li>
+      )}
+      <li>Live: {sessionWhen(s.starts_at)}</li>
+    </ol>
+  );
+}
+
 function SessionCard({ s }: { s: WeekSession }) {
   const done = s.readings.filter((r) => r.opened).length;
   const all = s.readings.length;
@@ -42,6 +74,7 @@ function SessionCard({ s }: { s: WeekSession }) {
         {s.code} {s.title}
       </Link>
       {s.note && <p className="yx-muted yx-week-note">{s.note}</p>}
+      <SprintSteps s={s} />
       {all > 0 && (
         <>
           <p className="yx-week-prep">{done === all ? "Readings done" : `${all - done} of ${all} readings to do first`}</p>

@@ -4,7 +4,8 @@
  * A Yaxa conversation: grounded answers with a citations margin, a Socratic
  * mode where Yaxa asks the questions, faculty personas, and notes export.
  * `/learn/chat/new?module=GCPP102&unit=U03` starts one; the id replaces "new"
- * once the server has created it.
+ * once the server has created it. `?learn=1&module=…&unit=…` starts a Learn session: Yaxa
+ * teaches the unit's idea through its weekly case, and the learner explains it back.
  */
 import { useParams, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -12,7 +13,8 @@ import { ArrowUp, Download } from "lucide-react";
 
 import { Avatar, FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
 import { AnswerText, GroundingMargin, type MarginEntry } from "@/features/yaxa/grounding";
-import { streamChat, yaxa, type Citation, type FacultyView, type ModuleView, type Passage } from "@/lib/yaxa-api";
+import { CaseCard, ExplainBack } from "@/features/yaxa/learn";
+import { streamChat, yaxa, type CaseView, type Citation, type FacultyView, type ModuleView, type Passage } from "@/lib/yaxa-api";
 
 interface Msg {
   role: "user" | "assistant" | "notice";
@@ -49,7 +51,10 @@ function ChatScreen() {
   const [loaded, setLoaded] = useState(params.cid === "new");
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [socratic, setSocratic] = useState(search.get("mode") === "socratic"); // "Question me" on the module page
+  const [learn, setLearn] = useState(search.get("learn") === "1"); // a Learn session on the weekly case
+  const [caseView, setCaseView] = useState<CaseView | null>(null);
+  const [caseMissing, setCaseMissing] = useState(false);
+  const [socratic, setSocratic] = useState(search.get("mode") === "socratic" || search.get("learn") === "1"); // "Question me" on the module page
   const [faculty, setFaculty] = useState<string>("");
   const [facultyList, setFacultyList] = useState<FacultyView[]>([]);
   const [starters, setStarters] = useState<string[]>([]);
@@ -70,6 +75,7 @@ function ChatScreen() {
         setModuleCode(c.module);
         setUnitId(c.unit);
         setAcross(c.kind === "programme");
+        if (c.kind === "learn") setLearn(true);
         setMsgs(
           c.turns.map((t) => ({
             role: t.role === "assistant" ? "assistant" : "user",
@@ -105,6 +111,18 @@ function ChatScreen() {
   useEffect(() => {
     yaxa.faculty().then(setFacultyList).catch(() => {});
   }, []);
+  // ---- Learn: the week's case, and Yaxa's opening question on a new session
+  useEffect(() => {
+    if (!learn || !moduleCode || !unitId) return;
+    setSocratic(true);
+    yaxa
+      .caseGet(moduleCode, unitId)
+      .then((c) => {
+        setCaseView(c);
+        if (params.cid === "new") setMsgs((m) => (m.length ? m : [{ role: "assistant", content: c.opening, socratic: true }]));
+      })
+      .catch(() => setCaseMissing(true));
+  }, [learn, moduleCode, unitId, params.cid]);
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [msgs]);
@@ -132,7 +150,7 @@ function ChatScreen() {
           return copy;
         });
       await streamChat(
-        { message, conversation_id: convId, module: across ? null : moduleCode, unit: across ? null : unitId, faculty: faculty || null, socratic, scope: across ? "programme" : "module" },
+        { message, conversation_id: convId, module: across ? null : moduleCode, unit: across ? null : unitId, faculty: faculty || null, socratic, learn, scope: across ? "programme" : "module" },
         {
           onMeta: (meta) => {
             if (!convId) {
@@ -152,7 +170,7 @@ function ChatScreen() {
       patchLast((m) => ({ ...m, pending: false }));
       setBusy(false);
     },
-    [across, busy, convId, faculty, facultyView, moduleCode, socratic, unitId],
+    [across, busy, convId, faculty, facultyView, learn, moduleCode, socratic, unitId],
   );
 
   // ---- Socratic toggle: announce it and offer threads to pick up
@@ -215,9 +233,13 @@ function ChatScreen() {
         me={me}
         center={
           <>
-            <button className={`yx-btn yx-btn-sm ${socratic ? "yx-btn-maroon" : "yx-btn-primary"}`} onClick={toggleSocratic} title={socratic ? "Exit Socratic mode" : "Yaxa asks the questions"}>
-              {socratic ? "Exit Socratic" : "Turn Socratic"}
-            </button>
+            {learn ? (
+              <span className="yx-header-title">Learn{unitId ? ` · ${unitId}` : ""}</span>
+            ) : (
+              <button className={`yx-btn yx-btn-sm ${socratic ? "yx-btn-maroon" : "yx-btn-primary"}`} onClick={toggleSocratic} title={socratic ? "Exit Socratic mode" : "Yaxa asks the questions"}>
+                {socratic ? "Exit Socratic" : "Turn Socratic"}
+              </button>
+            )}
             {convId && msgs.length > 1 && (
               <button className="yx-btn yx-btn-sm yx-btn-ghost" style={{ color: "inherit", borderColor: "currentColor" }} onClick={exportNotes} disabled={exporting} title="Your questions and answers so far, as study notes you can keep.">
                 <Download size={14} /> {exporting ? "Writing your notes…" : "Export my learnings (.md)"}
@@ -229,6 +251,10 @@ function ChatScreen() {
       <div className="yx-chat">
         <div className="yx-main">
           <div className="yx-thread">
+            {learn && caseView && <CaseCard c={caseView} />}
+            {learn && caseMissing && (
+              <p className="yx-muted">This session doesn&apos;t have a case yet, so Yaxa will question you on the session&apos;s readings instead.</p>
+            )}
             {msgs.length === 0 && (
               <div className="yx-welcome">
                 <h1>{socratic ? "Socratic mode" : `Welcome, ${first}.`}</h1>
@@ -285,6 +311,9 @@ function ChatScreen() {
                   <button key={t} onClick={() => send(t)}>{t}</button>
                 ))}
               </div>
+            )}
+            {learn && caseView && moduleCode && unitId && msgs.length > 2 && (
+              <ExplainBack module={moduleCode} session={unitId} explained={caseView.learn.status === "explained"} />
             )}
             {exportError && <p className="yx-error">{exportError}</p>}
             <div ref={bottom} />
