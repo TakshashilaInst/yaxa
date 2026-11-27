@@ -57,3 +57,123 @@ def test_roundtrip():
 def test_public_view_hides_grasp():
     v = cases.public_view(_case(status="approved"))
     assert "grasp" not in v and v["title"] == "Delhi's free electricity" and v["opening"]
+
+
+# ---------------------------------------------------------------- Task 2: faculty draft, edit, approve
+import asyncio  # noqa: E402
+import json  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+from fastapi import HTTPException  # noqa: E402
+
+from deeptutor.yaxa import schedule, store  # noqa: E402
+
+
+def as_user(monkeypatch, uid: str, *, cohort: str | None = "GCPP45", staff: bool = False):
+    if cohort and not schedule.load_cohort(cohort):
+        schedule.save_cohort(schedule.Cohort(code=cohort, programme="GCPP"))
+    user = store.load_user(uid, display_name=uid.title())
+    user.enrolments = [store.Enrolment(programme="GCPP", track="TP", cohort=cohort)] if cohort else [
+        store.Enrolment(programme="GCPP", track="TP")]
+    store.save_user(user)
+    monkeypatch.setattr(cases, "_me", lambda: (SimpleNamespace(id=uid, is_admin=staff), store.load_user(uid)))
+
+
+class FakeModel:
+    def __init__(self, *replies: str):
+        self.replies, self.calls = list(replies), 0
+
+    async def __call__(self, config, messages, max_tokens=0):
+        self.calls += 1
+        return self.replies.pop(0) if len(self.replies) > 1 else self.replies[0]
+
+
+DRAFT = json.dumps({"title": "Delhi's free electricity", "situation": words(170), "opening": "What happens to demand?",
+                    "grasp": ["Price below cost raises demand", "Someone pays the gap"]})
+
+
+@pytest.fixture
+def model(monkeypatch):
+    passages = [{"title": "State, a Political Institution", "file": "CP11 - State.pdf", "text": "The State is permanent.", "kb": "GCPP"}]
+
+    async def fake_retrieve(kb, query, top_k, corpus=""):
+        return passages
+
+    monkeypatch.setattr(cases.grounding, "retrieve", fake_retrieve)
+    monkeypatch.setattr(cases, "resolve_for", lambda uid: object())
+    fake = FakeModel(DRAFT)
+    monkeypatch.setattr(cases, "complete_text", fake)
+    return fake
+
+
+def test_draft_saves_valid_draft(monkeypatch, model):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    out = asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
+    saved = cases.load_case("GCPP-PAC", "CP11")
+    assert saved.status == "draft" and saved.title == "Delhi's free electricity" and len(saved.grasp) == 2
+    assert out["grasp"] == saved.grasp  # staff see the grasp notes
+
+
+def test_draft_prompt_defines_state_as_weberian(monkeypatch, model):
+    assert "Weber" in cases.DRAFT_PROMPT
+
+
+def test_bad_draft_twice_is_502_and_nothing_saved(monkeypatch, model):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    model.replies = ["not json"]
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
+    assert e.value.status_code == 502 and model.calls == 2 and cases.load_case("GCPP-PAC", "CP11") is None
+
+
+def _body(**kw):
+    c = _case(**kw)
+    return cases.EditBody(title=c.title, situation=c.situation, opening=c.opening, grasp=c.grasp)
+
+
+def test_edit_invalid_is_400_with_problems(monkeypatch):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    cases.save_case(_case())
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.admin_save("GCPP-PAC", "CP11", _body(opening="")))
+    assert e.value.status_code == 400 and e.value.detail["problems"]
+
+
+def test_edit_keeps_approval_and_bumps_version(monkeypatch):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    cases.save_case(_case(status="approved", version=3))
+    asyncio.run(cases.admin_save("GCPP-PAC", "CP11", _body(title="Delhi's subsidy, revisited")))
+    c = cases.load_case("GCPP-PAC", "CP11")
+    assert c.status == "approved" and c.version == 4 and c.title == "Delhi's subsidy, revisited"
+
+
+def test_approve_and_unpublish(monkeypatch):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    cases.save_case(_case())
+    out = asyncio.run(cases.admin_approve("GCPP-PAC", "CP11"))
+    assert out["status"] == "approved" and out["approved_by"] == "Boss" and out["approved_at"]
+    assert asyncio.run(cases.admin_unpublish("GCPP-PAC", "CP11"))["status"] == "draft"
+
+
+def test_approve_invalid_is_400(monkeypatch):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    cases.save_case(_case(grasp=["only one"]))
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.admin_approve("GCPP-PAC", "CP11"))
+    assert e.value.status_code == 400
+
+
+def test_admin_list_covers_every_unit(monkeypatch):
+    as_user(monkeypatch, "boss", cohort=None, staff=True)
+    cases.save_case(_case(status="approved"))
+    rows = asyncio.run(cases.admin_list("GCPP-PAC"))
+    assert len(rows) == len(catalog.get_catalog().module("GCPP-PAC").units)
+    assert next(r for r in rows if r["session"] == "CP11")["status"] == "approved"
+    assert next(r for r in rows if r["session"] == "CP12")["status"] == "none"
+
+
+def test_learner_cannot_draft(monkeypatch, model):
+    as_user(monkeypatch, "ravi")
+    with pytest.raises(HTTPException) as e:
+        asyncio.run(cases.admin_draft("GCPP-PAC", "CP11"))
+    assert e.value.status_code == 403 and model.calls == 0

@@ -19,6 +19,7 @@ from deeptutor.multi_user.context import get_current_user
 
 from . import (
     announcements,
+    cases,
     checks,
     cohort,
     discussion,
@@ -53,6 +54,8 @@ router = APIRouter()
 router.include_router(practice.router)
 router.include_router(checks.admin_router)
 router.include_router(checks.router)
+router.include_router(cases.admin_router)
+router.include_router(cases.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)
