@@ -151,6 +151,10 @@ function Tools({ cohort }: { cohort?: string | null }) {
             <p className="yx-muted yx-carry-note">Talk to your classmates: study groups, logistics, a reading you found useful.</p>
           </Link>
         )}
+        <Link href="/learn/brief" className="yx-card yx-carry">
+          <div className="yx-carry-title">My policy brief →</div>
+          <p className="yx-muted yx-carry-note">Your own problem, a layer each session. Private to you; Yaxa questions it, never writes it.</p>
+        </Link>
         <Link href="/learn/chat/new?scope=programme" className="yx-card yx-carry">
           <div className="yx-carry-title">Ask across my programme →</div>
           <p className="yx-muted yx-carry-note">For questions that cut across modules. Yaxa draws on all your modules and the faculty&apos;s writing.</p>
@@ -207,7 +211,7 @@ export default function LearnHome() {
           {fresh && enrolled
             ? "Open a module to start: read a unit, ask Yaxa to explain it, let it question you, then test yourself."
             : "Yaxa answers from Takshashila's course material and shows you the passages it used."}{" "}
-          <Link href="/learn/onboarding">Edit your profile</Link>
+          <Link href="/learn/onboarding">Edit your profile</Link>{" · "}<Link href="/learn/account">Your AI key</Link>
         </p>
 
         <AnnouncementStrip list={news} />

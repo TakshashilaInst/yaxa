@@ -88,7 +88,7 @@ def resolve_for(user_id: str) -> LLMConfig:
         return own
     if mode == "byok":
         raise ModelUnavailable(
-            "Add your own AI key (Claude or OpenAI) under Profile → Your AI key. "
+            "Add your own AI key (Claude or OpenAI) on the Your AI key page (Home → Your AI key). "
             "Yaxa uses it for your questions; Takshashila doesn't pay for students' AI use."
         )
     return _shared_config()

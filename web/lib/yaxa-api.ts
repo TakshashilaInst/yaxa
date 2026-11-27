@@ -151,7 +151,27 @@ export interface ModuleUnitDetail {
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
   check?: CheckStatus; // the 5-question check before the session
   learn?: LearnStatus; // the Learn session on the weekly case
+  layer?: LayerStatus; // this session's layer of the student's own brief
 }
+
+// ---------- the brief (private to the student)
+export interface LayerStatus { available: boolean; written: boolean }
+export type Rating = "no" | "partly" | "yes";
+export interface Critique { critique: string; sources: { ref: string; title: string; url: string }[]; at: string }
+export interface BriefLayer {
+  module: string; module_title: string; session: string; title: string; prompt: string; self_check: string[];
+  text: string; ratings: Record<string, Rating>; critiques: Critique[]; updated_at: string;
+}
+export interface Unseen { topic: string; text: string; proposed_at: string; updated_at: string; critiques?: Critique[] }
+export interface Brief { problem: { title: string; text: string; updated_at: string }; layers: BriefLayer[]; unseen: Unseen }
+export interface LayerAdmin { module: string; session: string; status: "none" | "draft" | "approved"; version: number; prompt: string; self_check: string[]; hint: string; approved_by?: string }
+export interface LayerAdminRow { session: string; title: string; hint: string; status: LayerAdmin["status"] }
+export interface SprintSession {
+  module: string; session: string; title: string; date: string; enrolled: number;
+  learn: { case: boolean; started: number; explained: number }; layer: { available: boolean; written: number };
+  gaps: string[]; weaknesses: string[]; debate: string; note: string; error: string | null;
+}
+export interface AiKey { provider: "anthropic" | "openai" | null; model?: string; hint?: string; set_at?: string }
 
 // ---------- weekly case and Learn session
 export interface LearnStatus { case: boolean; status: "not_started" | "in_progress" | "tried" | "explained"; conversation_id: string | null }
@@ -342,7 +362,7 @@ export interface WeekSession {
   code: string; module: string; module_title: string; title: string;
   starts_at: string; host: string; note: string; webinar_url: string;
   readings: WeekReading[]; transcript_ready: boolean;
-  learn?: LearnStatus; check?: CheckStatus; // the sprint steps
+  learn?: LearnStatus; check?: CheckStatus; layer?: LayerStatus; // the sprint steps
 }
 export interface WeekView { cohort: string | null; sessions: WeekSession[]; dates: { date: string; label: string }[] }
 export interface CohortSession { code: string; date: string; time: string; host: string; webinar_url: string; note: string }
@@ -526,6 +546,26 @@ export const yaxa = {
     json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { title: c.title, situation: c.situation, opening: c.opening, grasp: c.grasp })),
   caseApprove: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
   caseUnpublish: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
+  brief: () => json<Brief>("/brief"),
+  briefProblem: (title: string, text: string) => json<Brief["problem"]>("/brief/problem", send("PUT", { title, text })),
+  briefLayer: (module: string, session: string, text: string, ratings: Record<string, Rating>) =>
+    json<BriefLayer>(`/brief/layers/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { text, ratings })),
+  briefCritique: (module: string, session: string) => json<Critique>(`/brief/layers/${encodeURIComponent(module)}/${encodeURIComponent(session)}/critique`, send("POST")),
+  briefUnseen: (replace = false) => json<Unseen>("/brief/unseen", send("POST", { replace })),
+  briefUnseenText: (text: string) => json<Unseen>("/brief/unseen", send("PUT", { text })),
+  briefUnseenCritique: () => json<Critique>("/brief/unseen/critique", send("POST")),
+  layerAdminList: (module: string) => json<LayerAdminRow[]>(`/layers/admin/${encodeURIComponent(module)}`),
+  layerAdminGet: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  layerDraft: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  layerSave: (module: string, session: string, prompt: string, self_check: string[]) =>
+    json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { prompt, self_check })),
+  layerApprove: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
+  layerUnpublish: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
+  sprintBrief: (cohort: string, refresh = false) =>
+    json<{ cohort: string; sessions: SprintSession[] }>(`/sprint/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
+  aiKey: () => json<AiKey>("/me/ai-key"),
+  aiKeySave: (provider: string, key: string, model: string) => json<AiKey>("/me/ai-key", send("PUT", { provider, key, model })),
+  aiKeyDelete: () => json<AiKey>("/me/ai-key", send("DELETE")),
   cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
   cohortBrief: (module: string, days: number, refresh = false) =>
     json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),
@@ -556,6 +596,16 @@ export const yaxa = {
   demoExit: () => json<{ ok: boolean }>("/demo/exit", send("POST")),
 
   /** Ask for study notes and save them as a .md download. */
+  async exportBrief(): Promise<void> {
+    const res = await apiFetch(apiUrl("/api/yaxa/brief/export"));
+    if (!res.ok) throw new Error("Couldn't download your brief. Try again.");
+    const url = URL.createObjectURL(await res.blob());
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-policy-brief.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  },
   async exportNotes(conversationId: string): Promise<void> {
     const res = await apiFetch(apiUrl("/api/yaxa/export"), send("POST", { conversation_id: conversationId }));
     if (!res.ok) throw new Error("Couldn't generate the notes. Try again.");

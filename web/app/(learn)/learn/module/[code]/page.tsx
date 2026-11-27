@@ -128,6 +128,14 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
           </Link>
         </p>
       )}
+      {u.layer?.available && (
+        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
+          <b>Apply:</b>{" "}
+          <Link href={`/learn/brief#${encodeURIComponent(code)}-${encodeURIComponent(u.id)}`}>
+            {u.layer.written ? "Layer written ✓ · revisit your brief" : "Add this session's layer to your brief"}
+          </Link>
+        </p>
+      )}
       {u.check?.available && (
         <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
           <b>Before the session:</b>{" "}

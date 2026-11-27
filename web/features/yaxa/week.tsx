@@ -46,11 +46,18 @@ export function learnLabel(learn: LearnStatus): string {
 
 /** The sprint for one session: Learn on the case, then the check, then the live session. */
 function SprintSteps({ s }: { s: WeekSession }) {
-  if (!s.learn?.case && !s.check?.available) return null;
+  if (!s.learn?.case && !s.check?.available && !s.layer?.available) return null;
   return (
     <ol className="yx-week-sprint" style={{ margin: "8px 0", paddingLeft: 18 }}>
       {s.learn?.case && (
         <li><Link href={learnHref(s.module, s.code, s.learn)}>{learnLabel(s.learn)}</Link> <span className="yx-muted">· the idea, through a real case</span></li>
+      )}
+      {s.layer?.available && (
+        <li>
+          <Link href={`/learn/brief#${encodeURIComponent(s.module)}-${encodeURIComponent(s.code)}`}>
+            {s.layer.written ? "Apply ✓ layer written" : "Apply: add this layer to your brief"}
+          </Link>
+        </li>
       )}
       {s.check?.available && (
         <li>

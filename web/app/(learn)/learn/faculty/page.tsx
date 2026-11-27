@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
-import { yaxa, type CheckBriefSession, type CohortBrief, type CohortRow } from "@/lib/yaxa-api";
+import { yaxa, type CheckBriefSession, type CohortBrief, type CohortRow, type SprintSession } from "@/lib/yaxa-api";
 
 const PERIODS = [
   { days: 7, label: "Last 7 days" },
@@ -82,6 +82,61 @@ function WebinarPrep() {
   );
 }
 
+/** The weekly sprint: explain-back, brief-layer patterns and a debate framing for Saturday. Anonymised. */
+function SprintPrep() {
+  const [cohorts, setCohorts] = useState<CohortRow[]>([]);
+  const [cohort, setCohort] = useState("");
+  const [data, setData] = useState<{ cohort: string; sessions: SprintSession[] } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    yaxa.cohorts().then((c) => { setCohorts(c); setCohort((x) => x || c[0]?.code || ""); }).catch((e) => setError(String(e?.message ?? e)));
+  }, []);
+  const load = (refresh: boolean) => {
+    if (!cohort) return;
+    setBusy(true);
+    yaxa.sprintBrief(cohort, refresh).then(setData).catch((e) => setError(String(e?.message ?? e))).finally(() => setBusy(false));
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => load(false), [cohort]);
+  const shown = data && data.cohort === cohort ? data : null;
+  if (!cohorts.length) return null;
+  return (
+    <section style={{ margin: "8px 0 28px" }}>
+      <div className="yx-tools" style={{ gap: 8, alignItems: "baseline" }}>
+        <h2 style={{ fontSize: 20, margin: 0 }}>The week&apos;s Learn and briefs</h2>
+        <select value={cohort} onChange={(e) => setCohort(e.target.value)}>
+          {cohorts.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+        </select>
+        <button className="yx-btn yx-btn-sm yx-btn-ghost" disabled={busy} onClick={() => load(true)}>{busy ? "Reading…" : "Refresh"}</button>
+      </div>
+      <p className="yx-muted" style={{ margin: "4px 0" }}>
+        Anonymised: patterns across students only, never anyone&apos;s brief. Brief patterns appear once three or more students have written a layer.
+      </p>
+      {error && <p className="yx-error">{error}</p>}
+      {!shown && !error && <p className="yx-muted">Loading…</p>}
+      {shown && !shown.sessions.length && (
+        <p className="yx-muted">No sessions with an approved case or brief layer this fortnight.{" "}
+          <Link href="/learn/faculty/cases">Weekly cases →</Link> · <Link href="/learn/faculty/layers">Brief layers →</Link></p>
+      )}
+      {shown?.sessions.map((s) => (
+        <div key={s.session} className="yx-card" style={{ margin: "10px 0" }}>
+          <b>{s.session} · {s.title}</b> <span className="yx-muted">· {s.date}</span>
+          <p style={{ margin: "4px 0" }}>
+            {s.learn.case && <>{s.learn.explained} of {s.enrolled} explained the idea back ({s.learn.started} started the Learn session)</>}
+            {s.learn.case && s.layer.available && " · "}
+            {s.layer.available && <>{s.layer.written} wrote this brief layer</>}
+          </p>
+          {!!s.gaps.length && (<><b>Common gaps</b><ul style={{ margin: "4px 0 6px" }}>{s.gaps.map((g, i) => <li key={i}>{g}</li>)}</ul></>)}
+          {!!s.weaknesses.length && (<><b>Across the brief layers</b><ul style={{ margin: "4px 0 6px" }}>{s.weaknesses.map((g, i) => <li key={i}>{g}</li>)}</ul></>)}
+          {s.debate && <p style={{ margin: "4px 0" }}><b>Saturday debate:</b> {s.debate}</p>}
+          {(s.note || s.error) && <p className="yx-muted" style={{ margin: 0 }}>{s.error || s.note}</p>}
+        </div>
+      ))}
+    </section>
+  );
+}
+
 export default function CohortBriefPage() {
   const { me, error: meError } = useMe();
   const [modules, setModules] = useState<{ code: string; title: string }[]>([]);
@@ -143,9 +198,10 @@ export default function CohortBriefPage() {
           <Link href="/learn/faculty/discussion">Class questions to review →</Link>
           {" · "}<Link href="/learn/faculty/announcements">Announcements →</Link>
           {" · "}<Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
-          {" · "}<Link href="/learn/faculty/checks">Session checks →</Link>{" · "}<Link href="/learn/faculty/cases">Weekly cases →</Link>
+          {" · "}<Link href="/learn/faculty/checks">Session checks →</Link>{" · "}<Link href="/learn/faculty/cases">Weekly cases →</Link>{" · "}<Link href="/learn/faculty/layers">Brief layers →</Link>
         </p>
         <WebinarPrep />
+        <SprintPrep />
         <div className="yx-eyebrow">For faculty · anonymised</div>
         <h1 style={{ margin: "4px 0 6px" }}>What your students are asking</h1>
         <p className="yx-lede" style={{ marginTop: 0 }}>
