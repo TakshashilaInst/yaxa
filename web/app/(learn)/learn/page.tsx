@@ -193,7 +193,9 @@ export default function LearnHome() {
   if (error) return <div className="yx"><FullPageMessage><p className="yx-error">{error}</p></FullPageMessage></div>;
   if (!me) return <div className="yx"><FullPageMessage><p className="yx-muted">Loading…</p></FullPageMessage></div>;
 
-  const first = me.display_name.split(" ")[0];
+  // never greet someone by an email address: "pranay@takshashila.org.in" becomes "Pranay"
+  const shown = me.display_name.includes("@") ? me.display_name.split("@")[0].replace(/[._-]+/g, " ") : me.display_name;
+  const first = shown.split(" ")[0].replace(/^./, (c) => c.toUpperCase());
   const enrolled = !!me.enrolments.length || me.is_admin;
   const activeSim = sims.flatMap((card) => card.runs.filter((r) => r.stage <= 5).map((run) => ({ card, run })))[0];
   const fresh = !due.length && !recent.length && !activeSim;

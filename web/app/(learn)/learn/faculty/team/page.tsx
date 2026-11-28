@@ -70,7 +70,7 @@ export default function FacultyTeamPage() {
         {!team ? <p className="yx-muted">Loading…</p> : (
           <>
             <h2 style={{ fontSize: 20, marginTop: 24 }}>Who teaches what</h2>
-            <table className="yx-table" style={{ width: "100%" }}>
+            <table className="yx-table yx-stack" style={{ width: "100%" }}>
               <thead><tr><th style={{ width: "34%" }}>Module</th><th>Faculty (main faculty first)</th></tr></thead>
               <tbody>{team.modules.map((m) => <ModuleRow key={`${m.code}:${m.faculty.join(",")}`} m={m} canEdit={admin} onSaved={load} />)}</tbody>
             </table>
@@ -81,7 +81,7 @@ export default function FacultyTeamPage() {
               and starts from the modules that person teaches. New faculty need a login first: create it in the{" "}
               <Link href="/chat">back office</Link> under Users, then match it here, or <Link href="/learn/faculty/onboard">add many people at once from a spreadsheet</Link>.
             </p>
-            <table className="yx-table" style={{ width: "100%" }}>
+            <table className="yx-table yx-stack" style={{ width: "100%" }}>
               <thead><tr><th>Login</th><th>Faculty member</th></tr></thead>
               <tbody>
                 {team.accounts.map((a) => (

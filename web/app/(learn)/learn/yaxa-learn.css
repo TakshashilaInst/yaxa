@@ -595,3 +595,36 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
   .yx-menu-btn span { display: none; }
   .yx-header-right { gap: 4px; }
 }
+/* phones: keep the header on one line — logo, Menu, the faculty icon and log out */
+@media (max-width: 560px) {
+  .yx .yx-header { gap: 6px; padding: 8px 10px; }
+  .yx .yx-brand { flex-shrink: 0; font-size: 17px; }
+  .yx .yx-brand img { width: 74px; height: auto; }
+  .yx .yx-header-center:empty { display: none; }
+  .yx .yx-header-right { margin-left: auto; min-width: 0; gap: 6px; }
+  .yx .yx-header .yx-pill,
+  .yx .yx-header a.yx-iconbtn[href="/learn/library"],
+  .yx .yx-header a.yx-iconbtn[href="/learn/demo"],
+  .yx .yx-header a.yx-iconbtn[href="/chat"] { display: none; }
+  .yx .yx-chat-compose { flex-wrap: wrap; }
+  .yx .yx-chat-compose textarea { flex: 1 1 100%; }
+  .yx .yx-chat-compose .yx-btn { flex: 1; }
+}
+/* small screens: one column that never grows past the screen (a long session name in the
+   jump menu used to widen it); the header's page title is dropped, the page heading says it */
+@media (max-width: 960px) {
+  .yx .yx-with-toc { grid-template-columns: minmax(0, 1fr); }
+  .yx .yx-with-toc > * { min-width: 0; }
+  .yx .yx-toc-mobile select { width: 100%; max-width: 100%; }
+}
+@media (max-width: 560px) {
+  .yx .yx-header-center { display: none; }
+  .yx .yx-page { overflow-wrap: anywhere; }
+}
+/* tables that become stacked rows on phones (Faculty team) */
+@media (max-width: 560px) {
+  .yx-table.yx-stack thead { display: none; }
+  .yx-table.yx-stack tr, .yx-table.yx-stack td { display: block; width: 100% !important; }
+  .yx-table.yx-stack td:first-child { border-bottom: 0; padding-bottom: 2px; }
+  .yx-table.yx-stack input, .yx-table.yx-stack select { min-width: 0; }
+}
