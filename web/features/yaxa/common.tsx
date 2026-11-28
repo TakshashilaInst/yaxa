@@ -66,12 +66,22 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
   };
   return (
     <header className="yx-header">
-      <Link href="/learn" className="yx-brand">
-        <span className="yx-brand-mark">य</span>
+      <Link href="/learn" className="yx-brand" aria-label="Yaxa home">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/takshashila-logo-dark-bg.svg" alt="Takshashila Institution" width={94} height={38} />
+        <span className="yx-brand-sep" aria-hidden />
         Yaxa
       </Link>
       <div className="yx-header-center">{center}</div>
       <div className="yx-header-right">
+        {me && (
+          <nav className="yx-header-nav" aria-label="Yaxa">
+            <Link href="/learn">This week</Link>
+            <Link href="/learn/brief">My brief</Link>
+            <Link href="/learn/cohort">Cohort chat</Link>
+            <Link href="/learn/how-it-works">How Yaxa works</Link>
+          </nav>
+        )}
         {me && (
           <span className="yx-pill" title={me.profile.current_role || ""}>
             <Avatar spec={me.avatar} size={22} />
@@ -140,6 +150,22 @@ export function Thinking({ socratic }: { socratic: boolean }) {
         <span />
       </span>
     </div>
+  );
+}
+
+// ------------------------------------------------------------- breadcrumbs
+/** "This week / Fundamentals / CP11": where the learner is, every step a link but the last. */
+export function Crumbs({ items }: { items: { label: string; href?: string }[] }) {
+  return (
+    <nav className="yx-crumbs" aria-label="You are here">
+      <Link href="/learn">This week</Link>
+      {items.map((c, i) => (
+        <span key={`${c.label}-${i}`}>
+          <span aria-hidden className="yx-crumbs-sep">/</span>
+          {c.href && i < items.length - 1 ? <Link href={c.href}>{c.label}</Link> : <span aria-current={i === items.length - 1 ? "page" : undefined}>{c.label}</span>}
+        </span>
+      ))}
+    </nav>
   );
 }
 

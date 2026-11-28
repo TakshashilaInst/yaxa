@@ -1,14 +1,15 @@
-/* Yaxa sign-in. One bold element: the lighthouse beam from Takshashila's logo, sweeping across a
-   maroon panel. Everything on the form side stays quiet. */
+/* Yaxa sign-in, in Takshashila's house style (takshashila-style-guide.md): wine panel carrying
+   the lighthouse logo and its beam; a quiet white form side. Inter and Roboto Mono, square
+   corners, no shadows, no gradients. */
 
 .page {
-  --paper: #faf7f1;
-  --ink: #1f1619;
-  --muted: #625650;
-  --line: #ddd3c2;
-  --maroon-deep: #4f112e;
-  --maroon: #6b1238;
-  --saffron: #f19914;
+  --paper: #fdfdfd;
+  --ink: #171413;
+  --muted: #5c5754;
+  --line: rgba(23, 20, 19, 0.16);
+  --maroon-deep: #4a0a2e;
+  --maroon: #620d3c;
+  --saffron: #f1a222;
   --sun: #fbc814;
   --field: #ffffff;
   --error: #b3261e;
@@ -19,7 +20,7 @@
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--tk-sans), -apple-system, system-ui, sans-serif;
   overflow-y: auto;
 }
 
@@ -27,8 +28,8 @@
 .panel {
   position: relative;
   overflow: hidden;
-  background: var(--maroon-deep);
-  color: #fff7ea;
+  background: var(--maroon);
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -44,7 +45,7 @@
   height: 120%;
   /* a wedge opening from the top-right corner, like the lamp's light in the logo */
   clip-path: polygon(100% 0%, 0% 38%, 0% 78%);
-  background: linear-gradient(250deg, rgba(251, 200, 20, 0.55) 0%, rgba(241, 153, 20, 0.32) 45%, rgba(241, 153, 20, 0) 85%);
+  background: rgba(241, 162, 34, 0.22);  /* a flat wash: the house style has no gradients */
   transform-origin: 100% 0%;
   animation: sweep 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   pointer-events: none;
@@ -54,11 +55,9 @@
   position: absolute;
   top: clamp(28px, 6vh, 56px);
   right: clamp(28px, 5vw, 56px);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--sun);
-  box-shadow: 0 0 0 6px rgba(251, 200, 20, 0.18), 0 0 40px 12px rgba(251, 200, 20, 0.45);
+  width: 12px;
+  height: 12px;
+  background: var(--saffron);
 }
 
 @keyframes sweep {
@@ -72,21 +71,28 @@
 }
 
 .wordmark {
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: clamp(3.25rem, 7vw, 5.5rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.01em;
+  font-size: clamp(3.5rem, 7vw, 4.5rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
   margin: 0 0 1.25rem;
-  color: #fff7ea;
+  color: #fff;
 }
 
 .pitch {
-  font-family: var(--font-serif), Georgia, serif;
   font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-  line-height: 1.6;
+  font-weight: 300;
+  line-height: 1.45;
   margin: 0;
-  color: rgba(255, 247, 234, 0.86);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.panelLogo {
+  position: absolute;
+  top: clamp(28px, 6vh, 56px);
+  left: clamp(32px, 6vw, 72px);
+  width: clamp(150px, 16vw, 200px);
+  height: auto;
 }
 
 /* ---------------------------------------------------------------- the form side */
@@ -102,19 +108,13 @@
   max-width: 24rem;
 }
 
-.logo {
-  display: block;
-  width: 210px;
-  height: auto;
-  margin: 0 0 2.75rem -6px;
-}
 
 .heading {
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--maroon);
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
   margin: 0 0 0.5rem;
 }
 
@@ -144,27 +144,27 @@
   color: var(--ink);
   background: var(--field);
   border: 1px solid var(--line);
-  border-radius: 6px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .input:focus {
   outline: none;
   border-color: var(--maroon);
-  box-shadow: 0 0 0 3px rgba(107, 18, 56, 0.16);
+  outline: 1px solid var(--maroon);
 }
 
 .button {
   width: 100%;
   margin-top: 0.5rem;
-  padding: 0.8rem 1rem;
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff7ea;
+  padding: 14px 28px;
+  font-family: var(--tk-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
   background: var(--maroon);
   border: 0;
-  border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s ease;
 }
@@ -176,7 +176,7 @@
 .error {
   margin: 0 0 1rem;
   padding: 0.65rem 0.8rem;
-  border-left: 3px solid var(--error);
+  border-left: 2px solid var(--error);
   background: rgba(179, 38, 30, 0.07);
   color: var(--error);
   font-size: 0.9rem;
@@ -185,7 +185,7 @@
 .notice {
   margin: 0 0 1.25rem;
   padding: 0.65rem 0.8rem;
-  border-left: 3px solid var(--saffron);
+  border-left: 2px solid var(--saffron);
   background: rgba(241, 153, 20, 0.1);
   font-size: 0.9rem;
 }
@@ -199,32 +199,41 @@
 
 .footer {
   margin-top: 3rem;
-  color: var(--muted);
-  font-size: 0.8rem;
+  font-family: var(--tk-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(23, 20, 19, 0.5);
 }
 
 /* ---------------------------------------------------------------- small screens: the panel becomes a band */
 @media (max-width: 820px) {
   .page { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
   .panel { min-height: 0; padding: 40px 24px 28px; }
-  .wordmark { font-size: 3rem; margin-bottom: 0.75rem; }
-  .pitch { font-size: 1rem; }
-  .formSide { justify-content: flex-start; padding: 32px 24px 40px; }
-  .logo { width: 170px; margin-bottom: 2rem; }
+  .wordmark {
+  font-size: clamp(3.5rem, 7vw, 4.5rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin: 0 0 1.25rem;
+  color: #fff;
 }
 
 /* ---------------------------------------------------------------- dark mode */
 @media (prefers-color-scheme: dark) {
   .page {
-    --paper: #1c1216;
-    --ink: #f3ebe4;
-    --muted: #bfb0a6;
-    --line: #4a3540;
-    --field: #261a1f;
+    --paper: #171413;
+    --ink: #f4f1ee;
+    --muted: #bdb6b2;
+    --line: rgba(255, 255, 255, 0.18);
+    --field: #221d1b;
   }
-  .heading { color: #f4c9d9; }
-  .button { background: #8a1c4a; }
-  .button:hover { background: #a02457; }
+  .heading {
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

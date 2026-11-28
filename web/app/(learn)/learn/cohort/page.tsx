@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
-import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
+import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { when } from "@/features/yaxa/discussion";
 import { yaxa, type ChatChannel, type ChatMessage } from "@/lib/yaxa-api";
 
@@ -59,6 +59,13 @@ function CohortChat() {
   const [error, setError] = useState<string | null>(null);
   const [now, setNow] = useState(0); // refreshed by each poll; decides whether Edit/Delete still show
   const bottom = useRef<HTMLDivElement>(null);
+
+  // reading the chat clears "new messages" on Home, now and again on leaving
+  useEffect(() => {
+    if (!me) return;
+    yaxa.whatsNewSeen("chat").catch(() => {});
+    return () => { yaxa.whatsNewSeen("chat").catch(() => {}); };
+  }, [me]);
 
   useEffect(() => {
     if (!me) return;
@@ -124,7 +131,7 @@ function CohortChat() {
     <div className="yx">
       <LearnHeader me={me} />
       <main className="yx-page" style={{ maxWidth: 820 }}>
-        <p style={{ margin: 0 }}><Link href="/learn">← Home</Link></p>
+        <Crumbs items={[{ label: "Cohort chat" }]} />
         <h1 style={{ margin: "10px 0 4px" }}>Cohort chat</h1>
         <p className="yx-muted" style={{ marginTop: 0, fontSize: 15 }}>
           Everyone in your cohort and the faculty can read this. For questions about a session, use the class discussion on its module page, where Yaxa and the faculty answer.

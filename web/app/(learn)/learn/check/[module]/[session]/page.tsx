@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
+import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { yaxa, type CheckResult, type CheckView } from "@/lib/yaxa-api";
 
 export default function CheckPage() {
@@ -61,7 +61,7 @@ export default function CheckPage() {
     <div className="yx">
       <LearnHeader me={me} center={<span className="yx-header-title">Before the session · {session}</span>} />
       <main className="yx-page" style={{ maxWidth: 760 }}>
-        <p style={{ margin: "0 0 12px" }}><Link href={back}>← Back to the session</Link></p>
+        <Crumbs items={[{ label: module, href: back }, { label: `${session} check` }]} />
         {error && <p className="yx-error">{error}</p>}
         {check && !check.available && <p className="yx-muted">This session doesn&apos;t have a check yet.</p>}
 

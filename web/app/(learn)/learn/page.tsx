@@ -1,10 +1,9 @@
 "use client";
 
 /**
- * The student's home. Top to bottom: where to carry on (reviews due, last
- * conversation, a simulation in progress), their modules as compact cards
- * with progress (each opens the module page), the programme-wide tools, and
- * their recent conversations.
+ * The student's home is "this week". Top to bottom: where they are in the week's rhythm (Learn,
+ * Apply, Check, Saturday), what's new since their last visit, announcements, this week's sessions
+ * each with one next step, their modules, and everything else folded under "More ways to study".
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +23,7 @@ import {
   type SimScenarioCard,
   type WeekView,
   type AnnouncementList,
+  type WhatsNew,
 } from "@/lib/yaxa-api";
 
 function convHref(c: ConversationSummary) {
@@ -36,12 +36,65 @@ function convLabel(c: ConversationSummary) {
   return [c.module, c.unit].filter(Boolean).join(" · ");
 }
 
+// ----------------------------------------------------------- the week's rhythm
+const PHASES = [
+  { name: "Learn", days: "Mon–Wed" },
+  { name: "Apply", days: "by Thu" },
+  { name: "Check", days: "by Fri" },
+  { name: "Saturday", days: "live" },
+];
+
+/** Which step of the week it is today, in IST: Mon–Wed Learn, Thu Apply, Fri Check, Sat live, Sun none. */
+function phaseToday(): number {
+  const day = new Date().toLocaleDateString("en-GB", { weekday: "short", timeZone: "Asia/Kolkata" });
+  return ({ Mon: 0, Tue: 0, Wed: 0, Thu: 1, Fri: 2, Sat: 3 } as Record<string, number>)[day] ?? -1;
+}
+
+function WeekRhythm() {
+  const now = phaseToday();
+  return (
+    <div className="yx-rhythm">
+      <ol>
+        {PHASES.map((p, i) => (
+          <li key={p.name} className={i === now ? "is-now" : ""} aria-current={i === now ? "step" : undefined}>
+            <span className="yx-rhythm-n">0{i + 1}</span> {p.name} <span className="yx-rhythm-days">{p.days}</span>
+          </li>
+        ))}
+      </ol>
+      <Link href="/learn/how-it-works">How a Yaxa week works →</Link>
+    </div>
+  );
+}
+
+function plural(n: number, one: string, many: string) {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+/** One line: new messages in the cohort chat, replies to my questions, new announcements. */
+function NewSince({ news }: { news: WhatsNew | null }) {
+  if (!news?.cohort || !(news.chat || news.discussion)) return null;
+  const where = news.discussion_where[0];
+  return (
+    <p className="yx-new">
+      <span className="yx-eyebrow">New since your last visit</span>{" "}
+      {!!news.chat && <Link href="/learn/cohort">{plural(news.chat, "message", "messages")} in the cohort chat</Link>}
+      {!!news.chat && !!news.discussion && " · "}
+      {!!news.discussion && where && (
+        <Link href={where.module ? `/learn/module/${encodeURIComponent(where.module)}#${where.session}` : "/learn"}
+          onClick={() => { yaxa.whatsNewSeen("discussion").catch(() => {}); }}>
+          {plural(news.discussion, "reply", "replies")} to your questions ({news.discussion_where.map((w) => w.session).join(", ")})
+        </Link>
+      )}
+    </p>
+  );
+}
+
 // ------------------------------------------------------------- carry on
 function CarryOn({ due, last, sim }: { due: ReviewDue[]; last?: ConversationSummary; sim?: { card: SimScenarioCard; run: SimScenarioCard["runs"][number] } }) {
   if (!due.length && !last && !sim) return null;
   return (
-    <section style={{ marginTop: 22 }}>
-      <h2 className="yx-section-title">Carry on</h2>
+    <section style={{ marginTop: 18 }}>
+      <h3 className="yx-group-title">Carry on</h3>
       <div className="yx-grid">
         {!!due.length && (
           <div className="yx-card yx-carry">
@@ -118,13 +171,10 @@ function ProgrammeSection({ p, summary }: { p: ProgrammeView; summary: Record<st
       ? p.tracks.map((t) => [t.name, [...t.core, ...t.specialisation]] as [string, ModuleView[]])
       : [["Modules", p.modules]];
   return (
-    <section style={{ marginTop: 30 }}>
-      <div className="yx-eyebrow">
-        {p.code}
-        {track ? ` · ${track.name}` : ""}
-        {p.cohort ? ` · Cohort ${p.cohort}` : ""}
-      </div>
-      <h2 style={{ margin: "4px 0 6px" }}>{p.name}</h2>
+    <section style={{ marginTop: 12 }}>
+      <p className="yx-muted" style={{ margin: "0 0 4px" }}>
+        {p.name}{track ? `, ${track.name} track` : ""}
+      </p>
       {groups.map(([label, mods]) =>
         mods.length ? (
           <div key={label} style={{ marginTop: 14 }}>
@@ -142,8 +192,8 @@ function ProgrammeSection({ p, summary }: { p: ProgrammeView; summary: Record<st
 // ---------------------------------------------------------------- tools
 function Tools({ cohort }: { cohort?: string | null }) {
   return (
-    <section style={{ marginTop: 34 }}>
-      <h2 className="yx-section-title">Across your programme</h2>
+    <section style={{ marginTop: 18 }}>
+      <h3 className="yx-group-title">Across your programme</h3>
       <div className="yx-grid">
         {cohort && (
           <Link href="/learn/cohort" className="yx-card yx-carry">
@@ -178,6 +228,7 @@ export default function LearnHome() {
   const [sims, setSims] = useState<SimScenarioCard[]>([]);
   const [week, setWeek] = useState<WeekView | null>(null);
   const [news, setNews] = useState<AnnouncementList | null>(null);
+  const [fresh2, setFresh2] = useState<WhatsNew | null>(null);
 
   useEffect(() => {
     if (me && !me.onboarded && !me.is_admin) router.replace("/learn/onboarding");
@@ -191,6 +242,7 @@ export default function LearnHome() {
     yaxa.simScenarios().then(setSims).catch(() => {});
     yaxa.week().then(setWeek).catch(() => {});
     yaxa.announcements().then(setNews).catch(() => {});
+    yaxa.whatsNew().then(setFresh2).catch(() => {});
     if (me.is_admin && !me.enrolments.length) yaxa.catalog().then((c) => setAllProgrammes(c.programmes)).catch(() => {});
   }, [me]);
 
@@ -206,41 +258,51 @@ export default function LearnHome() {
     <div className="yx">
       <LearnHeader me={me} />
       <main className="yx-page">
-        <h1 style={{ margin: 0 }}>Welcome, {first}.</h1>
-        <p className="yx-lede" style={{ marginBottom: 0 }}>
-          {fresh && enrolled
-            ? "Open a module to start: read a unit, ask Yaxa to explain it, let it question you, then test yourself."
-            : "Yaxa answers from Takshashila's course material and shows you the passages it used."}{" "}
-          <Link href="/learn/onboarding">Edit your profile</Link>{" · "}<Link href="/learn/account">Your AI key</Link>
-        </p>
-
+        <div className="yx-eyebrow">This week{week?.cohort ? ` · ${week.cohort}` : ""}</div>
+        <h1 style={{ margin: "6px 0 4px" }}>Welcome, {first}.</h1>
+        {enrolled && <WeekRhythm />}
+        <NewSince news={fresh2} />
         <AnnouncementStrip list={news} />
-        <ThisWeek week={week} />
-        <CarryOn due={due} last={recent[0]} sim={activeSim} />
 
         {!enrolled && <EnrolPicker onDone={reload} />}
-        {me.enrolments.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
-        {me.is_admin && !me.enrolments.length && (
-          <>
-            <p className="yx-muted" style={{ marginTop: 24 }}>You&apos;re an admin, so you see every programme.</p>
-            {allProgrammes.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
-          </>
+        <ThisWeek week={week} />
+        {enrolled && !week?.cohort && fresh && (
+          <p className="yx-lede">Open a module below to start. Each session follows the same rhythm: Learn, Apply, Check, then the live session.</p>
         )}
 
-        {enrolled && <Tools cohort={week?.cohort ?? news?.cohort} />}
+        <section className="yx-home-section">
+          <h2 className="yx-section-title">Your modules</h2>
+          {me.enrolments.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
+          {me.is_admin && !me.enrolments.length && (
+            <>
+              <p className="yx-muted">You&apos;re an admin, so you see every programme. A student sees only their own track.</p>
+              {allProgrammes.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
+            </>
+          )}
+        </section>
 
-        {recent.length > 1 && (
-          <section style={{ marginTop: 34 }}>
-            <h2 className="yx-section-title">Your conversations</h2>
-            <ul className="yx-conv-list">
-              {recent.slice(1, 9).map((c) => (
-                <li key={c.id}>
-                  <Link href={convHref(c)}>{c.title}</Link>
-                  <span className="yx-muted"> · {convLabel(c) || "Conversation"}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+        {enrolled && (
+          <details className="yx-fold yx-more">
+            <summary>More ways to study</summary>
+            <CarryOn due={due} last={recent[0]} sim={activeSim} />
+            <Tools cohort={week?.cohort ?? news?.cohort} />
+            {recent.length > 1 && (
+              <section style={{ marginTop: 18 }}>
+                <h3 className="yx-group-title">Your conversations</h3>
+                <ul className="yx-conv-list">
+                  {recent.slice(1, 9).map((c) => (
+                    <li key={c.id}>
+                      <Link href={convHref(c)}>{c.title}</Link>
+                      <span className="yx-muted"> · {convLabel(c) || "Conversation"}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            <p className="yx-muted" style={{ marginTop: 18 }}>
+              <Link href="/learn/onboarding">Edit your profile</Link>{" · "}<Link href="/learn/account">Your AI key</Link>
+            </p>
+          </details>
         )}
       </main>
     </div>

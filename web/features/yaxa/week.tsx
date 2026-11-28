@@ -1,11 +1,10 @@
 "use client";
 
 /**
- * "This week" on the learner's home: their cohort's sessions for the next seven
- * days, each with the readings to do first (ticked once opened in Yaxa), a way
- * to prepare (Yaxa questions you on them), the webinar link on the day, and a
- * recap once the transcript is in. Plus deadlines and other key dates, and the
- * private calendar feed. All times are IST.
+ * "This week" on the learner's home: their cohort's sessions for the next seven days. Each card
+ * shows the sprint's steps (Learn, Apply, Check, Saturday), ONE next step as the main button,
+ * the live-session link, and the readings folded away. Plus key dates and the private calendar
+ * feed. All times are IST.
  */
 import Link from "next/link";
 import { useState } from "react";
@@ -44,29 +43,38 @@ export function learnLabel(learn: LearnStatus): string {
   return "Learn: carry on";
 }
 
-/** The sprint for one session: Learn on the case, then the check, then the live session. */
-function SprintSteps({ s }: { s: WeekSession }) {
-  if (!s.learn?.case && !s.check?.available && !s.layer?.available) return null;
+type Step = { label: string; href: string; detail: string };
+
+/** The one thing to do next for a session, in sprint order: Learn, then Apply, then Check. */
+export function nextStep(s: { module: string; code: string; learn?: LearnStatus | null; layer?: WeekSession["layer"]; check?: WeekSession["check"] }): Step | null {
+  const m = encodeURIComponent(s.module), u = encodeURIComponent(s.code);
+  if (s.learn?.case && s.learn.status !== "explained") {
+    return { label: s.learn.status === "not_started" ? "Start Learn" : "Carry on with Learn", href: learnHref(s.module, s.code, s.learn),
+      detail: "About 20 minutes: a real case first, then the idea, then you explain it back." };
+  }
+  if (s.layer?.available && !s.layer.written) {
+    return { label: "Apply it to your brief", href: `/learn/brief#${m}-${u}`, detail: "One paragraph in your own policy brief. Yaxa questions it; you write it." };
+  }
+  if (s.check?.available && !s.check.ready) {
+    return { label: s.check.attempts ? "Retake the check" : "Take the check", href: `/learn/check/${m}/${u}`,
+      detail: s.check.attempts ? `Best so far ${s.check.best}/5.` : "Five questions on the readings." };
+  }
+  return null;
+}
+
+/** Learn, Apply, Check for one session, each ticked when done. */
+function StepTicks({ s }: { s: WeekSession }) {
+  const steps: [string, boolean, string][] = [];
+  if (s.learn?.case) steps.push(["Learn", s.learn.status === "explained", learnHref(s.module, s.code, s.learn)]);
+  if (s.layer?.available) steps.push(["Apply", !!s.layer.written, `/learn/brief#${encodeURIComponent(s.module)}-${encodeURIComponent(s.code)}`]);
+  if (s.check?.available) steps.push(["Check", !!s.check.ready, `/learn/check/${encodeURIComponent(s.module)}/${encodeURIComponent(s.code)}`]);
+  if (!steps.length) return null;
   return (
-    <ol className="yx-week-sprint" style={{ margin: "8px 0", paddingLeft: 18 }}>
-      {s.learn?.case && (
-        <li><Link href={learnHref(s.module, s.code, s.learn)}>{learnLabel(s.learn)}</Link> <span className="yx-muted">· the idea, through a real case</span></li>
-      )}
-      {s.layer?.available && (
-        <li>
-          <Link href={`/learn/brief#${encodeURIComponent(s.module)}-${encodeURIComponent(s.code)}`}>
-            {s.layer.written ? "Apply ✓ layer written" : "Apply: add this layer to your brief"}
-          </Link>
-        </li>
-      )}
-      {s.check?.available && (
-        <li>
-          <Link href={`/learn/check/${encodeURIComponent(s.module)}/${encodeURIComponent(s.code)}`}>
-            {s.check.ready ? "Check ✓ ready" : s.check.attempts ? `Check: best ${s.check.best}/5` : "Check: 5 questions"}
-          </Link>
-        </li>
-      )}
-      <li>Live: {sessionWhen(s.starts_at)}</li>
+    <ol className="yx-ticks" aria-label="This session's steps">
+      {steps.map(([name, done, href]) => (
+        <li key={name} className={done ? "is-done" : ""}><Link href={href}>{done ? "✓ " : ""}{name}</Link></li>
+      ))}
+      <li>Saturday</li>
     </ol>
   );
 }
@@ -74,17 +82,25 @@ function SprintSteps({ s }: { s: WeekSession }) {
 function SessionCard({ s }: { s: WeekSession }) {
   const done = s.readings.filter((r) => r.opened).length;
   const all = s.readings.length;
+  const step = nextStep(s);
   return (
     <div className="yx-card yx-week-session">
-      <div className="yx-eyebrow">{sessionWhen(s.starts_at)}{s.host ? ` · ${s.host}` : ""}</div>
-      <Link href={`/learn/module/${encodeURIComponent(s.module)}#${s.code}`} className="yx-week-title">
-        {s.code} {s.title}
-      </Link>
+      <div className="yx-eyebrow">{s.code} · Live {sessionWhen(s.starts_at)}{s.host ? ` · ${s.host}` : ""}</div>
+      <Link href={`/learn/module/${encodeURIComponent(s.module)}#${s.code}`} className="yx-week-title">{s.title}</Link>
       {s.note && <p className="yx-muted yx-week-note">{s.note}</p>}
-      <SprintSteps s={s} />
+      <StepTicks s={s} />
+      {step ? (
+        <div className="yx-next">
+          <Link className="yx-btn yx-btn-primary" href={step.href}>{step.label} →</Link>
+          <p className="yx-muted">{step.detail}</p>
+        </div>
+      ) : (
+        <p className="yx-next-done">You&apos;re ready for Saturday.</p>
+      )}
+      {s.webinar_url && <a className="yx-btn yx-btn-gold yx-btn-sm" href={s.webinar_url} target="_blank" rel="noreferrer">Join the live session ↗</a>}
       {all > 0 && (
-        <>
-          <p className="yx-week-prep">{done === all ? "Readings done" : `${all - done} of ${all} readings to do first`}</p>
+        <details className="yx-fold">
+          <summary>Readings · {done === all ? "all opened" : `${done} of ${all} opened`}</summary>
           <ul className="yx-week-readings">
             {s.readings.map((r) => (
               <li key={r.open} className={r.opened ? "is-done" : ""}>
@@ -94,21 +110,12 @@ function SessionCard({ s }: { s: WeekSession }) {
               </li>
             ))}
           </ul>
-        </>
+        </details>
       )}
-      <div className="yx-study-modes">
-        {s.webinar_url && <a className="yx-btn yx-btn-primary yx-btn-sm" href={s.webinar_url} target="_blank" rel="noreferrer">Join webinar</a>}
-        {s.transcript_ready ? (
-          <>
-            <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={chatHref(s, false)}>Recap the webinar</Link>
-            <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/practice?module=${encodeURIComponent(s.module)}&unit=${encodeURIComponent(s.code)}`}>Test me</Link>
-          </>
-        ) : (
-          <Link className={`yx-btn ${s.webinar_url ? "yx-btn-ghost" : "yx-btn-primary"} yx-btn-sm`} href={chatHref(s, true)}>
-            Question me on {s.code}
-          </Link>
-        )}
-      </div>
+      <p className="yx-also">
+        {s.transcript_ready ? <Link href={chatHref(s, false)}>Recap the live session</Link> : <Link href={chatHref(s, false)}>Ask Yaxa about {s.code}</Link>}
+        {" · "}<Link href={chatHref(s, true)}>Let Yaxa question you</Link>
+      </p>
     </div>
   );
 }
@@ -143,13 +150,17 @@ function CalendarLink() {
 }
 
 export function ThisWeek({ week }: { week: WeekView | null }) {
-  if (!week?.cohort || (!week.sessions.length && !week.dates.length)) return null;
+  if (!week?.cohort) return null;
   return (
-    <section style={{ marginTop: 22 }}>
-      <h2 className="yx-section-title">This week <span className="yx-muted" style={{ fontWeight: 400, fontSize: 15 }}>· {week.cohort}</span></h2>
-      <div className="yx-grid">
-        {week.sessions.map((s) => <SessionCard key={`${s.code}-${s.starts_at}`} s={s} />)}
-      </div>
+    <section className="yx-home-section">
+      <h2 className="yx-section-title">Your sessions this week</h2>
+      {week.sessions.length ? (
+        <div className="yx-grid">
+          {week.sessions.map((s) => <SessionCard key={`${s.code}-${s.starts_at}`} s={s} />)}
+        </div>
+      ) : (
+        <p className="yx-muted">No live sessions in the next seven days. Open any module below to read ahead.</p>
+      )}
       {!!week.dates.length && (
         <ul className="yx-week-dates">
           {week.dates.map((d) => <li key={`${d.date}-${d.label}`}><b>{dayLabel(d.date)}</b> · {d.label}</li>)}

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 
-import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
+import { Crumbs, FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
 import { yaxa, type Brief, type BriefLayer, type Critique, type Rating } from "@/lib/yaxa-api";
 
 const RATINGS: { value: Rating; label: string }[] = [
@@ -124,7 +124,7 @@ function ProblemCard({ brief, onSaved }: { brief: Brief; onSaved: (p: Brief["pro
     try { onSaved(await yaxa.briefProblem(title, text)); setEditing(false); } catch (e) { setError(errText(e)); }
   };
   return (
-    <section className="yx-card" style={{ marginBottom: 20 }}>
+    <section className="yx-card" id="problem" style={{ marginBottom: 20 }}>
       <div className="yx-eyebrow">My problem</div>
       {editing ? (
         <>
@@ -162,7 +162,7 @@ function UnseenCard({ brief }: { brief: Brief }) {
     setBusy(null);
   };
   return (
-    <section className="yx-card" style={{ marginTop: 24 }}>
+    <section className="yx-card" id="unseen" style={{ marginTop: 24 }}>
       <div className="yx-eyebrow">Final week · an unseen topic</div>
       <p className="yx-muted" style={{ margin: "4px 0 8px" }}>
         At the end of the course, take one problem you haven&apos;t seen and work it through with the whole framework, on your own.
@@ -214,6 +214,7 @@ export default function BriefPage() {
     <div className="yx">
       <LearnHeader me={me} center={<span className="yx-header-title">My policy brief</span>} />
       <main className="yx-page" style={{ maxWidth: 820 }}>
+        <Crumbs items={[{ label: "My policy brief" }]} />
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", flexWrap: "wrap" }}>
           <h1 style={{ margin: 0 }}>My policy brief</h1>
           <button className="yx-btn yx-btn-sm yx-btn-ghost" onClick={() => void yaxa.exportBrief().catch((e) => setError(errText(e)))}>
@@ -224,12 +225,23 @@ export default function BriefPage() {
           One problem of your own, built up a layer at a time: each session adds the idea you just learned. It&apos;s private:
           faculty never see it, and nothing is graded. It&apos;s yours to keep after the course.
         </p>
+        <p className="yx-muted" style={{ fontSize: 15 }}>
+          This is the <b>Apply</b> step of each week: after you Learn a session&apos;s idea, write its layer here, and let Yaxa
+          question your reasoning before the live session. <Link href="/learn/how-it-works">How a Yaxa week works</Link>
+        </p>
+        <nav className="yx-onpage" aria-label="On this page">
+          <span className="yx-eyebrow">On this page</span>
+          <a href="#problem">My problem</a>
+          {brief.layers.map((l) => (
+            <a key={`${l.module}/${l.session}`} href={`#${l.module}-${l.session}`}>{l.text ? "✓ " : ""}{l.session}</a>
+          ))}
+          <a href="#unseen">Unseen topic</a>
+        </nav>
         <ProblemCard brief={brief} onSaved={(problem) => setBrief({ ...brief, problem })} />
         <h2 className="yx-section-title">Layers <span className="yx-muted" style={{ fontWeight: 400, fontSize: 15 }}>· {written} of {brief.layers.length} written</span></h2>
         {!brief.layers.length && <p className="yx-muted">No layers yet: they appear here as faculty open each session&apos;s layer.</p>}
         {brief.layers.map((l) => <LayerCard key={`${l.module}/${l.session}`} layer={l} />)}
         <UnseenCard brief={brief} />
-        <p className="yx-muted" style={{ marginTop: 20 }}><Link href="/learn">← Home</Link></p>
       </main>
     </div>
   );

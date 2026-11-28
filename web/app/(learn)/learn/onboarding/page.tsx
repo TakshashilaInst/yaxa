@@ -37,8 +37,10 @@ export default function Onboarding() {
     setSaving(true);
     setErr(null);
     try {
+      const firstTime = !me.onboarded;
       await yaxa.saveProfile(profile, name);
-      router.push("/learn");
+      // first time: explain how a Yaxa week works before Home
+      router.push(firstTime && !me.is_admin ? "/learn/how-it-works?first=1" : "/learn");
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
       setSaving(false);

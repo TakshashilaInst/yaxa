@@ -1,19 +1,19 @@
 "use client";
 
 /**
- * A module's home: each learning unit with its outcomes, readings and webinar
- * transcripts, three ways to study it (explain, question me, test me), and the
- * student's mastery and next review. Readings come from the same library Yaxa
- * answers from, so the list and the tutor agree.
+ * A module's home: a contents column (every session, with Learn / Apply / Check ticks) beside the
+ * sessions themselves. Each session shows its one next step, its readings, other ways to study it,
+ * and its discussion. Readings come from the same library Yaxa answers from, so the list and the
+ * tutor agree.
  */
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
+import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { ReviewLabel, StatusChip } from "@/features/yaxa/progress";
 import { SessionDiscussion } from "@/features/yaxa/discussion";
-import { learnHref, sessionWhen } from "@/features/yaxa/week";
+import { learnHref, nextStep, sessionWhen } from "@/features/yaxa/week";
 import { yaxa, type ModuleDetail, type ModuleReading, type ModuleUnitDetail, type SessionResource } from "@/lib/yaxa-api";
 
 const KIND_LABEL: Record<string, string> = { pdf: "PDF", video: "Webinar", note: "Article", anecdote: "Anecdote" };
@@ -100,6 +100,70 @@ function ResourceList({ title, items, collapsed = false }: { title: string; item
   );
 }
 
+/** Learn, Apply, Check for a session: ticks for what's done, and the one next step as a button. */
+function UnitSteps({ code, u }: { code: string; u: ModuleUnitDetail }) {
+  const has = u.learn?.case || u.layer?.available || u.check?.available;
+  if (!has) return null;
+  const step = nextStep({ module: code, code: u.id, learn: u.learn, layer: u.layer, check: u.check });
+  const m = encodeURIComponent(code), id = encodeURIComponent(u.id);
+  return (
+    <>
+      <ol className="yx-ticks" aria-label="This session's steps" style={{ marginTop: 12 }}>
+        {u.learn?.case && <li className={u.learn.status === "explained" ? "is-done" : ""}><Link href={learnHref(code, u.id, u.learn)}>{u.learn.status === "explained" ? "✓ " : ""}Learn</Link></li>}
+        {u.layer?.available && <li className={u.layer.written ? "is-done" : ""}><Link href={`/learn/brief#${m}-${id}`}>{u.layer.written ? "✓ " : ""}Apply</Link></li>}
+        {u.check?.available && <li className={u.check.ready ? "is-done" : ""}><Link href={`/learn/check/${m}/${id}`}>{u.check.ready ? "✓ " : ""}Check</Link></li>}
+        <li>Live session</li>
+      </ol>
+      {step ? (
+        <div className="yx-next">
+          <Link className="yx-btn yx-btn-primary yx-btn-sm" href={step.href}>{step.label} →</Link>
+          <p className="yx-muted">{step.detail}</p>
+        </div>
+      ) : (
+        <p className="yx-next-done">Done: you&apos;re ready for the live session.</p>
+      )}
+    </>
+  );
+}
+
+/** Ticks for the contents column: one character per step, filled when done. */
+function tocTicks(u: ModuleUnitDetail): string {
+  const t: string[] = [];
+  if (u.learn?.case) t.push(u.learn.status === "explained" ? "●" : "○");
+  if (u.layer?.available) t.push(u.layer.written ? "●" : "○");
+  if (u.check?.available) t.push(u.check.ready ? "●" : "○");
+  return t.join("");
+}
+
+/** Every session in the module, fixed beside the page on wide screens; a jump menu on phones. */
+function Contents({ units }: { units: ModuleUnitDetail[] }) {
+  return (
+    <>
+      <nav className="yx-toc" aria-label="Sessions in this module">
+        <div className="yx-eyebrow">Sessions</div>
+        <ol>
+          {units.map((u) => (
+            <li key={u.id}>
+              <a href={`#${u.id}`}>
+                <span className="yx-toc-code">{u.id}</span>
+                <span className="yx-toc-title">{u.title}</span>
+                {tocTicks(u) && <span className="yx-toc-ticks" title="Learn, Apply, Check">{tocTicks(u)}</span>}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <label className="yx-toc-mobile">
+        <span className="yx-eyebrow">Jump to a session</span>
+        <select defaultValue="" onChange={(e) => { if (e.target.value) document.getElementById(e.target.value)?.scrollIntoView({ behavior: "smooth" }); }}>
+          <option value="" disabled>Choose…</option>
+          {units.map((u) => <option key={u.id} value={u.id}>{u.id} · {u.title}</option>)}
+        </select>
+      </label>
+    </>
+  );
+}
+
 function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number }) {
   return (
     <section className="yx-card yx-unit-card" id={u.id}>
@@ -120,42 +184,7 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
       </div>
       {u.outcomes && <p className="yx-muted" style={{ margin: "6px 0 0" }}>{u.outcomes}</p>}
 
-      {u.learn?.case && (
-        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
-          <b>Learn:</b>{" "}
-          <Link href={learnHref(code, u.id, u.learn)}>
-            {u.learn.status === "explained" ? "Explained ✓ · revisit the case" : u.learn.status === "not_started" ? "Learn this through a real case" : "Carry on with the case"}
-          </Link>
-        </p>
-      )}
-      {u.layer?.available && (
-        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
-          <b>Apply:</b>{" "}
-          <Link href={`/learn/brief#${encodeURIComponent(code)}-${encodeURIComponent(u.id)}`}>
-            {u.layer.written ? "Layer written ✓ · revisit your brief" : "Add this session's layer to your brief"}
-          </Link>
-        </p>
-      )}
-      {u.check?.available && (
-        <p className="yx-check-line" style={{ margin: "10px 0 0" }}>
-          <b>Before the session:</b>{" "}
-          <Link href={`/learn/check/${encodeURIComponent(code)}/${encodeURIComponent(u.id)}`}>
-            {u.check.ready ? `Ready ✓ (best ${u.check.best}/5)` : u.check.attempts ? `Best so far ${u.check.best}/5 · try again` : "Take the 5-question check"}
-          </Link>
-        </p>
-      )}
-
-      <div className="yx-study-modes">
-        <Link className="yx-btn yx-btn-primary yx-btn-sm" href={chat(code, u.id)} title="Ask anything; Yaxa explains from the readings">
-          Explain it to me
-        </Link>
-        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={chat(code, u.id, true)} title="Socratic: Yaxa asks the questions and you reason it out">
-          Question me
-        </Link>
-        <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={practise(code, u.id)} title="One question, marked against the course material">
-          Test me
-        </Link>
-      </div>
+      <UnitSteps code={code} u={u} />
 
       {u.resources.length ? (
         <>
@@ -175,6 +204,12 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
           <Readings items={u.readings} />
         </>
       )}
+      <p className="yx-also">
+        Other ways to study this session:{" "}
+        <Link href={chat(code, u.id)}>Ask Yaxa</Link>{" · "}
+        <Link href={chat(code, u.id, true)}>Let Yaxa question you</Link>{" · "}
+        <Link href={practise(code, u.id)}>Practice question</Link>
+      </p>
       {/^C[A-Z]\d/.test(u.id) && <SessionDiscussion module={code} session={u.id} />}
     </section>
   );
@@ -201,24 +236,26 @@ export default function ModulePage() {
   return (
     <div className="yx">
       <LearnHeader me={me} center={<span className="yx-header-title">{mod.title}</span>} />
-      <main className="yx-page">
-        <p style={{ margin: 0 }}><Link href="/learn">← My modules</Link></p>
-        <div className="yx-eyebrow" style={{ marginTop: 12 }}>{mod.code}</div>
-        <h1 style={{ margin: "2px 0 6px" }}>{mod.title}</h1>
+      <main className="yx-page yx-page-wide">
+        <Crumbs items={[{ label: mod.title }]} />
+        <div className="yx-eyebrow">{mod.code}</div>
+        <h1 style={{ margin: "4px 0 8px" }}>{mod.title}</h1>
         {mod.description && <p className="yx-lede" style={{ marginTop: 0 }}>{mod.description}</p>}
-        <p style={{ margin: "4px 0 0" }}>
-          {practised.length
-            ? <><b>{mastered}</b> of {mod.units.length} units mastered{due ? <> · <b>{due}</b> due for review</> : null}</>
-            : <span className="yx-muted">Pick a unit below. Read, ask Yaxa to explain, let it question you, then test yourself.</span>}
+        {practised.length > 0 && (
+          <p style={{ margin: "4px 0 0" }}><b>{mastered}</b> of {mod.units.length} sessions mastered{due ? <> · <b>{due}</b> due for review</> : null}</p>
+        )}
+        <p className="yx-also">
+          The whole module:{" "}
+          <Link href={chat(mod.code, null)}>Ask Yaxa about it</Link>{" · "}
+          <Link href={practise(mod.code, null)}>Practise the next session</Link>{" · "}
+          <Link href={`/learn/panel?module=${encodeURIComponent(mod.code)}`}>Put a question to a faculty panel</Link>
         </p>
-        <div className="yx-study-modes" style={{ marginTop: 14 }}>
-          <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={chat(mod.code, null)}>Ask about the whole module</Link>
-          <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={practise(mod.code, null)}>Practise the next unit</Link>
-          <Link className="yx-btn yx-btn-ghost yx-btn-sm" href={`/learn/panel?module=${encodeURIComponent(mod.code)}`}>Put a question to a faculty panel</Link>
-        </div>
 
-        <div style={{ display: "grid", gap: 14, marginTop: 22 }}>
-          {mod.units.map((u, i) => <UnitCard key={u.id} code={mod.code} u={u} n={i + 1} />)}
+        <div className="yx-with-toc">
+          <Contents units={mod.units} />
+          <div style={{ display: "grid", gap: 14, minWidth: 0 }}>
+            {mod.units.map((u, i) => <UnitCard key={u.id} code={mod.code} u={u} n={i + 1} />)}
+          </div>
         </div>
 
         {!!mod.other_readings.length && (

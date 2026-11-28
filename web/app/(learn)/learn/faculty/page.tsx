@@ -82,6 +82,27 @@ function WebinarPrep() {
   );
 }
 
+/** Start Saturday's argument early: post the debate question to the whole cohort's chat. */
+function PostDebate({ cohort, session, title, debate }: { cohort: string; session: string; title: string; debate: string }) {
+  const [state, setState] = useState<"idle" | "busy" | "done">("idle");
+  const [error, setError] = useState<string | null>(null);
+  const post = async () => {
+    setState("busy"); setError(null);
+    try {
+      await yaxa.chatSend(cohort, `For Saturday's ${session} (${title}), a question to argue about before we meet:\n\n${debate}`);
+      setState("done");
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)); setState("idle"); }
+  };
+  return (
+    <p style={{ margin: "6px 0 0" }}>
+      {state === "done"
+        ? <span className="yx-muted">Posted to the {cohort} chat. <Link href={`/learn/cohort?cohort=${encodeURIComponent(cohort)}`}>Open the chat</Link></span>
+        : <button className="yx-btn yx-btn-sm yx-btn-ghost" disabled={state === "busy"} onClick={post}>{state === "busy" ? "Posting…" : `Post it to the ${cohort} chat`}</button>}
+      {error && <span className="yx-error" style={{ marginLeft: 8 }}>{error}</span>}
+    </p>
+  );
+}
+
 /** The weekly sprint: explain-back, brief-layer patterns and a debate framing for Saturday. Anonymised. */
 function SprintPrep() {
   const [cohorts, setCohorts] = useState<CohortRow[]>([]);
@@ -129,7 +150,12 @@ function SprintPrep() {
           </p>
           {!!s.gaps.length && (<><b>Common gaps</b><ul style={{ margin: "4px 0 6px" }}>{s.gaps.map((g, i) => <li key={i}>{g}</li>)}</ul></>)}
           {!!s.weaknesses.length && (<><b>Across the brief layers</b><ul style={{ margin: "4px 0 6px" }}>{s.weaknesses.map((g, i) => <li key={i}>{g}</li>)}</ul></>)}
-          {s.debate && <p style={{ margin: "4px 0" }}><b>Saturday debate:</b> {s.debate}</p>}
+          {s.debate && (
+            <div style={{ margin: "4px 0" }}>
+              <p style={{ margin: 0 }}><b>Saturday debate:</b> {s.debate}</p>
+              <PostDebate cohort={cohort} session={s.session} title={s.title} debate={s.debate} />
+            </div>
+          )}
           {(s.note || s.error) && <p className="yx-muted" style={{ margin: 0 }}>{s.error || s.note}</p>}
         </div>
       ))}
