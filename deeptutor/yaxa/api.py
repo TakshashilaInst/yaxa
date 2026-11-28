@@ -30,6 +30,7 @@ from . import (
     layers,
     library_api,
     module_page,
+    onboarding,
     panel,
     practice,
     prepare,
@@ -73,6 +74,7 @@ router.include_router(whats_new.router)
 router.include_router(team.router)
 router.include_router(prepare.router)
 router.include_router(after.router)
+router.include_router(onboarding.router)
 router.include_router(weekly.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
