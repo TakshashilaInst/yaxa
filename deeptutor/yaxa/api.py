@@ -18,6 +18,7 @@ from pydantic import BaseModel
 from deeptutor.multi_user.context import get_current_user
 
 from . import (
+    after,
     announcements,
     brief,
     cases,
@@ -37,6 +38,7 @@ from . import (
     sprint_brief,
     store,
     team,
+    weekly,
     whats_new,
 )
 from . import chat as cohort_chat  # cohort chat; `chat` below is the Yaxa tutor route
@@ -70,6 +72,8 @@ router.include_router(keys.router)
 router.include_router(whats_new.router)
 router.include_router(team.router)
 router.include_router(prepare.router)
+router.include_router(after.router)
+router.include_router(weekly.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)

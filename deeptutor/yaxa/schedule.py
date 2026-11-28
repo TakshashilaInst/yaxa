@@ -53,6 +53,8 @@ class Cohort(BaseModel):
     start: str = ""
     email_group: str = ""
     track_email_groups: dict[str, str] = Field(default_factory=dict)
+    faculty_email_group: str = ""  # Friday note to faculty goes here
+    weekly_email: bool = False  # Sunday nudge and Friday note; off until staff switch it on
     join_code: str = ""
     join_open: bool = True
     closed: bool = False  # once the programme ends: chat and discussion become read-only

@@ -13,7 +13,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from . import team
+from . import after, team
 from . import practice, store
 from .access import _me, _require_module
 from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
@@ -210,6 +210,7 @@ async def module_view(code: str) -> dict[str, Any]:
                 "check": _check_status(cu.id, module.code, u.id),  # the 5-question check before the session
                 "learn": _learn_status(cu.id, module.code, u.id),  # the Learn session on the weekly case
                 "layer": _layer_status(cu.id, module.code, u.id),  # this session's layer of the student's brief
+                "after": after.approved_note(cohort.code if cohort else None, module.code, u.id),  # faculty's note after the live session
             }
             for u in module.units
         ],

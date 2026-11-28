@@ -42,6 +42,7 @@ def test_lists_the_next_two_weeks_with_status(monkeypatch):
     cp11 = rows[0]
     assert cp11["module"] == "GCPP-Fundamentals" and cp11["date"] == "2026-11-28"
     assert cp11["case"] == "draft" and cp11["layer"] == "none" and cp11["check"] == "none"
+    assert cp11["after"] == "none"
 
 
 def test_all_weeks_includes_past_and_later(monkeypatch):

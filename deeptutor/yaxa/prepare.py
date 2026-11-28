@@ -12,7 +12,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-from . import cases, checks, layers
+from . import after, cases, checks, layers
 from .access import _me, _privileged
 from .catalog import get_catalog
 from .schedule import load_cohort
@@ -67,8 +67,9 @@ async def upcoming(cohort: str, all_weeks: bool = False) -> dict[str, Any]:
         module, title = _module_of(s.code)
         if not module:
             continue
+        note = after._load(c.code, s.code)
         rows.append({"session": s.code, "module": module, "title": title, "date": s.date, "time": s.time,
-                     "host": s.host, "past": s.date < today} | status(module, s.code))
+                     "host": s.host, "past": s.date < today, "after": (note or {}).get("status", "none")} | status(module, s.code))
     return {"cohort": c.code, "today": today, "sessions": rows}
 
 
