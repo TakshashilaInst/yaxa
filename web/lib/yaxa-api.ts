@@ -191,6 +191,9 @@ export interface CaseAdmin {
 }
 export interface CaseAdminRow { session: string; title: string; case_title: string; status: CaseAdmin["status"] }
 
+export type PrepStatus = "none" | "draft" | "approved";
+export interface PrepRow { session: string; module: string; title: string; date: string; time: string; host: string; past: boolean;
+  case: PrepStatus; layer: PrepStatus; check: PrepStatus }
 export interface Team {
   modules: { code: string; title: string; faculty: string[] }[];
   accounts: { user_id: string; display_name: string; faculty_name: string; faculty: boolean }[];
@@ -483,6 +486,7 @@ export const yaxa = {
     json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/review${q(cohort)}`, send("POST", { status, note })),
   removeThread: (module: string, session: string, id: string, cohort?: string) =>
     json<{ ok: boolean }>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}${q(cohort)}`, send("DELETE")),
+  discussionWaiting: () => json<{ total: number; by_cohort: Record<string, number> }>("/discussion/waiting"),
   discussionQueue: (cohort: string) => json<QueueItem[]>(`/discussion/queue${q(cohort)}`),
   // cohort chat
   chatChannels: (cohort?: string) => json<ChatChannel[]>(`/chat/channels${q(cohort)}`),
@@ -531,6 +535,10 @@ export const yaxa = {
     return json<string[]>(`/socratic/topics?${q}`);
   },
   team: () => json<Team>("/team"),
+  prepare: (cohort: string, allWeeks = false) =>
+    json<{ cohort: string; today: string; sessions: PrepRow[] }>(`/prepare/${encodeURIComponent(cohort)}${allWeeks ? "?all_weeks=true" : ""}`),
+  prepareDraft: (module: string, session: string) =>
+    json<{ case: PrepStatus; layer: PrepStatus; check: PrepStatus; errors: string[] }>(`/prepare/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
   teamSetModule: (code: string, faculty: string[]) => json<{ code: string; faculty: string[] }>(`/team/modules/${encodeURIComponent(code)}`, send("PUT", { faculty })),
   teamLink: (userId: string, name: string) => json<{ faculty: boolean; teaches: string[] }>(`/team/accounts/${encodeURIComponent(userId)}`, send("PUT", { name })),
   moduleDetail: (code: string) => json<ModuleDetail>(`/module/${encodeURIComponent(code)}`),

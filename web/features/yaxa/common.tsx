@@ -12,6 +12,35 @@ import { ClipboardList, LayoutDashboard, Library, LogOut, Users } from "lucide-r
 import { logout } from "@/lib/auth";
 import { yaxa, type Avatar as AvatarSpec, type Me } from "@/lib/yaxa-api";
 
+// ------------------------------------------------------------ class questions waiting for faculty
+/** How many class questions no faculty member has handled yet (0 for students, or on error). */
+export function useWaiting(staff: boolean) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!staff) return;
+    yaxa.discussionWaiting().then((w) => setN(w.total)).catch(() => {});
+  }, [staff]);
+  return n;
+}
+
+/** ?module=&session= on a faculty editor's address (read in effects only, so no Suspense needed). */
+export function linkedTarget(): { module: string; session: string } {
+  if (typeof window === "undefined") return { module: "", session: "" };
+  const p = new URLSearchParams(window.location.search);
+  return { module: p.get("module") || "", session: p.get("session") || "" };
+}
+
+/** The first module a faculty member teaches, else the first module listed. */
+export function firstModule(me: Me | null, modules: { code: string }[]): string {
+  const mine = me?.teaches ?? [];
+  return modules.find((m) => mine.includes(m.code))?.code || modules[0]?.code || "";
+}
+
+export function CountBadge({ n, label }: { n: number; label: string }) {
+  if (!n) return null;
+  return <span className="yx-count" aria-label={`${n} ${label}`}>{n > 99 ? "99+" : n}</span>;
+}
+
 // ------------------------------------------------------------ current user
 export function useMe() {
   const [me, setMe] = useState<Me | null>(null);
@@ -59,6 +88,7 @@ export function Avatar({ spec, size = 36 }: { spec?: AvatarSpec; size?: number }
 // ------------------------------------------------------------------ header
 export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode }) {
   const router = useRouter();
+  const waiting = useWaiting(!!me && (me.is_admin || me.role === "faculty") && !me.in_demo_session);
   const exitDemo = async () => {
     await yaxa.demoExit();
     router.push("/learn/demo");
@@ -78,7 +108,7 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
           <nav className="yx-header-nav" aria-label="Yaxa">
             <Link href="/learn">This week</Link>
             {me.is_admin || me.role === "faculty"
-              ? <Link href="/learn/faculty">Cohort brief</Link>
+              ? <Link href="/learn/faculty">Cohort brief<CountBadge n={waiting} label="class questions waiting" /></Link>
               : <Link href="/learn/brief">My brief</Link>}
             <Link href="/learn/cohort">Cohort chat</Link>
             <Link href="/learn/how-it-works">How Yaxa works</Link>
@@ -98,8 +128,9 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
         )}
         {me && (me.is_admin || me.role === "faculty") && !me.in_demo_session && (
           <>
-            <Link className="yx-iconbtn" href="/learn/faculty" title="Cohort brief (for faculty)">
+            <Link className="yx-iconbtn" href="/learn/faculty" title={waiting ? `Cohort brief: ${waiting} class questions waiting` : "Cohort brief (for faculty)"}>
               <ClipboardList size={18} />
+              <CountBadge n={waiting} label="class questions waiting" />
             </Link>
             <Link className="yx-iconbtn" href="/learn/library" title="Libraries: readings and recordings">
               <Library size={18} />

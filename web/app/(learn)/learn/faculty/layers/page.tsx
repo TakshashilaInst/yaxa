@@ -6,9 +6,9 @@
  * Faculty never see students' briefs.
  */
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
+import { FullPageMessage, LearnHeader, Thinking, useMe, firstModule, linkedTarget } from "@/features/yaxa/common";
 import { yaxa, type LayerAdmin, type LayerAdminRow } from "@/lib/yaxa-api";
 
 const STATUS: Record<LayerAdminRow["status"], string> = { none: "No layer", draft: "Draft", approved: "Live" };
@@ -33,7 +33,7 @@ export default function FacultyLayersPage() {
 
   useEffect(() => {
     if (!privileged) return;
-    yaxa.cohortModules().then((m) => { setModules(m); setModuleCode((x) => x || m[0]?.code || ""); }).catch(fail);
+    yaxa.cohortModules().then((m) => { setModules(m); setModuleCode((x) => x || linkedTarget().module || firstModule(me, m)); }).catch(fail);
   }, [privileged]);
   useEffect(() => {
     if (!moduleCode) return;
@@ -43,6 +43,13 @@ export default function FacultyLayersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleCode]);
 
+  const linkedOpened = useRef(false);
+  useEffect(() => {
+    const t = linkedTarget();
+    if (linkedOpened.current || !t.session || moduleCode !== t.module || !rows.some((r) => r.session === t.session)) return;
+    linkedOpened.current = true;
+    void open(t.session);
+  });
   const open = async (s: string) => {
     if (dirty && !window.confirm("Discard your unsaved edits?")) return;
     setSession(s); setC(null); setDirty(false); setError(null); setNote(null);
