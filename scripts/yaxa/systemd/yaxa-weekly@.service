@@ -1,0 +1,15 @@
+# Yaxa weekly email: %i is "sunday" (students) or "friday" (faculty). Started by the matching timer.
+# Install: cp yaxa-weekly@.service yaxa-weekly-sunday.timer yaxa-weekly-friday.timer /etc/systemd/system/
+#          systemctl daemon-reload && systemctl enable --now yaxa-weekly-sunday.timer yaxa-weekly-friday.timer
+[Unit]
+Description=Yaxa weekly email (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=yaxa
+Group=yaxa
+WorkingDirectory=/home/yaxa/yaxa
+Environment=DEEPTUTOR_HOME=/home/yaxa/yaxa-home
+ExecStart=/home/yaxa/yaxa/.venv/bin/python -m deeptutor.yaxa.weekly %i

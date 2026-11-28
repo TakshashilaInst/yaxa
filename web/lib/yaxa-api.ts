@@ -42,6 +42,7 @@ export interface Me {
   display_name: string;
   is_admin: boolean;
   role: string;
+  teaches?: string[];
   demo: boolean;
   avatar: Avatar;
   in_demo_session: boolean;
@@ -94,7 +95,7 @@ export interface Turn {
 
 export interface Conversation {
   id: string;
-  kind: "chat" | "panel" | "programme";
+  kind: "chat" | "panel" | "programme" | "learn";
   module: string | null;
   unit: string | null;
   title: string;
@@ -103,7 +104,7 @@ export interface Conversation {
 
 export interface ConversationSummary {
   id: string;
-  kind: "chat" | "panel" | "programme";
+  kind: "chat" | "panel" | "programme" | "learn";
   title: string;
   module: string | null;
   unit: string | null;
@@ -150,12 +151,62 @@ export interface ModuleUnitDetail {
   readings: ModuleReading[]; // more from the library (webinar transcripts, extra material)
   progress: Pick<UnitProgress, "status" | "answered" | "last_scores" | "review"> | null;
   check?: CheckStatus; // the 5-question check before the session
+  learn?: LearnStatus; // the Learn session on the weekly case
+  layer?: LayerStatus; // this session's layer of the student's own brief
+  after?: AfterNote | null; // faculty's note after this cohort's live session
 }
 
+// ---------- the brief (private to the student)
+export interface LayerStatus { available: boolean; written: boolean }
+export type Rating = "no" | "partly" | "yes";
+export interface Critique { critique: string; sources: { ref: string; title: string; url: string }[]; at: string }
+export interface BriefLayer {
+  module: string; module_title: string; session: string; title: string; prompt: string; self_check: string[];
+  text: string; ratings: Record<string, Rating>; critiques: Critique[]; updated_at: string;
+}
+export interface Unseen { topic: string; text: string; proposed_at: string; updated_at: string; critiques?: Critique[] }
+export interface Brief { problem: { title: string; text: string; updated_at: string }; layers: BriefLayer[]; unseen: Unseen }
+export interface LayerAdmin { module: string; session: string; status: "none" | "draft" | "approved"; version: number; prompt: string; self_check: string[]; hint: string; approved_by?: string }
+export interface LayerAdminRow { session: string; title: string; hint: string; status: LayerAdmin["status"] }
+export interface SprintSession {
+  module: string; session: string; title: string; date: string; enrolled: number;
+  learn: { case: boolean; started: number; explained: number }; layer: { available: boolean; written: number };
+  gaps: string[]; weaknesses: string[]; debate: string; note: string; error: string | null;
+}
+export interface WhatsNew {
+  cohort: string | null;
+  chat: number;
+  discussion: number;
+  discussion_where: { module: string | null; session: string }[];
+  announcements: number;
+}
+export interface AiKey { provider: "anthropic" | "openai" | null; model?: string; hint?: string; set_at?: string }
+
+// ---------- weekly case and Learn session
+export interface LearnStatus { case: boolean; status: "not_started" | "in_progress" | "tried" | "explained"; conversation_id: string | null }
+export interface CaseView { module: string; session: string; version: number; title: string; situation: string; opening: string; learn: LearnStatus }
+export interface ExplainResult { got: string[]; missing: string[]; next: string[]; feedback: string }
+export interface CaseAdmin {
+  module: string; session: string; status: "none" | "draft" | "approved"; version: number;
+  title: string; situation: string; opening: string; grasp: string[]; approved_by?: string; approved_at?: string;
+}
+export interface CaseAdminRow { session: string; title: string; case_title: string; status: CaseAdmin["status"] }
+
+export type PrepStatus = "none" | "draft" | "approved";
+export interface PrepRow { session: string; module: string; title: string; date: string; time: string; host: string; past: boolean;
+  case: PrepStatus; layer: PrepStatus; check: PrepStatus; after: PrepStatus }
+export interface AfterNote { discussed: string[]; open: string[]; recording_url: string }
+export interface AfterAdmin extends AfterNote { module: string; session: string; status: PrepStatus; from?: string; transcripts?: { file: string; title: string }[] }
+export interface Team {
+  modules: { code: string; title: string; faculty: string[] }[];
+  accounts: { user_id: string; display_name: string; faculty_name: string; faculty: boolean }[];
+  names: string[];
+}
 export interface ModuleDetail {
   code: string;
   title: string;
   description: string;
+  faculty?: string[];
   units: ModuleUnitDetail[];
   other_readings: ModuleReading[];
 }
@@ -331,6 +382,7 @@ export interface WeekSession {
   code: string; module: string; module_title: string; title: string;
   starts_at: string; host: string; note: string; webinar_url: string;
   readings: WeekReading[]; transcript_ready: boolean;
+  learn?: LearnStatus; check?: CheckStatus; layer?: LayerStatus; // the sprint steps
 }
 export interface WeekView { cohort: string | null; sessions: WeekSession[]; dates: { date: string; label: string }[] }
 export interface CohortSession { code: string; date: string; time: string; host: string; webinar_url: string; note: string }
@@ -338,6 +390,7 @@ export interface CohortKeyDate { date: string; label: string; track?: string | n
 export interface CohortSchedule {
   code: string; programme: string; start: string; email_group: string;
   track_email_groups: Record<string, string>; join_code: string; join_open: boolean; closed?: boolean;
+  faculty_email_group?: string; weekly_email?: boolean;
   sessions: CohortSession[]; dates: CohortKeyDate[];
 }
 export interface CohortDetail extends CohortSchedule {
@@ -346,14 +399,6 @@ export interface CohortDetail extends CohortSchedule {
 export interface CohortRow { code: string; programme: string; start: string; sessions: number; members: number; join_code: string; join_open: boolean }
 export interface CohortMember { user_id: string; display_name: string; track: string | null }
 export interface JoinPreview { cohort: string; programme: string; programme_name: string; tracks: { code: string; name: string }[]; open: boolean }
-
-export interface WhatsNew {
-  cohort: string | null;
-  chat: number;
-  discussion: number;
-  discussion_where: { module: string | null; session: string }[];
-  announcements: number;
-}
 
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await apiFetch(apiUrl(`/api/yaxa${path}`), init);
@@ -408,7 +453,7 @@ export interface PastThread { id: string; cohort: string; text: string; also: nu
 export interface DiscussionView { cohort: string | null; closed: boolean; threads: DiscussionThread[]; past: PastThread[] }
 export interface QueueItem extends DiscussionThread { session: string; module: string; session_title: string; needs_faculty: boolean }
 export interface ChatChannel { id: string; name: string }
-export interface ChatMessage { id: string; author: string; staff: boolean; text: string; created_at: string; edited: boolean; mine: boolean }
+export interface ChatMessage { id: string; author: string; staff: boolean; text: string; image?: string; created_at: string; edited: boolean; mine: boolean }
 export interface ChatPage { messages: ChatMessage[]; closed: boolean; me: string }
 
 const q = (cohort?: string) => (cohort ? `?cohort=${encodeURIComponent(cohort)}` : "");
@@ -445,14 +490,20 @@ export const yaxa = {
     json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/review${q(cohort)}`, send("POST", { status, note })),
   removeThread: (module: string, session: string, id: string, cohort?: string) =>
     json<{ ok: boolean }>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}${q(cohort)}`, send("DELETE")),
-  whatsNew: () => json<WhatsNew>("/whats-new"),
-  whatsNewSeen: (area: "chat" | "discussion") => json<{ ok: boolean }>("/whats-new/seen", send("POST", { area })),
+  discussionWaiting: () => json<{ total: number; by_cohort: Record<string, number> }>("/discussion/waiting"),
   discussionQueue: (cohort: string) => json<QueueItem[]>(`/discussion/queue${q(cohort)}`),
   // cohort chat
   chatChannels: (cohort?: string) => json<ChatChannel[]>(`/chat/channels${q(cohort)}`),
   chatMessages: (channel: string, after = "") =>
     json<ChatPage>(`/chat/${encodeURIComponent(channel)}${after ? `?after=${encodeURIComponent(after)}` : ""}`),
-  chatSend: (channel: string, text: string) => json<ChatMessage>(`/chat/${encodeURIComponent(channel)}`, send("POST", { text })),
+  chatSend: (channel: string, text: string, image = "") => json<ChatMessage>(`/chat/${encodeURIComponent(channel)}`, send("POST", { text, image })),
+  /** Upload one image to a chat channel; post it with chatSend(channel, text, image). */
+  chatImageUpload: (channel: string, file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return json<{ image: string }>(`/chat/${encodeURIComponent(channel)}/image`, { method: "POST", body: form });
+  },
+  chatImageUrl: (channel: string, name: string) => apiUrl(`/api/yaxa/chat/${encodeURIComponent(channel)}/image/${encodeURIComponent(name)}`),
   chatEdit: (channel: string, id: string, text: string) =>
     json<ChatMessage>(`/chat/${encodeURIComponent(channel)}/${id}`, send("PATCH", { text })),
   chatDelete: (channel: string, id: string) => json<{ ok: boolean }>(`/chat/${encodeURIComponent(channel)}/${id}`, send("DELETE")),
@@ -487,6 +538,32 @@ export const yaxa = {
     if (conversationId) q.set("conversation_id", conversationId);
     return json<string[]>(`/socratic/topics?${q}`);
   },
+  team: () => json<Team>("/team"),
+  onboard: (file: File, emailLogins: boolean) => {
+    const form = new FormData();
+    form.append("file", file);
+    return json<{ rows: { row: number; email: string; name: string; ok: boolean; created?: boolean; error?: string }[];
+      created: number; emailed: number; logins_csv: string }>(`/onboard${emailLogins ? "?email_logins=true" : ""}`, { method: "POST", body: form });
+  },
+  afterGet: (c: string, m: string, s: string) => json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}`),
+  afterDraft: (c: string, m: string, s: string, file: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/draft`, send("POST", { file })),
+  afterSave: (c: string, m: string, s: string, n: AfterNote) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}`, send("PUT", n)),
+  afterApprove: (c: string, m: string, s: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/approve`, send("POST")),
+  afterUnpublish: (c: string, m: string, s: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/unpublish`, send("POST")),
+  weeklyPreview: (cohort: string, kind: "sunday" | "friday") =>
+    json<{ enabled: boolean; configured: boolean; mails: { to: string; subject: string; text: string }[] }>(`/weekly/${encodeURIComponent(cohort)}/${kind}`),
+  weeklyTest: (cohort: string, kind: "sunday" | "friday", to: string) =>
+    json<{ sent: number }>(`/weekly/${encodeURIComponent(cohort)}/test`, send("POST", { kind, to })),
+  prepare: (cohort: string, allWeeks = false) =>
+    json<{ cohort: string; today: string; sessions: PrepRow[] }>(`/prepare/${encodeURIComponent(cohort)}${allWeeks ? "?all_weeks=true" : ""}`),
+  prepareDraft: (module: string, session: string) =>
+    json<{ case: PrepStatus; layer: PrepStatus; check: PrepStatus; errors: string[] }>(`/prepare/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  teamSetModule: (code: string, faculty: string[]) => json<{ code: string; faculty: string[] }>(`/team/modules/${encodeURIComponent(code)}`, send("PUT", { faculty })),
+  teamLink: (userId: string, name: string) => json<{ faculty: boolean; teaches: string[] }>(`/team/accounts/${encodeURIComponent(userId)}`, send("PUT", { name })),
   moduleDetail: (code: string) => json<ModuleDetail>(`/module/${encodeURIComponent(code)}`),
   practiceSummary: () => json<{ modules: Record<string, ModuleSummary> }>("/practice/summary"),
   practiceReview: () => json<{ due: ReviewDue[] }>("/practice/review"),
@@ -513,6 +590,39 @@ export const yaxa = {
     json<CheckSetAdmin>(`/checks/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
   checkBrief: (cohort: string, refresh = false) =>
     json<{ cohort: string; sessions: CheckBriefSession[] }>(`/checks/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
+  caseGet: (module: string, session: string) =>
+    json<CaseView>(`/cases/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  caseExplain: (module: string, session: string, text: string) =>
+    json<ExplainResult>(`/cases/${encodeURIComponent(module)}/${encodeURIComponent(session)}/explain`, send("POST", { text })),
+  caseAdminList: (module: string) => json<CaseAdminRow[]>(`/cases/admin/${encodeURIComponent(module)}`),
+  caseAdminGet: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  caseDraft: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  caseSave: (module: string, session: string, c: Pick<CaseAdmin, "title" | "situation" | "opening" | "grasp">) =>
+    json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { title: c.title, situation: c.situation, opening: c.opening, grasp: c.grasp })),
+  caseApprove: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
+  caseUnpublish: (module: string, session: string) => json<CaseAdmin>(`/cases/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
+  brief: () => json<Brief>("/brief"),
+  briefProblem: (title: string, text: string) => json<Brief["problem"]>("/brief/problem", send("PUT", { title, text })),
+  briefLayer: (module: string, session: string, text: string, ratings: Record<string, Rating>) =>
+    json<BriefLayer>(`/brief/layers/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { text, ratings })),
+  briefCritique: (module: string, session: string) => json<Critique>(`/brief/layers/${encodeURIComponent(module)}/${encodeURIComponent(session)}/critique`, send("POST")),
+  briefUnseen: (replace = false) => json<Unseen>("/brief/unseen", send("POST", { replace })),
+  briefUnseenText: (text: string) => json<Unseen>("/brief/unseen", send("PUT", { text })),
+  briefUnseenCritique: () => json<Critique>("/brief/unseen/critique", send("POST")),
+  layerAdminList: (module: string) => json<LayerAdminRow[]>(`/layers/admin/${encodeURIComponent(module)}`),
+  layerAdminGet: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`),
+  layerDraft: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/draft`, send("POST")),
+  layerSave: (module: string, session: string, prompt: string, self_check: string[]) =>
+    json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}`, send("PUT", { prompt, self_check })),
+  layerApprove: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/approve`, send("POST")),
+  layerUnpublish: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
+  sprintBrief: (cohort: string, refresh = false) =>
+    json<{ cohort: string; sessions: SprintSession[] }>(`/sprint/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
+  whatsNew: () => json<WhatsNew>("/whats-new"),
+  whatsNewSeen: (area: "chat" | "discussion") => json<{ ok: boolean }>("/whats-new/seen", send("POST", { area })),
+  aiKey: () => json<AiKey>("/me/ai-key"),
+  aiKeySave: (provider: string, key: string, model: string) => json<AiKey>("/me/ai-key", send("PUT", { provider, key, model })),
+  aiKeyDelete: () => json<AiKey>("/me/ai-key", send("DELETE")),
   cohortModules: () => json<{ code: string; title: string }[]>("/cohort/modules"),
   cohortBrief: (module: string, days: number, refresh = false) =>
     json<CohortBrief>(`/cohort/brief?${new URLSearchParams({ module, days: String(days), refresh: String(refresh) })}`),
@@ -543,6 +653,16 @@ export const yaxa = {
   demoExit: () => json<{ ok: boolean }>("/demo/exit", send("POST")),
 
   /** Ask for study notes and save them as a .md download. */
+  async exportBrief(): Promise<void> {
+    const res = await apiFetch(apiUrl("/api/yaxa/brief/export"));
+    if (!res.ok) throw new Error("Couldn't download your brief. Try again.");
+    const url = URL.createObjectURL(await res.blob());
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-policy-brief.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  },
   async exportNotes(conversationId: string): Promise<void> {
     const res = await apiFetch(apiUrl("/api/yaxa/export"), send("POST", { conversation_id: conversationId }));
     if (!res.ok) throw new Error("Couldn't generate the notes. Try again.");
@@ -565,6 +685,7 @@ export interface ChatRequest {
   unit?: string | null;
   faculty?: string | null;
   socratic: boolean;
+  learn?: boolean; // a Learn session on the unit's weekly case
   scope?: "module" | "programme";
 }
 

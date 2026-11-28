@@ -3,15 +3,17 @@
 /**
  * The cohort's chat: one channel for everyone in the cohort, one for each
  * track. Light by design: no direct messages, no files. New messages arrive
- * every few seconds while the page is open. Staff pick a cohort with ?cohort=.
+ * every few seconds while the page is open. Faculty and staff can open every cohort's chat
+ * from a picker (or ?cohort=).
  */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
-import { FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
+import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { when } from "@/features/yaxa/discussion";
-import { yaxa, type ChatChannel, type ChatMessage } from "@/lib/yaxa-api";
+import { LinkedText } from "@/features/yaxa/linkify";
+import { yaxa, type ChatChannel, type ChatMessage, type CohortRow } from "@/lib/yaxa-api";
 
 const EDIT_MS = 15 * 60 * 1000;
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
@@ -41,7 +43,15 @@ function Message({ m, channel, now, onChange }: { m: ChatMessage; channel: strin
           </div>
         </div>
       ) : (
-        <div className="yx-disc-text">{m.text}</div>
+        <>
+          {m.text && <div className="yx-disc-text"><LinkedText text={m.text} /></div>}
+          {m.image && (
+            <a href={yaxa.chatImageUrl(channel, m.image)} target="_blank" rel="noreferrer" className="yx-chat-image">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={yaxa.chatImageUrl(channel, m.image)} alt={`Image shared by ${m.author}`} loading="lazy" />
+            </a>
+          )}
+        </>
       )}
     </li>
   );
@@ -49,8 +59,16 @@ function Message({ m, channel, now, onChange }: { m: ChatMessage; channel: strin
 
 function CohortChat() {
   const params = useSearchParams();
-  const cohortParam = params.get("cohort") || undefined;
   const { me, error: meError } = useMe();
+  const staff = !!me && (me.is_admin || me.role === "faculty");
+  const [cohorts, setCohorts] = useState<CohortRow[]>([]);
+  const [picked, setPicked] = useState<string | undefined>(params.get("cohort") || undefined);
+  // faculty aren't members of a cohort: list them all and open the first unless one was asked for
+  useEffect(() => {
+    if (!staff) return;
+    yaxa.cohorts().then((c) => { setCohorts(c); setPicked((x) => x || c[0]?.code); }).catch(() => {});
+  }, [staff]);
+  const cohortParam = staff ? picked : undefined;
   const [channels, setChannels] = useState<ChatChannel[] | null>(null);
   const [channel, setChannel] = useState("");
   const [msgs, setMsgs] = useState<ChatMessage[]>([]);
@@ -59,11 +77,34 @@ function CohortChat() {
   const [error, setError] = useState<string | null>(null);
   const [now, setNow] = useState(0); // refreshed by each poll; decides whether Edit/Delete still show
   const bottom = useRef<HTMLDivElement>(null);
+  const picker = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<{ name: string; preview: string } | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  // pick (or paste) an image: it uploads at once, then goes out with the next message
+  async function attach(file: File | undefined) {
+    if (!file || !channel) return;
+    setError(null); setUploading(true);
+    try {
+      const up = await yaxa.chatImageUpload(channel, file);
+      setImage({ name: up.image, preview: yaxa.chatImageUrl(channel, up.image) });
+    } catch (e) { setError(errText(e)); }
+    setUploading(false);
+    if (picker.current) picker.current.value = "";
+  }
+
+  // reading the chat clears "new messages" on Home, now and again on leaving
+  useEffect(() => {
+    if (!me) return;
+    yaxa.whatsNewSeen("chat").catch(() => {});
+    return () => { yaxa.whatsNewSeen("chat").catch(() => {}); };
+  }, [me]);
 
   useEffect(() => {
     if (!me) return;
-    yaxa.chatChannels(cohortParam).then((c) => { setChannels(c); setChannel((x) => x || c[0]?.id || ""); }).catch((e) => setError(errText(e)));
-  }, [me, cohortParam]);
+    if (staff && !cohortParam) return; // wait for the cohort list
+    yaxa.chatChannels(cohortParam).then((c) => { setChannels(c); setChannel(c[0]?.id || ""); }).catch((e) => setError(errText(e)));
+  }, [me, cohortParam, staff]);
 
   const reload = useCallback(() => {
     if (!channel) return;
@@ -98,11 +139,12 @@ function CohortChat() {
 
   async function sendNow() {
     const t = text.trim();
-    if (!t) return;
+    if (!t && !image) return;
     setError(null);
     try {
-      const m = await yaxa.chatSend(channel, t);
+      const m = await yaxa.chatSend(channel, t, image?.name ?? "");
       setText("");
+      setImage(null);
       setMsgs((x) => (x.some((y) => y.id === m.id) ? x : [...x, m]));
     } catch (e) {
       setError(errText(e));
@@ -124,8 +166,16 @@ function CohortChat() {
     <div className="yx">
       <LearnHeader me={me} />
       <main className="yx-page" style={{ maxWidth: 820 }}>
-        <p style={{ margin: 0 }}><Link href="/learn">← Home</Link></p>
+        <Crumbs items={[{ label: "Cohort chat" }]} />
         <h1 style={{ margin: "10px 0 4px" }}>Cohort chat</h1>
+        {staff && cohorts.length > 1 && (
+          <label className="yx-meta" style={{ display: "inline-flex", gap: 8, alignItems: "center", margin: "4px 0 8px" }}>
+            Cohort
+            <select value={cohortParam ?? ""} onChange={(e) => { setChannels(null); setPicked(e.target.value); }}>
+              {cohorts.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+            </select>
+          </label>
+        )}
         <p className="yx-muted" style={{ marginTop: 0, fontSize: 15 }}>
           Everyone in your cohort and the faculty can read this. For questions about a session, use the class discussion on its module page, where Yaxa and the faculty answer.
         </p>
@@ -148,12 +198,27 @@ function CohortChat() {
         {closed ? (
           <p className="yx-muted">This cohort has finished, so its chat is read-only.</p>
         ) : (
-          <div className="yx-chat-compose">
-            <textarea rows={2} value={text} maxLength={2000} placeholder="Write a message. Enter sends; Shift+Enter for a new line." aria-label="Message"
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendNow(); } }} />
-            <button type="button" className="yx-btn yx-btn-primary" disabled={!text.trim()} onClick={sendNow}>Send</button>
-          </div>
+          <>
+            {image && (
+              <div className="yx-chat-attached">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={image.preview} alt="Image to send" />
+                <button type="button" className="yx-linklike" onClick={() => setImage(null)}>Remove</button>
+              </div>
+            )}
+            <div className="yx-chat-compose">
+              <textarea rows={2} value={text} maxLength={2000}
+                placeholder="Write a message. Links: [label](https://…). Enter sends; Shift+Enter for a new line." aria-label="Message"
+                onChange={(e) => setText(e.target.value)}
+                onPaste={(e) => { const f = Array.from(e.clipboardData.files).find((x) => x.type.startsWith("image/")); if (f) { e.preventDefault(); void attach(f); } }}
+                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendNow(); } }} />
+              <input ref={picker} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => void attach(e.target.files?.[0])} />
+              <button type="button" className="yx-btn yx-btn-ghost" disabled={uploading} onClick={() => picker.current?.click()} title="Attach an image (JPEG, PNG or WebP, up to 5 MB)">
+                {uploading ? "Uploading…" : "Image"}
+              </button>
+              <button type="button" className="yx-btn yx-btn-primary" disabled={(!text.trim() && !image) || uploading} onClick={sendNow}>Send</button>
+            </div>
+          </>
         )}
       </main>
     </div>

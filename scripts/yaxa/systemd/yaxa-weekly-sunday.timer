@@ -1,0 +1,10 @@
+[Unit]
+Description=Yaxa Sunday email to students, 07:00 IST
+
+[Timer]
+OnCalendar=Sun *-*-* 07:00:00 Asia/Kolkata
+Persistent=true
+Unit=yaxa-weekly@sunday.service
+
+[Install]
+WantedBy=timers.target

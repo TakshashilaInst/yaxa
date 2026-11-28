@@ -5,9 +5,9 @@
  * redraw single questions, and approve. Learners see a check only once it is approved.
  */
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
+import { FullPageMessage, LearnHeader, Thinking, useMe, firstModule, linkedTarget } from "@/features/yaxa/common";
 import { yaxa, type CheckAdminRow, type CheckQuestion, type CheckSetAdmin } from "@/lib/yaxa-api";
 
 const STATUS: Record<CheckAdminRow["status"], string> = { none: "No check", draft: "Draft", approved: "Live" };
@@ -65,7 +65,7 @@ export default function FacultyChecksPage() {
 
   useEffect(() => {
     if (!privileged) return;
-    yaxa.cohortModules().then((m) => { setModules(m); setModuleCode((c) => c || m[0]?.code || ""); }).catch(fail);
+    yaxa.cohortModules().then((m) => { setModules(m); setModuleCode((c) => c || linkedTarget().module || firstModule(me, m)); }).catch(fail);
   }, [privileged]);
   useEffect(() => {
     if (!moduleCode) return;
@@ -75,6 +75,13 @@ export default function FacultyChecksPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleCode]);
 
+  const linkedOpened = useRef(false);
+  useEffect(() => {
+    const t = linkedTarget();
+    if (linkedOpened.current || !t.session || moduleCode !== t.module || !rows.some((r) => r.session === t.session)) return;
+    linkedOpened.current = true;
+    void open(t.session);
+  });
   const open = async (s: string) => {
     if (dirty && !window.confirm("Discard your unsaved edits?")) return;
     setSession(s); setSet(null); setDirty(false); setError(null); setNote(null);

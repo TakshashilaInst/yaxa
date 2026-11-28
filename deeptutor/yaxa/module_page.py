@@ -13,6 +13,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
+from . import after, team
 from . import practice, store
 from .access import _me, _require_module
 from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
@@ -181,6 +182,7 @@ async def module_view(code: str) -> dict[str, Any]:
         "code": module.code,
         "title": module.title,
         "description": module.description,
+        "faculty": team.faculty_for(module.code),
         "units": [
             {
                 "id": u.id,
@@ -194,6 +196,7 @@ async def module_view(code: str) -> dict[str, Any]:
                 "readings": [r for r in groups.get(u.id, []) if r.get("open") not in {x["open"] for x in res[u.id]}],
                 "progress": {k: progress[u.id][k] for k in ("status", "answered", "last_scores", "review")} if u.id in progress else None,
                 "check": _check_status(cu.id, module.code, u.id),  # the 5-question check before the session
+                "after": after.approved_note(cohort.code if cohort else None, module.code, u.id),  # faculty's note after the live session
             }
             for u in module.units
         ],

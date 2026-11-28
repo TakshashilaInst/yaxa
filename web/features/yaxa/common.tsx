@@ -7,10 +7,39 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { ClipboardList, LayoutDashboard, Library, LogOut, Users } from "lucide-react";
+import { ClipboardList, LayoutDashboard, Library, LogOut, Menu, Users, X } from "lucide-react";
 
 import { logout } from "@/lib/auth";
 import { yaxa, type Avatar as AvatarSpec, type Me } from "@/lib/yaxa-api";
+
+// ------------------------------------------------------------ class questions waiting for faculty
+/** How many class questions no faculty member has handled yet (0 for students, or on error). */
+export function useWaiting(staff: boolean) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!staff) return;
+    yaxa.discussionWaiting().then((w) => setN(w.total)).catch(() => {});
+  }, [staff]);
+  return n;
+}
+
+/** ?module=&session= on a faculty editor's address (read in effects only, so no Suspense needed). */
+export function linkedTarget(): { module: string; session: string } {
+  if (typeof window === "undefined") return { module: "", session: "" };
+  const p = new URLSearchParams(window.location.search);
+  return { module: p.get("module") || "", session: p.get("session") || "" };
+}
+
+/** The first module a faculty member teaches, else the first module listed. */
+export function firstModule(me: Me | null, modules: { code: string }[]): string {
+  const mine = me?.teaches ?? [];
+  return modules.find((m) => mine.includes(m.code))?.code || modules[0]?.code || "";
+}
+
+export function CountBadge({ n, label }: { n: number; label: string }) {
+  if (!n) return null;
+  return <span className="yx-count" aria-label={`${n} ${label}`}>{n > 99 ? "99+" : n}</span>;
+}
 
 // ------------------------------------------------------------ current user
 export function useMe() {
@@ -59,6 +88,8 @@ export function Avatar({ spec, size = 36 }: { spec?: AvatarSpec; size?: number }
 // ------------------------------------------------------------------ header
 export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode }) {
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const waiting = useWaiting(!!me && (me.is_admin || me.role === "faculty") && !me.in_demo_session);
   const exitDemo = async () => {
     await yaxa.demoExit();
     router.push("/learn/demo");
@@ -66,12 +97,27 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
   };
   return (
     <header className="yx-header">
-      <Link href="/learn" className="yx-brand">
-        <span className="yx-brand-mark">य</span>
+      <Link href="/learn" className="yx-brand" aria-label="Yaxa home">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/takshashila-logo-dark-bg.svg" alt="Takshashila Institution" width={94} height={38} />
+        <span className="yx-brand-sep" aria-hidden />
         Yaxa
       </Link>
       <div className="yx-header-center">{center}</div>
       <div className="yx-header-right">
+        {me && (
+          <button type="button" className="yx-menu-btn" aria-expanded={menuOpen} aria-controls="yx-nav" onClick={() => setMenuOpen((x) => !x)}>
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}<span>Menu</span>
+            {!menuOpen && <CountBadge n={waiting} label="class questions waiting" />}
+          </button>
+        )}
+        {me && (
+          <nav id="yx-nav" className={`yx-header-nav${menuOpen ? " is-open" : ""}`} aria-label="Yaxa" onClick={() => setMenuOpen(false)}>
+            <Link href="/learn">This week</Link>
+            {(me.is_admin || me.role === "faculty") && <Link href="/learn/faculty">Cohort brief<CountBadge n={waiting} label="class questions waiting" /></Link>}
+            <Link href="/learn/cohort">Cohort chat</Link>
+          </nav>
+        )}
         {me && (
           <span className="yx-pill" title={me.profile.current_role || ""}>
             <Avatar spec={me.avatar} size={22} />
@@ -86,8 +132,9 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
         )}
         {me && (me.is_admin || me.role === "faculty") && !me.in_demo_session && (
           <>
-            <Link className="yx-iconbtn" href="/learn/faculty" title="Cohort brief (for faculty)">
+            <Link className="yx-iconbtn" href="/learn/faculty" title={waiting ? `Cohort brief: ${waiting} class questions waiting` : "Cohort brief (for faculty)"}>
               <ClipboardList size={18} />
+              <CountBadge n={waiting} label="class questions waiting" />
             </Link>
             <Link className="yx-iconbtn" href="/learn/library" title="Libraries: readings and recordings">
               <Library size={18} />
@@ -140,6 +187,22 @@ export function Thinking({ socratic }: { socratic: boolean }) {
         <span />
       </span>
     </div>
+  );
+}
+
+// ------------------------------------------------------------- breadcrumbs
+/** "This week / Fundamentals / CP11": where the learner is, every step a link but the last. */
+export function Crumbs({ items }: { items: { label: string; href?: string }[] }) {
+  return (
+    <nav className="yx-crumbs" aria-label="You are here">
+      <Link href="/learn">This week</Link>
+      {items.map((c, i) => (
+        <span key={`${c.label}-${i}`}>
+          <span aria-hidden className="yx-crumbs-sep">/</span>
+          {c.href && i < items.length - 1 ? <Link href={c.href}>{c.label}</Link> : <span aria-current={i === items.length - 1 ? "page" : undefined}>{c.label}</span>}
+        </span>
+      ))}
+    </nav>
   );
 }
 

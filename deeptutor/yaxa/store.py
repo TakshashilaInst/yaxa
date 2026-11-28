@@ -48,6 +48,7 @@ class YaxaUser(BaseModel):
     user_id: str
     display_name: str = ""
     role: str = "student"  # student | faculty
+    faculty_name: str = ""  # for faculty: their name on the teaching roster (team.py)
     demo: bool = False  # seeded sample student (can be "entered" from the demo gallery)
     avatar: dict[str, str] = Field(default_factory=dict)  # gallery illustration colours/style
     profile: dict[str, str] = Field(default_factory=dict)

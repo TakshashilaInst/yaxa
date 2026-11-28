@@ -129,6 +129,20 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
         </p>
       )}
 
+      {u.after && (
+        <div className="yx-after">
+          <div className="yx-eyebrow">After the live session</div>
+          <ul>{u.after.discussed.map((d, i) => <li key={i}>{d}</li>)}</ul>
+          {u.after.open.length > 0 && (
+            <>
+              <div className="yx-meta" style={{ marginTop: 6 }}>Still open</div>
+              <ul>{u.after.open.map((d, i) => <li key={i}>{d}</li>)}</ul>
+            </>
+          )}
+          {u.after.recording_url && <a href={u.after.recording_url} target="_blank" rel="noreferrer">Watch the recording ↗</a>}
+        </div>
+      )}
+
       <div className="yx-study-modes">
         <Link className="yx-btn yx-btn-primary yx-btn-sm" href={chat(code, u.id)} title="Ask anything; Yaxa explains from the readings">
           Explain it to me
@@ -190,6 +204,7 @@ export default function ModulePage() {
         <div className="yx-eyebrow" style={{ marginTop: 12 }}>{mod.code}</div>
         <h1 style={{ margin: "2px 0 6px" }}>{mod.title}</h1>
         {mod.description && <p className="yx-lede" style={{ marginTop: 0 }}>{mod.description}</p>}
+        {!!mod.faculty?.length && <p className="yx-meta" style={{ margin: "0 0 12px" }}>Faculty: {mod.faculty.join(", ")}</p>}
         <p style={{ margin: "4px 0 0" }}>
           {practised.length
             ? <><b>{mastered}</b> of {mod.units.length} units mastered{due ? <> · <b>{due}</b> due for review</> : null}</>

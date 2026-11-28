@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { FullPageMessage, LearnHeader, Thinking, useMe } from "@/features/yaxa/common";
+import { CountBadge, FullPageMessage, LearnHeader, Thinking, firstModule, useMe, useWaiting } from "@/features/yaxa/common";
 import { yaxa, type CheckBriefSession, type CohortBrief, type CohortRow } from "@/lib/yaxa-api";
 
 const PERIODS = [
@@ -84,6 +84,7 @@ function WebinarPrep() {
 
 export default function CohortBriefPage() {
   const { me, error: meError } = useMe();
+  const waiting = useWaiting(!!me);
   const [modules, setModules] = useState<{ code: string; title: string }[]>([]);
   const [moduleCode, setModuleCode] = useState("");
   const [days, setDays] = useState(7);
@@ -98,7 +99,7 @@ export default function CohortBriefPage() {
       .cohortModules()
       .then((m) => {
         setModules(m);
-        setModuleCode((c) => c || m[0]?.code || "");
+        setModuleCode((c) => c || firstModule(me, m));
       })
       .catch((e) => setError({ key: "modules", message: e instanceof Error ? e.message : String(e) }));
   }, [privileged]);
@@ -140,10 +141,11 @@ export default function CohortBriefPage() {
       <LearnHeader me={me} center={<span className="yx-header-title">Cohort brief</span>} />
       <main className="yx-page">
         <p style={{ margin: "0 0 12px", fontSize: 15 }}>
-          <Link href="/learn/faculty/discussion">Class questions to review →</Link>
+          <Link href="/learn/faculty/discussion">Class questions to review<CountBadge n={waiting} label="waiting" /> →</Link>
           {" · "}<Link href="/learn/faculty/announcements">Announcements →</Link>
           {" · "}<Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
           {" · "}<Link href="/learn/faculty/checks">Session checks →</Link>
+          {" · "}<Link href="/learn/faculty/team">Faculty team →</Link>
         </p>
         <WebinarPrep />
         <div className="yx-eyebrow">For faculty · anonymised</div>

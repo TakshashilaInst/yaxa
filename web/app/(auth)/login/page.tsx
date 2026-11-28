@@ -66,6 +66,8 @@ function LoginPageContent() {
       <aside className={styles.panel} aria-hidden="true">
         <div className={styles.beam} />
         <div className={styles.lamp} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.panelLogo} src="/takshashila-logo-dark-bg.svg" alt="" width={200} height={81} />
         <div className={styles.panelText}>
           <p className={styles.wordmark}>Yaxa</p>
           <p className={styles.pitch}>
@@ -77,10 +79,6 @@ function LoginPageContent() {
 
       <main className={styles.formSide}>
         <div className={styles.formInner}>
-          <picture>
-            <source srcSet="/takshashila-logo-dark-bg.svg" media="(prefers-color-scheme: dark)" />
-            <img className={styles.logo} src="/takshashila-logo.svg" alt="Takshashila Institution" width={210} height={85} />
-          </picture>
 
           <h1 className={styles.heading}>Sign in to Yaxa</h1>
           <p className={styles.sub}>Use the account Takshashila created for you.</p>
