@@ -171,7 +171,7 @@ function SourceRow({
   phrases,
 }: {
   src: Passage;
-  label: number;
+  label: number | string;
   domId: string;
   open: boolean;
   onToggle: () => void;
@@ -226,8 +226,8 @@ export function GroundingMargin({
 }) {
   return (
     <aside className="yx-margin">
-      <h4>Grounding</h4>
-      {entries.length === 0 && <p className="yx-margin-empty">Ask a question and the passages the answer cites appear here, like marginalia.</p>}
+      <h4>Sources</h4>
+      {entries.length === 0 && <p className="yx-margin-empty">For each reply, the course passages Yaxa used appear here. The numbers match the markers in the reply.</p>}
       {entries.map((entry, qi) => {
         const cited = (entry.citations ?? []).filter((c) => !c.dangling).map((c) => c.n);
         const shown = entry.citations === undefined ? [] : cited;
@@ -235,9 +235,10 @@ export function GroundingMargin({
         return (
           <div key={qi}>
             <div className="yx-margin-q">
-              <span>{qi + 1}</span>
-              {entry.question}
+              <span className="yx-margin-q-label">You asked</span>
+              {entry.question.length > 120 ? `${entry.question.slice(0, 120)}…` : entry.question}
             </div>
+            {shown.length > 0 && <div className="yx-margin-sub">Cited in Yaxa&apos;s reply</div>}
             {entry.citations !== undefined && shown.length === 0 && (
               <p className="yx-margin-empty">This answer doesn&apos;t cite any passages from the course material.</p>
             )}
@@ -259,14 +260,14 @@ export function GroundingMargin({
             })}
             {!!entry.worth?.length && (
               <div className="yx-worth">
-                <b>Worth reading</b>
+                <b>Also worth reading (not cited)</b>
                 {entry.worth.map((src) => {
                   const key = `${qi}:w${src.n}`;
                   return (
                     <SourceRow
                       key={key}
                       src={src}
-                      label={src.n}
+                      label="·"
                       domId={`yx-src-${qi}-w${src.n}`}
                       open={openKey === key}
                       onToggle={() => setOpenKey(openKey === key ? null : key)}

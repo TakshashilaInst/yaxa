@@ -13,7 +13,7 @@ import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/com
 const WEEK: { code: string; when: string; title: string; body: string; time?: string }[] = [
   {
     code: "01", when: "Sunday to Tuesday", title: "Learn", time: "About 20 minutes per session",
-    body: "Yaxa opens with a real case and a question, before it explains anything. You reason about the case, Yaxa fills in the idea from the session's readings, and you finish by explaining the idea back in your own words. Yaxa tells you what you got and what is missing.",
+    body: "Yaxa opens with a real case and a question, before it explains anything. You reason about the case, Yaxa fills in the idea from the session's readings, and you finish by explaining the idea back in your own words. Yaxa tells you what you got and what is missing. Look for the Start Learn button on a session; it appears once faculty have prepared that session's case.",
   },
   {
     code: "02", when: "Wednesday and Thursday", title: "Apply", time: "One paragraph",
@@ -67,7 +67,7 @@ function HowItWorks() {
           <h2>Also on Yaxa, whenever you need them</h2>
           <ul>
             <li><b>Readings</b> for every session, ticked as you open them. Yaxa answers from the same readings and shows you the passage behind every answer.</li>
-            <li><b>Ask Yaxa</b> about any session, or let it question you instead.</li>
+            <li><b>Ask Yaxa</b> about any session, or let it question you instead. This is open conversation about the readings, not the Learn case.</li>
             <li><b>The session discussion</b>, under each session: ask a question, Yaxa drafts an answer and faculty confirm or correct it.</li>
             <li><b>Cohort chat</b> for your class, and one for your track.</li>
           </ul>

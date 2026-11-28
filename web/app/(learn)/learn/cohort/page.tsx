@@ -3,7 +3,8 @@
 /**
  * The cohort's chat: one channel for everyone in the cohort, one for each
  * track. Light by design: no direct messages, no files. New messages arrive
- * every few seconds while the page is open. Staff pick a cohort with ?cohort=.
+ * every few seconds while the page is open. Faculty and staff can open every cohort's chat
+ * from a picker (or ?cohort=).
  */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -11,7 +12,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/common";
 import { when } from "@/features/yaxa/discussion";
-import { yaxa, type ChatChannel, type ChatMessage } from "@/lib/yaxa-api";
+import { yaxa, type ChatChannel, type ChatMessage, type CohortRow } from "@/lib/yaxa-api";
 
 const EDIT_MS = 15 * 60 * 1000;
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
@@ -49,8 +50,16 @@ function Message({ m, channel, now, onChange }: { m: ChatMessage; channel: strin
 
 function CohortChat() {
   const params = useSearchParams();
-  const cohortParam = params.get("cohort") || undefined;
   const { me, error: meError } = useMe();
+  const staff = !!me && (me.is_admin || me.role === "faculty");
+  const [cohorts, setCohorts] = useState<CohortRow[]>([]);
+  const [picked, setPicked] = useState<string | undefined>(params.get("cohort") || undefined);
+  // faculty aren't members of a cohort: list them all and open the first unless one was asked for
+  useEffect(() => {
+    if (!staff) return;
+    yaxa.cohorts().then((c) => { setCohorts(c); setPicked((x) => x || c[0]?.code); }).catch(() => {});
+  }, [staff]);
+  const cohortParam = staff ? picked : undefined;
   const [channels, setChannels] = useState<ChatChannel[] | null>(null);
   const [channel, setChannel] = useState("");
   const [msgs, setMsgs] = useState<ChatMessage[]>([]);
@@ -69,8 +78,9 @@ function CohortChat() {
 
   useEffect(() => {
     if (!me) return;
-    yaxa.chatChannels(cohortParam).then((c) => { setChannels(c); setChannel((x) => x || c[0]?.id || ""); }).catch((e) => setError(errText(e)));
-  }, [me, cohortParam]);
+    if (staff && !cohortParam) return; // wait for the cohort list
+    yaxa.chatChannels(cohortParam).then((c) => { setChannels(c); setChannel(c[0]?.id || ""); }).catch((e) => setError(errText(e)));
+  }, [me, cohortParam, staff]);
 
   const reload = useCallback(() => {
     if (!channel) return;
@@ -133,6 +143,14 @@ function CohortChat() {
       <main className="yx-page" style={{ maxWidth: 820 }}>
         <Crumbs items={[{ label: "Cohort chat" }]} />
         <h1 style={{ margin: "10px 0 4px" }}>Cohort chat</h1>
+        {staff && cohorts.length > 1 && (
+          <label className="yx-meta" style={{ display: "inline-flex", gap: 8, alignItems: "center", margin: "4px 0 8px" }}>
+            Cohort
+            <select value={cohortParam ?? ""} onChange={(e) => { setChannels(null); setPicked(e.target.value); }}>
+              {cohorts.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+            </select>
+          </label>
+        )}
         <p className="yx-muted" style={{ marginTop: 0, fontSize: 15 }}>
           Everyone in your cohort and the faculty can read this. For questions about a session, use the class discussion on its module page, where Yaxa and the faculty answer.
         </p>

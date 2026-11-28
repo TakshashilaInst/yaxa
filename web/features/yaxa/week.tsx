@@ -96,7 +96,9 @@ function SessionCard({ s }: { s: WeekSession }) {
         </div>
       ) : s.learn?.case || s.layer?.available || s.check?.available ? (
         <p className="yx-next-done">You&apos;re ready for Saturday.</p>
-      ) : null}
+      ) : (
+        <p className="yx-steps-later">Learn, Apply and Check appear here once faculty publish them for this session. Until then, do the readings and ask Yaxa.</p>
+      )}
       {s.webinar_url && <a className="yx-btn yx-btn-gold yx-btn-sm" href={s.webinar_url} target="_blank" rel="noreferrer">Join the live session ↗</a>}
       {all > 0 && (
         <details className="yx-fold">

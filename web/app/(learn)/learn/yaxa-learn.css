@@ -526,3 +526,18 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
 .yx-header .yx-btn-primary, .yx-header .yx-btn-maroon { background: var(--yx-saffron); color: var(--yx-ink) !important; }
 .yx-header .yx-btn-primary:hover:not(:disabled), .yx-header .yx-btn-maroon:hover:not(:disabled) { background: #f4b34a; }
 .yx-header .yx-btn-ghost { border-color: rgba(255,255,255,.4); color: #fff !important; }
+
+/* header links and icons stay white on wine (links are wine elsewhere) */
+.yx .yx-header a, .yx .yx-header .yx-iconbtn { color: #fff !important; }
+/* every text box gets a visible edge; :where keeps it overridable (the chat composer has none) */
+.yx :where(textarea, select, input:not([type="checkbox"]):not([type="radio"]):not([type="range"])) {
+  border: 1px solid rgba(23, 20, 19, 0.28); background: #fff; padding: 8px 10px;
+}
+.yx .yx-composer textarea { border: 0; padding: 4px 0; background: transparent; }
+.yx :where(textarea, input):focus { border-color: var(--yx-maroon); outline: none; }
+/* sources margin: "You asked" rows and the cited / not-cited split */
+.yx-margin-q { padding-left: 0; font-style: normal; color: var(--yx-ink); }
+.yx-margin-q-label { position: static !important; display: block !important; width: auto !important; height: auto !important; border: 0 !important;
+  font-family: var(--tk-mono), monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yx-meta); }
+.yx-margin-sub { font-family: var(--tk-mono), monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yx-meta); margin: 6px 0 2px; }
+.yx-steps-later { margin: 8px 0 0; font-size: 14px; color: var(--yx-meta); }
