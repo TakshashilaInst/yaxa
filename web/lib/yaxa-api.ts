@@ -347,6 +347,14 @@ export interface CohortRow { code: string; programme: string; start: string; ses
 export interface CohortMember { user_id: string; display_name: string; track: string | null }
 export interface JoinPreview { cohort: string; programme: string; programme_name: string; tracks: { code: string; name: string }[]; open: boolean }
 
+export interface WhatsNew {
+  cohort: string | null;
+  chat: number;
+  discussion: number;
+  discussion_where: { module: string | null; session: string }[];
+  announcements: number;
+}
+
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await apiFetch(apiUrl(`/api/yaxa${path}`), init);
   if (!res.ok) {
@@ -437,6 +445,8 @@ export const yaxa = {
     json<DiscussionThread>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}/review${q(cohort)}`, send("POST", { status, note })),
   removeThread: (module: string, session: string, id: string, cohort?: string) =>
     json<{ ok: boolean }>(`/discussion/${encodeURIComponent(module)}/${encodeURIComponent(session)}/${id}${q(cohort)}`, send("DELETE")),
+  whatsNew: () => json<WhatsNew>("/whats-new"),
+  whatsNewSeen: (area: "chat" | "discussion") => json<{ ok: boolean }>("/whats-new/seen", send("POST", { area })),
   discussionQueue: (cohort: string) => json<QueueItem[]>(`/discussion/queue${q(cohort)}`),
   // cohort chat
   chatChannels: (cohort?: string) => json<ChatChannel[]>(`/chat/channels${q(cohort)}`),

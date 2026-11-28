@@ -30,6 +30,7 @@ from . import (
     prompting,
     schedule,
     store,
+    whats_new,
 )
 from . import chat as cohort_chat  # cohort chat; `chat` below is the Yaxa tutor route
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
@@ -53,6 +54,7 @@ router = APIRouter()
 router.include_router(practice.router)
 router.include_router(checks.admin_router)
 router.include_router(checks.router)
+router.include_router(whats_new.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)
