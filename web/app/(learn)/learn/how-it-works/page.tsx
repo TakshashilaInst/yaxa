@@ -12,15 +12,15 @@ import { Crumbs, FullPageMessage, LearnHeader, useMe } from "@/features/yaxa/com
 
 const WEEK: { code: string; when: string; title: string; body: string; time?: string }[] = [
   {
-    code: "01", when: "Early in the week", title: "Learn", time: "About 20 minutes per session",
+    code: "01", when: "Sunday to Tuesday", title: "Learn", time: "About 20 minutes per session",
     body: "Yaxa opens with a real case and a question, before it explains anything. You reason about the case, Yaxa fills in the idea from the session's readings, and you finish by explaining the idea back in your own words. Yaxa tells you what you got and what is missing.",
   },
   {
-    code: "02", when: "By Thursday", title: "Apply", time: "One paragraph",
+    code: "02", when: "Wednesday and Thursday", title: "Apply", time: "One paragraph",
     body: "Each session adds one layer to your own policy brief, on a problem you pick once at the start. You write the layer; Yaxa questions your reasoning and points to evidence, but never writes it for you. Your brief is private: faculty never see it.",
   },
   {
-    code: "03", when: "Before Saturday", title: "Check", time: "Five questions",
+    code: "03", when: "Any time before Saturday", title: "Check", time: "Five questions",
     body: "A short check on the session's readings, so you arrive knowing the basics. Take it as many times as you like; only you see your score.",
   },
   {
@@ -46,8 +46,8 @@ function HowItWorks() {
         <div className="yx-eyebrow">How a Yaxa week works</div>
         <h1 style={{ margin: "6px 0 12px" }}>Yaxa takes the lecture. Saturday is for conversation.</h1>
         <p className="yx-lede">
-          Each week follows the same rhythm for every session. You do the first three steps on your own time, in short
-          sittings. Home always shows the one thing to do next.
+          Each week follows the same rhythm for every session. You do the first three steps in your own time, in short
+          sittings. Nothing is locked or graded, so you can take them in any order. Home always shows the one thing to do next.
         </p>
 
         <ol className="yx-howto">

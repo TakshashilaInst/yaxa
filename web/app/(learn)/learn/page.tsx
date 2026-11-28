@@ -38,16 +38,17 @@ function convLabel(c: ConversationSummary) {
 
 // ----------------------------------------------------------- the week's rhythm
 const PHASES = [
-  { name: "Learn", days: "Mon–Wed" },
-  { name: "Apply", days: "by Thu" },
-  { name: "Check", days: "by Fri" },
+  { name: "Learn", days: "Sun–Tue" },
+  { name: "Apply", days: "Wed–Thu" },
+  { name: "Check", days: "any time" },
   { name: "Saturday", days: "live" },
 ];
 
-/** Which step of the week it is today, in IST: Mon–Wed Learn, Thu Apply, Fri Check, Sat live, Sun none. */
+/** Which step of the week it is today, in IST (as in the sprint spec): Sun–Tue Learn, Wed–Thu Apply,
+ *  Friday the last chance for the Check, Saturday live. */
 function phaseToday(): number {
   const day = new Date().toLocaleDateString("en-GB", { weekday: "short", timeZone: "Asia/Kolkata" });
-  return ({ Mon: 0, Tue: 0, Wed: 0, Thu: 1, Fri: 2, Sat: 3 } as Record<string, number>)[day] ?? -1;
+  return ({ Sun: 0, Mon: 0, Tue: 0, Wed: 1, Thu: 1, Fri: 2, Sat: 3 } as Record<string, number>)[day] ?? -1;
 }
 
 function WeekRhythm() {
