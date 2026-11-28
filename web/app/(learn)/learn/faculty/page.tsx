@@ -224,6 +224,7 @@ export default function CohortBriefPage() {
           <Link href="/learn/faculty/discussion">Class questions to review →</Link>
           {" · "}<Link href="/learn/faculty/announcements">Announcements →</Link>
           {" · "}<Link href="/learn/faculty/schedule">Cohort schedules and join links →</Link>
+          {" · "}<Link href="/learn/faculty/team">Faculty team →</Link>
           {" · "}<Link href="/learn/faculty/checks">Session checks →</Link>{" · "}<Link href="/learn/faculty/cases">Weekly cases →</Link>{" · "}<Link href="/learn/faculty/layers">Brief layers →</Link>
         </p>
         <WebinarPrep />

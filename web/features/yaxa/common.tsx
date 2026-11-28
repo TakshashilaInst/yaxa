@@ -77,7 +77,9 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
         {me && (
           <nav className="yx-header-nav" aria-label="Yaxa">
             <Link href="/learn">This week</Link>
-            <Link href="/learn/brief">My brief</Link>
+            {me.is_admin || me.role === "faculty"
+              ? <Link href="/learn/faculty">Cohort brief</Link>
+              : <Link href="/learn/brief">My brief</Link>}
             <Link href="/learn/cohort">Cohort chat</Link>
             <Link href="/learn/how-it-works">How Yaxa works</Link>
           </nav>

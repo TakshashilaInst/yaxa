@@ -42,6 +42,7 @@ export interface Me {
   display_name: string;
   is_admin: boolean;
   role: string;
+  teaches?: string[];
   demo: boolean;
   avatar: Avatar;
   in_demo_session: boolean;
@@ -190,10 +191,16 @@ export interface CaseAdmin {
 }
 export interface CaseAdminRow { session: string; title: string; case_title: string; status: CaseAdmin["status"] }
 
+export interface Team {
+  modules: { code: string; title: string; faculty: string[] }[];
+  accounts: { user_id: string; display_name: string; faculty_name: string; faculty: boolean }[];
+  names: string[];
+}
 export interface ModuleDetail {
   code: string;
   title: string;
   description: string;
+  faculty?: string[];
   units: ModuleUnitDetail[];
   other_readings: ModuleReading[];
 }
@@ -523,6 +530,9 @@ export const yaxa = {
     if (conversationId) q.set("conversation_id", conversationId);
     return json<string[]>(`/socratic/topics?${q}`);
   },
+  team: () => json<Team>("/team"),
+  teamSetModule: (code: string, faculty: string[]) => json<{ code: string; faculty: string[] }>(`/team/modules/${encodeURIComponent(code)}`, send("PUT", { faculty })),
+  teamLink: (userId: string, name: string) => json<{ faculty: boolean; teaches: string[] }>(`/team/accounts/${encodeURIComponent(userId)}`, send("PUT", { name })),
   moduleDetail: (code: string) => json<ModuleDetail>(`/module/${encodeURIComponent(code)}`),
   practiceSummary: () => json<{ modules: Record<string, ModuleSummary> }>("/practice/summary"),
   practiceReview: () => json<{ due: ReviewDue[] }>("/practice/review"),

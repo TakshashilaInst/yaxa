@@ -241,6 +241,7 @@ export default function ModulePage() {
         <div className="yx-eyebrow">{mod.code}</div>
         <h1 style={{ margin: "4px 0 8px" }}>{mod.title}</h1>
         {mod.description && <p className="yx-lede" style={{ marginTop: 0 }}>{mod.description}</p>}
+        {!!mod.faculty?.length && <p className="yx-meta" style={{ margin: "0 0 12px" }}>Faculty: {mod.faculty.join(", ")}</p>}
         {practised.length > 0 && (
           <p style={{ margin: "4px 0 0" }}><b>{mastered}</b> of {mod.units.length} sessions mastered{due ? <> · <b>{due}</b> due for review</> : null}</p>
         )}

@@ -62,6 +62,7 @@ export default function FacultyDiscussion() {
   const [cohort, setCohort] = useState("");
   const [items, setItems] = useState<QueueItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [allModules, setAllModules] = useState(false); // faculty start with the modules they teach
 
   useEffect(() => {
     if (!me) return;
@@ -74,7 +75,10 @@ export default function FacultyDiscussion() {
 
   if (meError || error) return <div className="yx"><FullPageMessage><p className="yx-error">{meError || error}</p></FullPageMessage></div>;
   if (!me) return <div className="yx"><FullPageMessage><p className="yx-muted">Loading…</p></FullPageMessage></div>;
-  const waiting = items?.filter((t) => t.needs_faculty).length ?? 0;
+  const teaches = me.teaches ?? [];
+  const mineOnly = teaches.length > 0 && !allModules;
+  const shown = mineOnly ? (items ?? []).filter((t) => teaches.includes(t.module)) : (items ?? []);
+  const waiting = shown.filter((t) => t.needs_faculty).length;
 
   return (
     <div className="yx">
@@ -90,11 +94,16 @@ export default function FacultyDiscussion() {
           <select value={cohort} onChange={(e) => setCohort(e.target.value)} aria-label="Cohort">
             {rows.map((r) => <option key={r.code} value={r.code}>{r.code}</option>)}
           </select>
-          {items && <span className="yx-muted" style={{ fontSize: 15 }}>{waiting} waiting for faculty · {items.length} in all</span>}
+          {teaches.length > 0 && (
+            <label className="yx-meta" style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+              <input type="checkbox" checked={mineOnly} onChange={(e) => setAllModules(!e.target.checked)} /> Only my modules
+            </label>
+          )}
+          {items && <span className="yx-muted" style={{ fontSize: 15 }}>{waiting} waiting for faculty · {shown.length} in all</span>}
           <Link href={`/learn/cohort?cohort=${encodeURIComponent(cohort)}`}>Open {cohort} chat →</Link>
         </div>
-        {items && !items.length && <p className="yx-muted">No questions yet.</p>}
-        <ul className="yx-disc-list">{(items ?? []).map((t) => <Item key={t.id} t={t} cohort={cohort} reload={load} />)}</ul>
+        {items && !shown.length && <p className="yx-muted">No questions yet.</p>}
+        <ul className="yx-disc-list">{shown.map((t) => <Item key={t.id} t={t} cohort={cohort} reload={load} />)}</ul>
       </main>
     </div>
   );
