@@ -561,3 +561,21 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
 .yx-prep-chip.is-none { border-color: rgba(179, 38, 30, 0.45); color: #8a1f17 !important; }
 .yx-prep-chip.is-draft { border-color: var(--yx-saffron); background: rgba(241, 162, 34, 0.12); }
 .yx-prep-chip.is-approved { border-color: var(--yx-maroon); background: rgba(98, 13, 60, 0.06); }
+.yx-mail-preview { margin-top: 10px; border-top: 1px solid var(--yx-line); padding-top: 8px; }
+.yx-mail-preview pre { white-space: pre-wrap; font-family: var(--tk-sans), sans-serif; font-size: 14px; line-height: 1.5; margin: 6px 0 0; }
+/* my course so far */
+.yx-prog-summary { display: flex; gap: 28px; flex-wrap: wrap; margin: 14px 0 6px; padding: 12px 0; border-top: 1px solid var(--yx-line); border-bottom: 1px solid var(--yx-line); }
+.yx-prog-summary b { font-size: 28px; font-weight: 400; }
+.yx-prog-summary span { color: var(--yx-muted); }
+.yx-prog-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.yx-prog-table th { text-align: left; font-family: var(--tk-mono), monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yx-meta); font-weight: 400; padding: 6px 4px; border-bottom: 1px solid var(--yx-line); }
+.yx-prog-table th:not(:first-child), .yx-prog-table td:not(:first-child) { text-align: center; width: 64px; }
+.yx-prog-table td { padding: 8px 4px; border-bottom: 1px solid var(--yx-line); }
+.yx-prog-table td a { text-decoration: none; }
+.yx-prog-done { color: var(--yx-maroon) !important; font-weight: 600; }
+.yx-prog-todo { color: var(--yx-meta) !important; }
+@media (max-width: 560px) { .yx-prog-table th:not(:first-child), .yx-prog-table td:not(:first-child) { width: 44px; } }
+/* after the live session */
+.yx-after { margin-top: 12px; padding: 10px 14px; border-left: 2px solid var(--yx-saffron); background: var(--yx-surface-2); }
+.yx-after ul { margin: 4px 0 6px; padding-left: 20px; }
+.yx-after li { margin: 2px 0; }

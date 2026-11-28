@@ -185,6 +185,19 @@ function UnitCard({ code, u, n }: { code: string; u: ModuleUnitDetail; n: number
       {u.outcomes && <p className="yx-muted" style={{ margin: "6px 0 0" }}>{u.outcomes}</p>}
 
       <UnitSteps code={code} u={u} />
+      {u.after && (
+        <div className="yx-after">
+          <div className="yx-eyebrow">After the live session</div>
+          <ul>{u.after.discussed.map((d, i) => <li key={i}>{d}</li>)}</ul>
+          {u.after.open.length > 0 && (
+            <>
+              <div className="yx-meta" style={{ marginTop: 6 }}>Still open</div>
+              <ul>{u.after.open.map((d, i) => <li key={i}>{d}</li>)}</ul>
+            </>
+          )}
+          {u.after.recording_url && <a href={u.after.recording_url} target="_blank" rel="noreferrer">Watch the recording ↗</a>}
+        </div>
+      )}
 
       {u.resources.length ? (
         <>

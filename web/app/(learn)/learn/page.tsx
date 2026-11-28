@@ -273,6 +273,7 @@ export default function LearnHome() {
 
         <section className="yx-home-section">
           <h2 className="yx-section-title">Your modules</h2>
+          <p style={{ margin: "0 0 10px" }}><Link href="/learn/progress">My course so far →</Link></p>
           {me.enrolments.map((p) => <ProgrammeSection key={p.code} p={p} summary={summary} />)}
           {me.is_admin && !me.enrolments.length && (
             <>

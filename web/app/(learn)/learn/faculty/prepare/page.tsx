@@ -23,7 +23,7 @@ const STEPS = [
 const day = (iso: string) =>
   new Date(`${iso}T12:00:00+05:30`).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
 
-function Row({ r, onDone }: { r: PrepRow; onDone: () => void }) {
+function Row({ r, cohort, onDone }: { r: PrepRow; cohort: string; onDone: () => void }) {
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const missing = STEPS.filter((s) => r[s.key] === "none").length;
@@ -49,7 +49,11 @@ function Row({ r, onDone }: { r: PrepRow; onDone: () => void }) {
             {s.name}: {LABEL[r[s.key]]}
           </Link>
         ))}
-        {missing > 0 && (
+        {r.past && (
+          <Link href={`/learn/faculty/after?cohort=${encodeURIComponent(cohort)}&module=${encodeURIComponent(r.module)}&session=${encodeURIComponent(r.session)}`}
+            className={`yx-prep-chip is-${r.after}`}>After-session note: {LABEL[r.after]}</Link>
+        )}
+        {missing > 0 && !r.past && (
           <button type="button" className="yx-btn yx-btn-sm yx-btn-primary" disabled={busy} onClick={draft}>
             {busy ? "Drafting…" : `Draft what's missing (${missing})`}
           </button>
@@ -115,7 +119,7 @@ export default function PreparePage() {
         {dates.map((d) => (
           <section key={d}>
             <h2 className="yx-prep-date">{day(d)}</h2>
-            <ul className="yx-prep-list">{shown.filter((r) => r.date === d).map((r) => <Row key={r.session} r={r} onDone={load} />)}</ul>
+            <ul className="yx-prep-list">{shown.filter((r) => r.date === d).map((r) => <Row key={r.session} r={r} cohort={cohort} onDone={load} />)}</ul>
           </section>
         ))}
       </main>

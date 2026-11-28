@@ -22,6 +22,44 @@ import {
 const BLANK_SESSION: CohortSession = { code: "", date: "", time: "11:30", host: "", webinar_url: "", note: "" };
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
+function WeeklyEmails({ cohort }: { cohort: string }) {
+  const [kind, setKind] = useState<"sunday" | "friday">("sunday");
+  const [data, setData] = useState<Awaited<ReturnType<typeof yaxa.weeklyPreview>> | null>(null);
+  const [to, setTo] = useState("");
+  const [note, setNote] = useState<string | null>(null);
+  useEffect(() => { yaxa.weeklyPreview(cohort, kind).then(setData).catch((e) => setNote(errText(e))); }, [cohort, kind]);
+  async function test() {
+    setNote(null);
+    try { const r = await yaxa.weeklyTest(cohort, kind, to); setNote(`Sent ${r.sent} test email${r.sent === 1 ? "" : "s"} to ${to}.`); }
+    catch (e) { setNote(errText(e)); }
+  }
+  return (
+    <section className="yx-card" style={{ marginTop: 14 }}>
+      <h2 style={{ fontSize: 19, margin: 0 }}>Weekly emails</h2>
+      <p className="yx-muted" style={{ margin: "4px 0 8px" }}>
+        What this week&apos;s email would say. {data && !data.configured && "Email isn't set up on the server yet, so nothing can be sent."}
+        {data && data.configured && !data.enabled && " Weekly emails are off for this cohort; switch them on above and save."}
+      </p>
+      <div className="yx-sched-toolbar">
+        <select value={kind} onChange={(e) => setKind(e.target.value as "sunday" | "friday")} aria-label="Which email">
+          <option value="sunday">Sunday, to students</option>
+          <option value="friday">Friday, to faculty</option>
+        </select>
+        <input type="email" value={to} onChange={(e) => setTo(e.target.value)} placeholder="your@takshashila.org.in" aria-label="Send a test to" />
+        <button type="button" className="yx-btn yx-btn-sm" disabled={!to.includes("@") || !data?.mails.length} onClick={test}>Send me a test</button>
+      </div>
+      {note && <p className="yx-muted">{note}</p>}
+      {data && !data.mails.length && <p className="yx-muted">Nothing would be sent this week (no sessions in the next seven days, or no email group set).</p>}
+      {data?.mails.map((m) => (
+        <div key={m.to} className="yx-mail-preview">
+          <div className="yx-meta">To {m.to} · {m.subject}</div>
+          <pre>{m.text}</pre>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 function NewCohort({ rows, onMade }: { rows: CohortRow[]; onMade: (code: string) => void }) {
   const [code, setCode] = useState("");
   const [from, setFrom] = useState("");
@@ -167,8 +205,14 @@ export default function SchedulePage() {
                 <label>Programme <input value={draft.programme} onChange={(e) => set({ programme: e.target.value.toUpperCase() })} style={{ width: 90 }} /></label>
                 <label>Starts <input type="date" value={draft.start} onChange={(e) => set({ start: e.target.value })} /></label>
                 <label>Email group <input type="email" value={draft.email_group} onChange={(e) => set({ email_group: e.target.value })} placeholder="gcpp45@…" /></label>
+                <label>Faculty email group <input type="email" value={draft.faculty_email_group ?? ""} onChange={(e) => set({ faculty_email_group: e.target.value })} placeholder="gcpp-faculty@…" /></label>
               </div>
+              <label style={{ display: "inline-flex", gap: 6, marginTop: 8 }}>
+                <input type="checkbox" checked={!!draft.weekly_email} onChange={(e) => set({ weekly_email: e.target.checked })} />
+                Send weekly emails: Sunday 7 am to students (this week&apos;s sessions), Friday 4 pm to faculty (the week&apos;s numbers)
+              </label>
             </section>
+            {draft.code && <WeeklyEmails cohort={draft.code} />}
 
             <section className="yx-card" style={{ marginTop: 14 }}>
               <h2 style={{ fontSize: 19, margin: 0 }}>Sessions</h2>

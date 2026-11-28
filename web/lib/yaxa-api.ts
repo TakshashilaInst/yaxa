@@ -153,6 +153,7 @@ export interface ModuleUnitDetail {
   check?: CheckStatus; // the 5-question check before the session
   learn?: LearnStatus; // the Learn session on the weekly case
   layer?: LayerStatus; // this session's layer of the student's own brief
+  after?: AfterNote | null; // faculty's note after this cohort's live session
 }
 
 // ---------- the brief (private to the student)
@@ -193,7 +194,9 @@ export interface CaseAdminRow { session: string; title: string; case_title: stri
 
 export type PrepStatus = "none" | "draft" | "approved";
 export interface PrepRow { session: string; module: string; title: string; date: string; time: string; host: string; past: boolean;
-  case: PrepStatus; layer: PrepStatus; check: PrepStatus }
+  case: PrepStatus; layer: PrepStatus; check: PrepStatus; after: PrepStatus }
+export interface AfterNote { discussed: string[]; open: string[]; recording_url: string }
+export interface AfterAdmin extends AfterNote { module: string; session: string; status: PrepStatus; from?: string; transcripts?: { file: string; title: string }[] }
 export interface Team {
   modules: { code: string; title: string; faculty: string[] }[];
   accounts: { user_id: string; display_name: string; faculty_name: string; faculty: boolean }[];
@@ -387,6 +390,7 @@ export interface CohortKeyDate { date: string; label: string; track?: string | n
 export interface CohortSchedule {
   code: string; programme: string; start: string; email_group: string;
   track_email_groups: Record<string, string>; join_code: string; join_open: boolean; closed?: boolean;
+  faculty_email_group?: string; weekly_email?: boolean;
   sessions: CohortSession[]; dates: CohortKeyDate[];
 }
 export interface CohortDetail extends CohortSchedule {
@@ -535,6 +539,19 @@ export const yaxa = {
     return json<string[]>(`/socratic/topics?${q}`);
   },
   team: () => json<Team>("/team"),
+  afterGet: (c: string, m: string, s: string) => json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}`),
+  afterDraft: (c: string, m: string, s: string, file: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/draft`, send("POST", { file })),
+  afterSave: (c: string, m: string, s: string, n: AfterNote) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}`, send("PUT", n)),
+  afterApprove: (c: string, m: string, s: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/approve`, send("POST")),
+  afterUnpublish: (c: string, m: string, s: string) =>
+    json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/unpublish`, send("POST")),
+  weeklyPreview: (cohort: string, kind: "sunday" | "friday") =>
+    json<{ enabled: boolean; configured: boolean; mails: { to: string; subject: string; text: string }[] }>(`/weekly/${encodeURIComponent(cohort)}/${kind}`),
+  weeklyTest: (cohort: string, kind: "sunday" | "friday", to: string) =>
+    json<{ sent: number }>(`/weekly/${encodeURIComponent(cohort)}/test`, send("POST", { kind, to })),
   prepare: (cohort: string, allWeeks = false) =>
     json<{ cohort: string; today: string; sessions: PrepRow[] }>(`/prepare/${encodeURIComponent(cohort)}${allWeeks ? "?all_weeks=true" : ""}`),
   prepareDraft: (module: string, session: string) =>
