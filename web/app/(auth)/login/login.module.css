@@ -1,0 +1,232 @@
+/* Yaxa sign-in. One bold element: the lighthouse beam from Takshashila's logo, sweeping across a
+   maroon panel. Everything on the form side stays quiet. */
+
+.page {
+  --paper: #faf7f1;
+  --ink: #1f1619;
+  --muted: #625650;
+  --line: #ddd3c2;
+  --maroon-deep: #4f112e;
+  --maroon: #6b1238;
+  --saffron: #f19914;
+  --sun: #fbc814;
+  --field: #ffffff;
+  --error: #b3261e;
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-y: auto;
+}
+
+/* ---------------------------------------------------------------- the beam panel */
+.panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--maroon-deep);
+  color: #fff7ea;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(32px, 6vw, 72px);
+  min-height: 100%;
+}
+
+.beam {
+  position: absolute;
+  top: -10%;
+  right: -30%;
+  width: 160%;
+  height: 120%;
+  /* a wedge opening from the top-right corner, like the lamp's light in the logo */
+  clip-path: polygon(100% 0%, 0% 38%, 0% 78%);
+  background: linear-gradient(250deg, rgba(251, 200, 20, 0.55) 0%, rgba(241, 153, 20, 0.32) 45%, rgba(241, 153, 20, 0) 85%);
+  transform-origin: 100% 0%;
+  animation: sweep 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  pointer-events: none;
+}
+
+.lamp {
+  position: absolute;
+  top: clamp(28px, 6vh, 56px);
+  right: clamp(28px, 5vw, 56px);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--sun);
+  box-shadow: 0 0 0 6px rgba(251, 200, 20, 0.18), 0 0 40px 12px rgba(251, 200, 20, 0.45);
+}
+
+@keyframes sweep {
+  from { transform: rotate(-14deg); opacity: 0; }
+  to { transform: rotate(0deg); opacity: 1; }
+}
+
+.panelText {
+  position: relative;
+  max-width: 30rem;
+}
+
+.wordmark {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(3.25rem, 7vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.25rem;
+  color: #fff7ea;
+}
+
+.pitch {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.6;
+  margin: 0;
+  color: rgba(255, 247, 234, 0.86);
+}
+
+/* ---------------------------------------------------------------- the form side */
+.formSide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 6vw, 80px);
+}
+
+.formInner {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.logo {
+  display: block;
+  width: 210px;
+  height: auto;
+  margin: 0 0 2.75rem -6px;
+}
+
+.heading {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--maroon);
+  margin: 0 0 0.5rem;
+}
+
+.sub {
+  margin: 0 0 2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(107, 18, 56, 0.16);
+}
+
+.button {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff7ea;
+  background: var(--maroon);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.button:hover { background: var(--maroon-deep); }
+.button:focus-visible { outline: 3px solid var(--saffron); outline-offset: 2px; }
+.button:disabled { opacity: 0.6; cursor: progress; }
+
+.error {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid var(--error);
+  background: rgba(179, 38, 30, 0.07);
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.notice {
+  margin: 0 0 1.25rem;
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid var(--saffron);
+  background: rgba(241, 153, 20, 0.1);
+  font-size: 0.9rem;
+}
+
+.help {
+  margin: 1.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.footer {
+  margin-top: 3rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ---------------------------------------------------------------- small screens: the panel becomes a band */
+@media (max-width: 820px) {
+  .page { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .panel { min-height: 0; padding: 40px 24px 28px; }
+  .wordmark { font-size: 3rem; margin-bottom: 0.75rem; }
+  .pitch { font-size: 1rem; }
+  .formSide { justify-content: flex-start; padding: 32px 24px 40px; }
+  .logo { width: 170px; margin-bottom: 2rem; }
+}
+
+/* ---------------------------------------------------------------- dark mode */
+@media (prefers-color-scheme: dark) {
+  .page {
+    --paper: #1c1216;
+    --ink: #f3ebe4;
+    --muted: #bfb0a6;
+    --line: #4a3540;
+    --field: #261a1f;
+  }
+  .heading { color: #f4c9d9; }
+  .button { background: #8a1c4a; }
+  .button:hover { background: #a02457; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam { animation: none; }
+}
