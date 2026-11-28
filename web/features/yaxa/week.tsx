@@ -94,9 +94,9 @@ function SessionCard({ s }: { s: WeekSession }) {
           <Link className="yx-btn yx-btn-primary" href={step.href}>{step.label} →</Link>
           <p className="yx-muted">{step.detail}</p>
         </div>
-      ) : (
+      ) : s.learn?.case || s.layer?.available || s.check?.available ? (
         <p className="yx-next-done">You&apos;re ready for Saturday.</p>
-      )}
+      ) : null}
       {s.webinar_url && <a className="yx-btn yx-btn-gold yx-btn-sm" href={s.webinar_url} target="_blank" rel="noreferrer">Join the live session ↗</a>}
       {all > 0 && (
         <details className="yx-fold">

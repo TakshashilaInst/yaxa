@@ -425,7 +425,7 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
 
 /* chat: same paper in both modes; Socratic is marked by a gold rule, not a dark room */
 .yx.yx-socratic { --yx-bg: #fdfdfd; --yx-surface-2: #f7f5f2; }
-.yx-socratic .yx-main h1, .yx-socratic .yx-main > p, .yx-socratic .yx-msg-who, .yx-socratic .yx-thinking,
+.yx.yx-socratic .yx-main h1, .yx.yx-socratic .yx-main > p, .yx.yx-socratic .yx-welcome p, .yx-socratic .yx-msg-who, .yx-socratic .yx-thinking,
 .yx-socratic .yx-suggest-label, .yx-socratic .yx-disclaimer { color: inherit; }
 .yx-socratic .yx-thread { border-left: 2px solid var(--yx-saffron); }
 .yx-socratic .yx-suggest button { background: var(--yx-surface); border-color: var(--yx-line); }
@@ -520,3 +520,9 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
 .yx-onpage a { text-decoration: none; }
 .yx-onpage a:hover { text-decoration: underline; }
 .yx [id] { scroll-margin-top: 84px; }
+
+.yx.yx-socratic .yx-main h1 { color: var(--yx-ink); }
+/* on the wine header, buttons turn gold (the house rule for CTAs on dark grounds) */
+.yx-header .yx-btn-primary, .yx-header .yx-btn-maroon { background: var(--yx-saffron); color: var(--yx-ink) !important; }
+.yx-header .yx-btn-primary:hover:not(:disabled), .yx-header .yx-btn-maroon:hover:not(:disabled) { background: #f4b34a; }
+.yx-header .yx-btn-ghost { border-color: rgba(255,255,255,.4); color: #fff !important; }
