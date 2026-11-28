@@ -35,6 +35,7 @@ from . import (
     schedule,
     sprint_brief,
     store,
+    whats_new,
 )
 from . import chat as cohort_chat  # cohort chat; `chat` below is the Yaxa tutor route
 from .access import (  # noqa: F401  (_cited_numbers is re-exported for tests)
@@ -64,6 +65,7 @@ router.include_router(layers.admin_router)
 router.include_router(brief.router)
 router.include_router(sprint_brief.router)
 router.include_router(keys.router)
+router.include_router(whats_new.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)

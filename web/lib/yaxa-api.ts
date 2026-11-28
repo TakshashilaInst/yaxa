@@ -171,6 +171,13 @@ export interface SprintSession {
   learn: { case: boolean; started: number; explained: number }; layer: { available: boolean; written: number };
   gaps: string[]; weaknesses: string[]; debate: string; note: string; error: string | null;
 }
+export interface WhatsNew {
+  cohort: string | null;
+  chat: number;
+  discussion: number;
+  discussion_where: { module: string | null; session: string }[];
+  announcements: number;
+}
 export interface AiKey { provider: "anthropic" | "openai" | null; model?: string; hint?: string; set_at?: string }
 
 // ---------- weekly case and Learn session
@@ -563,6 +570,8 @@ export const yaxa = {
   layerUnpublish: (module: string, session: string) => json<LayerAdmin>(`/layers/admin/${encodeURIComponent(module)}/${encodeURIComponent(session)}/unpublish`, send("POST")),
   sprintBrief: (cohort: string, refresh = false) =>
     json<{ cohort: string; sessions: SprintSession[] }>(`/sprint/brief?${new URLSearchParams({ cohort, refresh: String(refresh) })}`),
+  whatsNew: () => json<WhatsNew>("/whats-new"),
+  whatsNewSeen: (area: "chat" | "discussion") => json<{ ok: boolean }>("/whats-new/seen", send("POST", { area })),
   aiKey: () => json<AiKey>("/me/ai-key"),
   aiKeySave: (provider: string, key: string, model: string) => json<AiKey>("/me/ai-key", send("PUT", { provider, key, model })),
   aiKeyDelete: () => json<AiKey>("/me/ai-key", send("DELETE")),
