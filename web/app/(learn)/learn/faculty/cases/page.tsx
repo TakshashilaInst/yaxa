@@ -24,6 +24,7 @@ export default function FacultyCasesPage() {
   const [session, setSession] = useState<string | null>(null);
   const [c, setC] = useState<CaseAdmin | null>(null);
   const [dirty, setDirty] = useState(false);
+  const [writing, setWriting] = useState(false); // faculty writing a case from scratch, not yet saved
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export default function FacultyCasesPage() {
 
   const open = async (s: string) => {
     if (dirty && !window.confirm("Discard your unsaved edits?")) return;
-    setSession(s); setC(null); setDirty(false); setError(null); setNote(null);
+    setSession(s); setC(null); setDirty(false); setError(null); setNote(null); setWriting(false);
     try { setC(await yaxa.caseAdminGet(moduleCode, s)); } catch (e) { fail(e); }
   };
 
@@ -67,7 +68,7 @@ export default function FacultyCasesPage() {
   if (!privileged) return <div className="yx"><FullPageMessage><p>Weekly cases are for faculty. <Link href="/learn">Back</Link></p></FullPageMessage></div>;
 
   const row = session ? rows.find((r) => r.session === session) : null;
-  const hasCase = !!c && c.status !== "none";
+  const hasCase = !!c && (c.status !== "none" || writing);
   return (
     <div className="yx">
       <LearnHeader me={me} center={<span className="yx-header-title">Weekly cases</span>} />
@@ -113,6 +114,12 @@ export default function FacultyCasesPage() {
                 }}>
                 {busy === "draft" ? "Drafting…" : hasCase ? "Draft again" : "Draft a case from the readings"}
               </button>
+              {!hasCase && (
+                <button className="yx-btn yx-btn-sm yx-btn-ghost" disabled={!!busy}
+                  onClick={() => { if (c) { setC({ ...c, title: "", situation: "", opening: "", grasp: ["", ""] }); setWriting(true); setDirty(true); } }}>
+                  Write my own case
+                </button>
+              )}
               {hasCase && (
                 <>
                   <button className="yx-btn yx-btn-sm" disabled={!!busy || !dirty}

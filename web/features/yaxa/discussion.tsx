@@ -6,6 +6,7 @@
  * it. Classmates can say "I have this question too" and reply. Questions that
  * faculty reviewed in earlier cohorts appear below, without names.
  */
+import { LinkedText } from "@/features/yaxa/linkify";
 import { useCallback, useState } from "react";
 
 import {
@@ -63,7 +64,7 @@ export function Replies({ items }: { items: DiscussionReply[] }) {
         <li key={r.id ?? i}>
           <b>{r.author}</b>{r.staff && <span className="yx-disc-staff">Faculty</span>}
           {r.created_at && <span className="yx-muted"> · {when(r.created_at)}</span>}
-          <div className="yx-disc-text">{r.text}</div>
+          <div className="yx-disc-text"><LinkedText text={r.text} /></div>
         </li>
       ))}
     </ul>
@@ -92,7 +93,7 @@ function Thread({ t, module, session, closed, reload, setError }: {
   const act = (p: Promise<unknown>) => p.then(reload).catch((e) => setError(errText(e)));
   return (
     <li className="yx-disc-thread">
-      <div className="yx-disc-q">{t.text}</div>
+      <div className="yx-disc-q"><LinkedText text={t.text} /></div>
       <div className="yx-muted yx-disc-meta">
         {t.author} · {when(t.created_at)}
         {t.also > 0 && <> · {t.also} {t.also === 1 ? "other has" : "others have"} this question</>}
@@ -120,7 +121,7 @@ function Thread({ t, module, session, closed, reload, setError }: {
 function Past({ t }: { t: PastThread }) {
   return (
     <li className="yx-disc-thread is-past">
-      <div className="yx-disc-q">{t.text}</div>
+      <div className="yx-disc-q"><LinkedText text={t.text} /></div>
       <div className="yx-muted yx-disc-meta">A learner in {t.cohort}{t.also > 0 ? ` · ${t.also + 1} asked this` : ""}</div>
       <YaxaAnswer y={t.yaxa} />
       <ReviewBadge r={t.review} />

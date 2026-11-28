@@ -439,7 +439,7 @@ export interface PastThread { id: string; cohort: string; text: string; also: nu
 export interface DiscussionView { cohort: string | null; closed: boolean; threads: DiscussionThread[]; past: PastThread[] }
 export interface QueueItem extends DiscussionThread { session: string; module: string; session_title: string; needs_faculty: boolean }
 export interface ChatChannel { id: string; name: string }
-export interface ChatMessage { id: string; author: string; staff: boolean; text: string; created_at: string; edited: boolean; mine: boolean }
+export interface ChatMessage { id: string; author: string; staff: boolean; text: string; image?: string; created_at: string; edited: boolean; mine: boolean }
 export interface ChatPage { messages: ChatMessage[]; closed: boolean; me: string }
 
 const q = (cohort?: string) => (cohort ? `?cohort=${encodeURIComponent(cohort)}` : "");
@@ -481,7 +481,14 @@ export const yaxa = {
   chatChannels: (cohort?: string) => json<ChatChannel[]>(`/chat/channels${q(cohort)}`),
   chatMessages: (channel: string, after = "") =>
     json<ChatPage>(`/chat/${encodeURIComponent(channel)}${after ? `?after=${encodeURIComponent(after)}` : ""}`),
-  chatSend: (channel: string, text: string) => json<ChatMessage>(`/chat/${encodeURIComponent(channel)}`, send("POST", { text })),
+  chatSend: (channel: string, text: string, image = "") => json<ChatMessage>(`/chat/${encodeURIComponent(channel)}`, send("POST", { text, image })),
+  /** Upload one image to a chat channel; post it with chatSend(channel, text, image). */
+  chatImageUpload: (channel: string, file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return json<{ image: string }>(`/chat/${encodeURIComponent(channel)}/image`, { method: "POST", body: form });
+  },
+  chatImageUrl: (channel: string, name: string) => apiUrl(`/api/yaxa/chat/${encodeURIComponent(channel)}/image/${encodeURIComponent(name)}`),
   chatEdit: (channel: string, id: string, text: string) =>
     json<ChatMessage>(`/chat/${encodeURIComponent(channel)}/${id}`, send("PATCH", { text })),
   chatDelete: (channel: string, id: string) => json<{ ok: boolean }>(`/chat/${encodeURIComponent(channel)}/${id}`, send("DELETE")),

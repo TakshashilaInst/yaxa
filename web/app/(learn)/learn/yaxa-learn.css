@@ -541,3 +541,8 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
   font-family: var(--tk-mono), monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yx-meta); }
 .yx-margin-sub { font-family: var(--tk-mono), monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yx-meta); margin: 6px 0 2px; }
 .yx-steps-later { margin: 8px 0 0; font-size: 14px; color: var(--yx-meta); }
+/* chat images */
+.yx-chat-image { display: inline-block; margin-top: 6px; border: 1px solid var(--yx-line); }
+.yx-chat-image img { display: block; max-width: min(420px, 100%); max-height: 360px; height: auto; }
+.yx-chat-attached { display: flex; gap: 10px; align-items: flex-end; margin-top: 10px; }
+.yx-chat-attached img { max-height: 90px; max-width: 160px; border: 1px solid var(--yx-line); }
