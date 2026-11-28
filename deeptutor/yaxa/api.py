@@ -35,6 +35,7 @@ from . import (
     schedule,
     sprint_brief,
     store,
+    team,
     whats_new,
 )
 from . import chat as cohort_chat  # cohort chat; `chat` below is the Yaxa tutor route
@@ -66,6 +67,7 @@ router.include_router(brief.router)
 router.include_router(sprint_brief.router)
 router.include_router(keys.router)
 router.include_router(whats_new.router)
+router.include_router(team.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)
@@ -133,6 +135,7 @@ async def me(request: Request) -> dict[str, Any]:
         "display_name": user.display_name or cu.username,
         "is_admin": bool(cu.is_admin),
         "role": user.role,
+        "teaches": team.teaches(user),
         "demo": user.demo,
         "avatar": user.avatar,
         "in_demo_session": bool(request.cookies.get(DEMO_RETURN_COOKIE)),

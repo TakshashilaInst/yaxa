@@ -13,6 +13,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
+from . import team
 from . import practice, store
 from .access import _me, _require_module
 from .catalog import Module, SourceInfo, Unit, _sources_for, get_catalog
@@ -193,6 +194,7 @@ async def module_view(code: str) -> dict[str, Any]:
         "code": module.code,
         "title": module.title,
         "description": module.description,
+        "faculty": team.faculty_for(module.code),
         "units": [
             {
                 "id": u.id,
