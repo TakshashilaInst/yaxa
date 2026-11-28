@@ -22,6 +22,7 @@ from . import community, grounding, prompting, store
 from .access import _public_passage, _require_module
 from .catalog import Module, Unit, get_catalog
 from .llm import ModelUnavailable, complete_text, resolve_for
+from .schedule import list_cohorts
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -127,6 +128,34 @@ def _past(session: str, current: str | None) -> list[dict]:
     return out[:20]
 
 
+def _needs_faculty(t: dict) -> bool:
+    return not t.get("review") and not any(r.get("staff") for r in t.get("replies", []))
+
+
+@router.get("/discussion/waiting")
+async def waiting() -> dict:
+    """How many class questions no faculty member has handled yet, per cohort. A faculty
+    member linked to the teaching roster counts only the modules they teach."""
+    from . import team  # late: team imports access, which this module's routes also use
+
+    v = community.viewer()
+    if not v.staff:
+        raise HTTPException(403, "Faculty and staff only")
+    mine = set(team.teaches(v.user))
+    titles = {u.id: m.code for m in get_catalog().modules.values() for u in m.units}
+    by: dict[str, int] = {}
+    for c in list_cohorts():
+        n = 0
+        for f in sorted(_dir(c.code).glob("*.json")):
+            for t in store._read_json(f) or []:
+                module = t.get("module") or titles.get(f.stem, "")
+                if not t.get("hidden") and _needs_faculty(t) and (not mine or module in mine):
+                    n += 1
+        if n:
+            by[c.code] = n
+    return {"total": sum(by.values()), "by_cohort": by}
+
+
 @router.get("/discussion/queue")
 async def queue(cohort: str | None = None) -> list[dict]:
     v = community.viewer(cohort)
@@ -143,7 +172,7 @@ async def queue(cohort: str | None = None) -> list[dict]:
             row["session"] = f.stem
             row["module"] = t.get("module") or titles.get(f.stem, ("", ""))[0]
             row["session_title"] = titles.get(f.stem, ("", ""))[1]
-            row["needs_faculty"] = not t.get("review") and not any(r.get("staff") for r in t.get("replies", []))
+            row["needs_faculty"] = _needs_faculty(t)
             out.append(row)
     out.sort(key=lambda r: r["created_at"], reverse=True)
     out.sort(key=lambda r: not r["needs_faculty"])

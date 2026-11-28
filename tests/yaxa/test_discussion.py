@@ -200,3 +200,42 @@ def test_rate_limit_and_no_cohort_and_bad_session(monkeypatch):
     with pytest.raises(HTTPException) as e:
         ask()
     assert e.value.status_code == 404
+
+
+# ---------------------------------------------------------------- waiting count for faculty
+def test_waiting_counts_unhandled_questions_across_cohorts(monkeypatch):
+    as_(monkeypatch, "asha")
+    ask()
+    as_(monkeypatch, "neha")
+    ask("What is compellence?")
+    as_(monkeypatch, "prof", staff=True)
+    w = asyncio.run(discussion.waiting())
+    assert w["total"] == 2 and w["by_cohort"] == {"GCPP45": 1, "GCPP46": 1}
+
+
+def test_waiting_drops_reviewed_questions(monkeypatch):
+    as_(monkeypatch, "asha")
+    t = ask()
+    as_(monkeypatch, "prof", staff=True)
+    asyncio.run(discussion.review(MOD, SES, t["id"], discussion.Review(status="confirmed"), "GCPP45"))
+    assert asyncio.run(discussion.waiting())["total"] == 0
+
+
+def test_waiting_for_faculty_counts_only_modules_they_teach(monkeypatch):
+    from deeptutor.yaxa import team
+    as_(monkeypatch, "asha")
+    ask()
+    u = store.load_user("prof")
+    u.role, u.faculty_name = "faculty", "Prof Menon"
+    store.save_user(u)
+    monkeypatch.setattr(team, "roster", lambda: {"TP-AI": ["Prof Menon"]})
+    as_(monkeypatch, "prof")
+    assert asyncio.run(discussion.waiting())["total"] == 0
+    monkeypatch.setattr(team, "roster", lambda: {MOD: ["Prof Menon"]})
+    assert asyncio.run(discussion.waiting())["total"] == 1
+
+
+def test_waiting_is_staff_only(monkeypatch):
+    as_(monkeypatch, "asha")
+    with pytest.raises(HTTPException):
+        asyncio.run(discussion.waiting())

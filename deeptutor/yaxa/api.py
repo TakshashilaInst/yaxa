@@ -31,6 +31,7 @@ from . import (
     module_page,
     panel,
     practice,
+    prepare,
     prompting,
     schedule,
     sprint_brief,
@@ -68,6 +69,7 @@ router.include_router(sprint_brief.router)
 router.include_router(keys.router)
 router.include_router(whats_new.router)
 router.include_router(team.router)
+router.include_router(prepare.router)
 router.include_router(cohort.router)
 router.include_router(panel.router)
 router.include_router(module_page.router)
