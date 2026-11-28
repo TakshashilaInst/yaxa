@@ -579,3 +579,19 @@ a.yx-card:hover, a.yx-carry:hover, a.yx-module-link:hover { background: var(--yx
 .yx-after { margin-top: 12px; padding: 10px 14px; border-left: 2px solid var(--yx-saffron); background: var(--yx-surface-2); }
 .yx-after ul { margin: 4px 0 6px; padding-left: 20px; }
 .yx-after li { margin: 2px 0; }
+/* phone and tablet: the header links fold into a Menu button */
+.yx-menu-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid rgba(255,255,255,.35); color: #fff;
+  font-family: var(--tk-mono), monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 9px; cursor: pointer; position: relative; }
+.yx-nav-extra { display: none; }
+@media (max-width: 960px) {
+  .yx-menu-btn { display: inline-flex; }
+  .yx-header { position: relative; }
+  .yx .yx-header-nav.is-open { display: flex; flex-direction: column; gap: 0; position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+    margin: 0; background: var(--yx-maroon); border-top: 1px solid rgba(255,255,255,.2); padding: 4px 0; font-size: 16px; }
+  .yx .yx-header-nav.is-open a { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .yx .yx-header-nav.is-open .yx-nav-extra { display: block; }
+}
+@media (max-width: 560px) {
+  .yx-menu-btn span { display: none; }
+  .yx-header-right { gap: 4px; }
+}

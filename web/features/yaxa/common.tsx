@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { ClipboardList, LayoutDashboard, Library, LogOut, Users } from "lucide-react";
+import { ClipboardList, LayoutDashboard, Library, LogOut, Menu, Users, X } from "lucide-react";
 
 import { logout } from "@/lib/auth";
 import { yaxa, type Avatar as AvatarSpec, type Me } from "@/lib/yaxa-api";
@@ -88,6 +88,7 @@ export function Avatar({ spec, size = 36 }: { spec?: AvatarSpec; size?: number }
 // ------------------------------------------------------------------ header
 export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode }) {
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
   const waiting = useWaiting(!!me && (me.is_admin || me.role === "faculty") && !me.in_demo_session);
   const exitDemo = async () => {
     await yaxa.demoExit();
@@ -105,12 +106,19 @@ export function LearnHeader({ me, center }: { me: Me | null; center?: ReactNode 
       <div className="yx-header-center">{center}</div>
       <div className="yx-header-right">
         {me && (
-          <nav className="yx-header-nav" aria-label="Yaxa">
+          <button type="button" className="yx-menu-btn" aria-expanded={menuOpen} aria-controls="yx-nav" onClick={() => setMenuOpen((x) => !x)}>
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}<span>Menu</span>
+            {!menuOpen && <CountBadge n={waiting} label="class questions waiting" />}
+          </button>
+        )}
+        {me && (
+          <nav id="yx-nav" className={`yx-header-nav${menuOpen ? " is-open" : ""}`} aria-label="Yaxa" onClick={() => setMenuOpen(false)}>
             <Link href="/learn">This week</Link>
             {me.is_admin || me.role === "faculty"
               ? <Link href="/learn/faculty">Cohort brief<CountBadge n={waiting} label="class questions waiting" /></Link>
               : <Link href="/learn/brief">My brief</Link>}
             <Link href="/learn/cohort">Cohort chat</Link>
+            <Link href="/learn/progress" className="yx-nav-extra">My course so far</Link>
             <Link href="/learn/how-it-works">How Yaxa works</Link>
           </nav>
         )}

@@ -79,7 +79,7 @@ export default function FacultyTeamPage() {
             <p className="yx-muted" style={{ marginTop: 0 }}>
               Match each faculty member to their Yaxa login. A matched login gets the faculty tools, can open every cohort&apos;s chat,
               and starts from the modules that person teaches. New faculty need a login first: create it in the{" "}
-              <Link href="/chat">back office</Link> under Users, then match it here.
+              <Link href="/chat">back office</Link> under Users, then match it here, or <Link href="/learn/faculty/onboard">add many people at once from a spreadsheet</Link>.
             </p>
             <table className="yx-table" style={{ width: "100%" }}>
               <thead><tr><th>Login</th><th>Faculty member</th></tr></thead>

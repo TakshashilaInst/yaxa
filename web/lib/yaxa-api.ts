@@ -539,6 +539,12 @@ export const yaxa = {
     return json<string[]>(`/socratic/topics?${q}`);
   },
   team: () => json<Team>("/team"),
+  onboard: (file: File, emailLogins: boolean) => {
+    const form = new FormData();
+    form.append("file", file);
+    return json<{ rows: { row: number; email: string; name: string; ok: boolean; created?: boolean; error?: string }[];
+      created: number; emailed: number; logins_csv: string }>(`/onboard${emailLogins ? "?email_logins=true" : ""}`, { method: "POST", body: form });
+  },
   afterGet: (c: string, m: string, s: string) => json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}`),
   afterDraft: (c: string, m: string, s: string, file: string) =>
     json<AfterAdmin>(`/after/${encodeURIComponent(c)}/${encodeURIComponent(m)}/${encodeURIComponent(s)}/draft`, send("POST", { file })),
